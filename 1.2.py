@@ -56,7 +56,7 @@ def build_lists(contents):
 
 
 if __name__ == '__main__':
-    with open('day_1_test.txt', 'r') as f:
+    with open('day_1_input.txt', 'r') as f:
         contents = f.read()
 
     left, right = build_lists(contents)
