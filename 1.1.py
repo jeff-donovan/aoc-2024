@@ -48,15 +48,16 @@ def sum_pair_diffs(left, right):
 def build_sorted_lists(contents):
     left = []
     right = []
-    lines = contents.split('\n')
-    for i, l in enumerate(lines):
-        if l:
-            le, re = l.split()
+
+    for line in contents.split('\n'):
+        if line:
+            le, re = line.split()
             left.append(int(le))
             right.append(int(re))
 
     left.sort()
     right.sort()
+
     return left, right
 
 
