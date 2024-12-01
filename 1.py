@@ -46,8 +46,12 @@ def build_lists(contents):
     lines = contents.split('\n')
     for i, l in enumerate(lines):
         if l:
-            split_line = l.split()
-            print(f'{i} | {split_line}')
+            le, re = l.split()
+            # print(f'{i} | {left} | {right}')
+            left.append(int(le))
+            right.append(int(re))
+
+    return left, right
 
 
 if __name__ == '__main__':
@@ -55,3 +59,7 @@ if __name__ == '__main__':
         contents = f.read()
 
     left, right = build_lists(contents)
+    left.sort()
+    right.sort()
+    # print(f'left: {left} | right: {right}')
+    # print(f'left: {len(left)} | right: {len(right)}')
