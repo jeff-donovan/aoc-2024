@@ -45,7 +45,7 @@ def sum_pair_diffs(left, right):
         sum += abs(left[i] - right[i])
     return sum
 
-def build_lists(contents):
+def build_sorted_lists(contents):
     left = []
     right = []
     lines = contents.split('\n')
@@ -55,6 +55,8 @@ def build_lists(contents):
             left.append(int(le))
             right.append(int(re))
 
+    left.sort()
+    right.sort()
     return left, right
 
 
@@ -62,9 +64,6 @@ if __name__ == '__main__':
     with open('day_1_input.txt', 'r') as f:
         contents = f.read()
 
-    left, right = build_lists(contents)
-    left.sort()
-    right.sort()
-
+    left, right = build_sorted_lists(contents)
     sum = sum_pair_diffs(left, right)
     print(sum)
