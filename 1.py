@@ -39,6 +39,11 @@ To find the total distance between the left list and the right list, add up the 
 Your actual left and right lists contain many location IDs. What is the total distance between your lists?
 '''
 
+def sum_pair_diffs(left, right):
+    sum = 0
+    for i in range(len(left)):
+        sum += abs(left[i] - right[i])
+    return sum
 
 def build_lists(contents):
     left = []
@@ -61,5 +66,8 @@ if __name__ == '__main__':
     left, right = build_lists(contents)
     left.sort()
     right.sort()
+
+    sum = sum_pair_diffs(left, right)
+    print(sum)
     # print(f'left: {left} | right: {right}')
     # print(f'left: {len(left)} | right: {len(right)}')
