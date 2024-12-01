@@ -52,7 +52,6 @@ def build_lists(contents):
     for i, l in enumerate(lines):
         if l:
             le, re = l.split()
-            # print(f'{i} | {left} | {right}')
             left.append(int(le))
             right.append(int(re))
 
@@ -69,5 +68,3 @@ if __name__ == '__main__':
 
     sum = sum_pair_diffs(left, right)
     print(sum)
-    # print(f'left: {left} | right: {right}')
-    # print(f'left: {len(left)} | right: {len(right)}')
