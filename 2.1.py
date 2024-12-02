@@ -33,3 +33,45 @@ So, in this example, 2 reports are safe.
 Analyze the unusual data from the engineers. How many reports are safe?
 '''
 
+def num_safe_reports(contents):
+    num = 0
+    for report in contents.split('\n'):
+        if report and is_safe(report):
+            num += 1
+    return num
+
+def is_safe(report):
+    return is_diff_in_range(report) and (is_increasing(report) or is_decreasing(report))
+
+def is_increasing(report):
+    levels = report.split(' ')
+    for i, level in enumerate(levels):
+        if i != 0:
+            if level <= levels[i - 1]:
+                return False
+    return True
+
+def is_decreasing(report):
+    levels = report.split(' ')
+    for i, level in enumerate(levels):
+        if i != 0:
+            if level >= levels[i - 1]:
+                return False
+    return True
+
+def is_diff_in_range(report):
+    levels = report.split(' ')
+    for i, level in enumerate(levels):
+        if i != 0:
+            diff = abs(level - levels[i - 1])
+            if not (1 <= diff <= 3):
+                return False
+    return True
+
+
+if __name__ == '__main__':
+    with open('day_2_test.txt', 'r') as f:
+        contents = f.read()
+
+    num = num_safe_reports(contents)
+    print(num)
