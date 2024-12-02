@@ -36,9 +36,9 @@ Analyze the unusual data from the engineers. How many reports are safe?
 def get_reports(contents):
     return [[int(n) for n in report.split(' ') if n != ''] for report in contents.split('\n') if report]
 
-def num_safe_reports(contents):
+def num_safe_reports(reports):
     num = 0
-    for report in contents.split('\n'):
+    for report in reports:
         if report and is_safe(report):
             num += 1
     return num
@@ -47,26 +47,23 @@ def is_safe(report):
     return is_diff_in_range(report) and (is_increasing(report) or is_decreasing(report))
 
 def is_increasing(report):
-    levels = report.split(' ')
-    for i, level in enumerate(levels):
+    for i, level in enumerate(report):
         if i != 0:
-            if level <= levels[i - 1]:
+            if level <= report[i - 1]:
                 return False
     return True
 
 def is_decreasing(report):
-    levels = report.split(' ')
-    for i, level in enumerate(levels):
+    for i, level in enumerate(report):
         if i != 0:
-            if level >= levels[i - 1]:
+            if level >= report[i - 1]:
                 return False
     return True
 
 def is_diff_in_range(report):
-    levels = report.split(' ')
-    for i, level in enumerate(levels):
+    for i, level in enumerate(report):
         if i != 0:
-            diff = abs(level - levels[i - 1])
+            diff = abs(level - report[i - 1])
             if not (1 <= diff <= 3):
                 return False
     return True
@@ -77,7 +74,5 @@ if __name__ == '__main__':
         contents = f.read()
 
     reports = get_reports(contents)
-    print(reports)
-
-    # num = num_safe_reports(contents)
-    # print(num)
+    num = num_safe_reports(reports)
+    print(num)
