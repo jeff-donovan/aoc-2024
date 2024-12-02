@@ -70,7 +70,7 @@ def is_diff_in_range(report):
 
 
 if __name__ == '__main__':
-    with open('day_2_test.txt', 'r') as f:
+    with open('day_2_input.txt', 'r') as f:
         contents = f.read()
 
     reports = get_reports(contents)
