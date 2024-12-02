@@ -25,8 +25,17 @@ def get_reports(contents):
 def num_safe_reports(reports):
     num = 0
     for report in reports:
-        if report and is_safe(report):
-            num += 1
+        if report:
+            if is_safe(report):
+                num += 1
+            else:
+                for i in range(len(report)):
+                    report_copy = report.copy()
+                    report_copy.pop(i)
+                    is_safe_without_level = is_safe(report_copy)
+                    if is_safe_without_level:
+                        num += 1
+                        break
     return num
 
 def is_safe(report):
