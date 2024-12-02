@@ -33,6 +33,9 @@ So, in this example, 2 reports are safe.
 Analyze the unusual data from the engineers. How many reports are safe?
 '''
 
+def get_reports(contents):
+    return [[int(n) for n in report.split(' ') if n != ''] for report in contents.split('\n') if report]
+
 def num_safe_reports(contents):
     num = 0
     for report in contents.split('\n'):
@@ -73,5 +76,8 @@ if __name__ == '__main__':
     with open('day_2_test.txt', 'r') as f:
         contents = f.read()
 
-    num = num_safe_reports(contents)
-    print(num)
+    reports = get_reports(contents)
+    print(reports)
+
+    # num = num_safe_reports(contents)
+    # print(num)
