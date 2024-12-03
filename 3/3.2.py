@@ -24,7 +24,30 @@ import re
 def find_all_substrings(contents):
     dos = find_all_do_indexes(contents)
     donts = find_all_donts_indexes(contents)
-    return []
+
+    substrings = []
+    substring = ''
+    enabled = True
+    for i, char in enumerate(contents):
+        if enabled and (i not in donts):
+            substring += char
+            continue
+
+        if not enabled and i in dos:
+            enabled = True
+            substring += char
+            continue
+
+        if enabled and i in donts:
+            substrings.append(substring)
+            substring = ''
+            enabled = False
+            continue
+
+    if enabled:
+        substrings.append(substring)
+        
+    return substrings
 
 def find_all_donts_indexes(contents):
     pattern = re.escape("don't()")
