@@ -28,7 +28,11 @@ def get_mul_pairs_as_strings(contents):
 
 
 if __name__ == '__main__':
-    with open('3/day_3_test.txt', 'r') as f:
+    with open('3/day_3_input.txt', 'r') as f:
         contents = f.read()
 
-    print(get_mul_pairs_as_strings(contents))
+    pairs = get_mul_pairs_as_strings(contents)
+    mul_sum = 0
+    for pair in pairs:
+        mul_sum += int(pair[0]) * int(pair[1])
+    print(mul_sum)
