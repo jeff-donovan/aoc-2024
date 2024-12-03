@@ -65,7 +65,7 @@ def get_mul_pairs_as_strings(contents):
 
 
 if __name__ == '__main__':
-    with open('3/day_3_test_2.txt', 'r') as f:
+    with open('3/day_3_input.txt', 'r') as f:
         contents = f.read()
 
     substrings = find_all_substrings(contents)
