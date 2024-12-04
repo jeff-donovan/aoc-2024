@@ -41,7 +41,7 @@ Take a look at the little Elf's word search. How many times does XMAS appear?
 
 def num_xmas(matrix):
     all_x_coords = get_all_x_coords(matrix)
-    return sum([1 for x_coords in all_x_coords if is_xmas(x_coords)])
+    return sum([1 for x_coords in all_x_coords if is_xmas(matrix, x_coords)])
 
 def get_all_x_coords(matrix):
     all_x_coords = []
@@ -54,28 +54,28 @@ def get_all_x_coords(matrix):
 def make_matrix(contents):
     return [row for row in contents.split('\n') if row]
 
-def is_xmas(x_coords):
+def is_xmas(matrix, x_coords):
     return (
-        is_xmas_horizontal(x_coords)
-        or is_xmas_vertical(x_coords)
-        or is_xmas_diagonal(x_coords)
-        or is_xmas_backwards(x_coords)
-        or is_xmas_overlapping(x_coords)
+        is_xmas_horizontal(matrix, x_coords)
+        or is_xmas_vertical(matrix, x_coords)
+        or is_xmas_diagonal(matrix, x_coords)
+        or is_xmas_backwards(matrix, x_coords)
+        or is_xmas_overlapping(matrix, x_coords)
     )
 
-def is_xmas_horizontal(x_coords):
+def is_xmas_horizontal(matrix, x_coords):
     pass
 
-def is_xmas_vertical(x_coords):
+def is_xmas_vertical(matrix, x_coords):
     pass
 
-def is_xmas_diagonal(x_coords):
+def is_xmas_diagonal(matrix, x_coords):
     pass
 
-def is_xmas_backwards(x_coords):
+def is_xmas_backwards(matrix, x_coords):
     pass
 
-def is_xmas_overlapping(x_coords):
+def is_xmas_overlapping(matrix, x_coords):
     pass
 
 
