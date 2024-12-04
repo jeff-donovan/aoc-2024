@@ -67,16 +67,15 @@ def num_xmas_for_x_coords(matrix, x_coords):
             print('is_xmas_vertical')
             num += 1
 
-        if is_xmas_diagonal(matrix, x_coords, is_backwards):
-            print('is_xmas_diagonal')
-            num += 1
+    num += num_xmas_diagonal(matrix, x_coords, is_backwards)
+
     return num
 
 def is_xmas_horizontal(matrix, x_coords, is_backwards):
     i, j = x_coords
 
     if is_backwards:
-        return (j - 3 > 0) and (
+        return (j - 3 >= 0) and (
             matrix[i][j] == 'X'
             and matrix[i][j - 1] == 'M'
             and matrix[i][j - 2] == 'A'
@@ -94,7 +93,7 @@ def is_xmas_vertical(matrix, x_coords, is_backwards):
     i, j = x_coords
 
     if is_backwards:
-        return (i - 3 > 0) and (
+        return (i - 3 >= 0) and (
             matrix[i][j] == 'X'
             and matrix[i - 1][j] == 'M'
             and matrix[i - 2][j] == 'A'
@@ -108,23 +107,48 @@ def is_xmas_vertical(matrix, x_coords, is_backwards):
         and matrix[i + 3][j] == 'S'
     )
 
-def is_xmas_diagonal(matrix, x_coords, is_backwards):
+def num_xmas_diagonal(matrix, x_coords, is_backwards):
     i, j = x_coords
 
-    if is_backwards:
-        return (i - 3 > 0 and j - 3 > 0) and (
-            matrix[i][j] == 'X'
-            and matrix[i - 1][j - 1] == 'M'
-            and matrix[i - 2][j - 2] == 'A'
-            and matrix[i - 3][j - 3] == 'S'
-        )
+    num = 0
 
-    return (i + 3 < len(matrix) and j + 3 < len(matrix)) and (
+    # down and to the right
+    if (i + 3 < len(matrix) and j + 3 < len(matrix)) and (
         matrix[i][j] == 'X'
         and matrix[i + 1][j + 1] == 'M'
         and matrix[i + 2][j + 2] == 'A'
         and matrix[i + 3][j + 3] == 'S'
-    )
+    ):
+        num += 1
+
+    # down and to the left
+    if (i + 3 < len(matrix) and j - 3 >= 0) and (
+        matrix[i][j] == 'X'
+        and matrix[i + 1][j - 1] == 'M'
+        and matrix[i + 2][j - 2] == 'A'
+        and matrix[i + 3][j - 3] == 'S'
+    ):
+        num += 1
+
+    # up and to the left
+    if (i - 3 >= 0 and j - 3 >= 0) and (
+        matrix[i][j] == 'X'
+        and matrix[i - 1][j - 1] == 'M'
+        and matrix[i - 2][j - 2] == 'A'
+        and matrix[i - 3][j - 3] == 'S'
+    ):
+        num += 1
+
+    # up and to the right
+    if (i - 3 >= 0 and j + 3 < len(matrix)) and (
+        matrix[i][j] == 'X'
+        and matrix[i - 1][j + 1] == 'M'
+        and matrix[i - 2][j + 2] == 'A'
+        and matrix[i - 3][j + 3] == 'S'
+    ):
+        num += 1
+
+    return num
 
 
 if __name__ == '__main__':
