@@ -55,16 +55,12 @@ def make_matrix(contents):
     return [row for row in contents.split('\n') if row]
 
 def num_xmas_for_x_coords(matrix, x_coords):
-    print()
-    print('x-coords: ', x_coords)
     num = 0
     for is_backwards in [True, False]:
         if is_xmas_horizontal(matrix, x_coords, is_backwards):
-            print('is_xmas_horizontal')
             num += 1
 
         if is_xmas_vertical(matrix, x_coords, is_backwards):
-            print('is_xmas_vertical')
             num += 1
 
     num += num_xmas_diagonal(matrix, x_coords, is_backwards)
