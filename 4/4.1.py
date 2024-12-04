@@ -148,7 +148,7 @@ def num_xmas_diagonal(matrix, x_coords, is_backwards):
 
 
 if __name__ == '__main__':
-    with open('4/day_4_test.txt', 'r') as f:
+    with open('4/day_4_input.txt', 'r') as f:
         contents = f.read()
 
     matrix = make_matrix(contents)
