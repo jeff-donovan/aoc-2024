@@ -41,7 +41,7 @@ Take a look at the little Elf's word search. How many times does XMAS appear?
 
 def num_xmas(matrix):
     all_x_coords = get_all_x_coords(matrix)
-    return sum([1 for x_coords in all_x_coords if is_xmas(matrix, x_coords)])
+    return sum([num_xmas_for_x_coords(matrix, x_coords) for x_coords in all_x_coords])
 
 def get_all_x_coords(matrix):
     all_x_coords = []
@@ -54,35 +54,70 @@ def get_all_x_coords(matrix):
 def make_matrix(contents):
     return [row for row in contents.split('\n') if row]
 
-def is_xmas(matrix, x_coords):
-    return (
-        is_xmas_horizontal(matrix, x_coords)
-        or is_xmas_vertical(matrix, x_coords)
-        or is_xmas_diagonal(matrix, x_coords)
-    )
+def num_xmas_for_x_coords(matrix, x_coords):
+    print()
+    print('x-coords: ', x_coords)
+    num = 0
+    for is_backwards in [True, False]:
+        if is_xmas_horizontal(matrix, x_coords, is_backwards):
+            print('is_xmas_horizontal')
+            num += 1
 
-def is_xmas_horizontal(matrix, x_coords):
+        if is_xmas_vertical(matrix, x_coords, is_backwards):
+            print('is_xmas_vertical')
+            num += 1
+
+        if is_xmas_diagonal(matrix, x_coords, is_backwards):
+            print('is_xmas_diagonal')
+            num += 1
+    return num
+
+def is_xmas_horizontal(matrix, x_coords, is_backwards):
     i, j = x_coords
 
-    return j + 3 < len(matrix[i]) and (
+    if is_backwards:
+        return (j - 3 > 0) and (
+            matrix[i][j] == 'X'
+            and matrix[i][j - 1] == 'M'
+            and matrix[i][j - 2] == 'A'
+            and matrix[i][j - 3] == 'S'
+        )
+
+    return (j + 3 < len(matrix[i])) and (
         matrix[i][j] == 'X'
         and matrix[i][j + 1] == 'M'
         and matrix[i][j + 2] == 'A'
         and matrix[i][j + 3] == 'S'
     )
 
-def is_xmas_vertical(matrix, x_coords):
+def is_xmas_vertical(matrix, x_coords, is_backwards):
     i, j = x_coords
 
-    return i + 3 < len(matrix) and (
+    if is_backwards:
+        return (i - 3 > 0) and (
+            matrix[i][j] == 'X'
+            and matrix[i - 1][j] == 'M'
+            and matrix[i - 2][j] == 'A'
+            and matrix[i - 3][j] == 'S'
+        )
+
+    return (i + 3 < len(matrix)) and (
         matrix[i][j] == 'X'
         and matrix[i + 1][j] == 'M'
         and matrix[i + 2][j] == 'A'
         and matrix[i + 3][j] == 'S'
     )
 
-def is_xmas_diagonal(matrix, x_coords):
+def is_xmas_diagonal(matrix, x_coords, is_backwards):
     i, j = x_coords
+
+    if is_backwards:
+        return (i - 3 > 0 and j - 3 > 0) and (
+            matrix[i][j] == 'X'
+            and matrix[i - 1][j - 1] == 'M'
+            and matrix[i - 2][j - 2] == 'A'
+            and matrix[i - 3][j - 3] == 'S'
+        )
 
     return (i + 3 < len(matrix) and j + 3 < len(matrix)) and (
         matrix[i][j] == 'X'
