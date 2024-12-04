@@ -64,10 +64,7 @@ def is_xmas(matrix, x_coords):
 def is_xmas_horizontal(matrix, x_coords):
     i, j = x_coords
 
-    if j + 3 >= len(matrix[i]):
-        return False
-
-    return (
+    return j + 3 < len(matrix[i]) and (
         matrix[i][j] == 'X'
         and matrix[i][j + 1] == 'M'
         and matrix[i][j + 2] == 'A'
@@ -77,10 +74,7 @@ def is_xmas_horizontal(matrix, x_coords):
 def is_xmas_vertical(matrix, x_coords):
     i, j = x_coords
 
-    if i + 3 >= len(matrix):
-        return False
-
-    return (
+    return i + 3 < len(matrix) and (
         matrix[i][j] == 'X'
         and matrix[i + 1][j] == 'M'
         and matrix[i + 2][j] == 'A'
@@ -90,10 +84,7 @@ def is_xmas_vertical(matrix, x_coords):
 def is_xmas_diagonal(matrix, x_coords):
     i, j = x_coords
 
-    if i + 3 >= len(matrix) or j + 3 >= len(matrix):
-        return False
-
-    return (
+    return (i + 3 < len(matrix) and j + 3 < len(matrix)) and (
         matrix[i][j] == 'X'
         and matrix[i + 1][j + 1] == 'M'
         and matrix[i + 2][j + 2] == 'A'
