@@ -103,7 +103,17 @@ def is_xmas_diagonal(matrix, x_coords):
     )
 
 def is_xmas_backwards(matrix, x_coords):
-    pass
+    i, j = x_coords
+
+    if j - 3 < 0:
+        return False
+
+    return (
+        matrix[i][j] == 'X'
+        and matrix[i][j - 1] == 'M'
+        and matrix[i][j - 2] == 'A'
+        and matrix[i][j - 3] == 'S'
+    )
 
 def is_xmas_overlapping(matrix, x_coords):
     pass
