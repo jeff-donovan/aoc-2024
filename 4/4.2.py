@@ -93,7 +93,7 @@ def is_sam_diagonal_up(matrix, a_coords):
 
 
 if __name__ == '__main__':
-    with open('4/day_4_test.txt', 'r') as f:
+    with open('4/day_4_input.txt', 'r') as f:
         contents = f.read()
 
     matrix = make_matrix(contents)
