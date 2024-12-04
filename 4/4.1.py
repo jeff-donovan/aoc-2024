@@ -59,8 +59,6 @@ def is_xmas(matrix, x_coords):
         is_xmas_horizontal(matrix, x_coords)
         or is_xmas_vertical(matrix, x_coords)
         or is_xmas_diagonal(matrix, x_coords)
-        or is_xmas_backwards(matrix, x_coords)
-        or is_xmas_overlapping(matrix, x_coords)
     )
 
 def is_xmas_horizontal(matrix, x_coords):
@@ -72,7 +70,7 @@ def is_xmas_horizontal(matrix, x_coords):
     return (
         matrix[i][j] == 'X'
         and matrix[i][j + 1] == 'M'
-        and matrix[i][j+2] == 'A'
+        and matrix[i][j + 2] == 'A'
         and matrix[i][j + 3] == 'S'
     )
 
@@ -101,22 +99,6 @@ def is_xmas_diagonal(matrix, x_coords):
         and matrix[i + 2][j + 2] == 'A'
         and matrix[i + 3][j + 3] == 'S'
     )
-
-def is_xmas_backwards(matrix, x_coords):
-    i, j = x_coords
-
-    if j - 3 < 0:
-        return False
-
-    return (
-        matrix[i][j] == 'X'
-        and matrix[i][j - 1] == 'M'
-        and matrix[i][j - 2] == 'A'
-        and matrix[i][j - 3] == 'S'
-    )
-
-def is_xmas_overlapping(matrix, x_coords):
-    pass
 
 
 if __name__ == '__main__':
