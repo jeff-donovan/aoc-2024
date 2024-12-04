@@ -90,7 +90,17 @@ def is_xmas_vertical(matrix, x_coords):
     )
 
 def is_xmas_diagonal(matrix, x_coords):
-    pass
+    i, j = x_coords
+
+    if i + 3 >= len(matrix) or j + 3 >= len(matrix):
+        return False
+
+    return (
+        matrix[i][j] == 'X'
+        and matrix[i + 1][j + 1] == 'M'
+        and matrix[i + 2][j + 2] == 'A'
+        and matrix[i + 3][j + 3] == 'S'
+    )
 
 def is_xmas_backwards(matrix, x_coords):
     pass
