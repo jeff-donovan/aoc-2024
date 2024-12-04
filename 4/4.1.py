@@ -77,7 +77,17 @@ def is_xmas_horizontal(matrix, x_coords):
     )
 
 def is_xmas_vertical(matrix, x_coords):
-    pass
+    i, j = x_coords
+
+    if i + 3 >= len(matrix):
+        return False
+
+    return (
+        matrix[i][j] == 'X'
+        and matrix[i + 1][j] == 'M'
+        and matrix[i + 2][j] == 'A'
+        and matrix[i + 3][j] == 'S'
+    )
 
 def is_xmas_diagonal(matrix, x_coords):
     pass
