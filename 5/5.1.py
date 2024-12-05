@@ -76,10 +76,24 @@ Determine which updates are already in the correct order. What do you get if you
 '''
 
 import math
+import pprint
 
 
 def make_rules_dictionary(contents):
-    return {}
+    rules = {}
+    for row in contents.split('\n'):
+        if '|' in row:
+            before, after = row.split('|')
+
+            if before not in rules:
+                rules[before] = {'is_before': set(), 'is_after': set()}
+            rules[before]['is_before'].add(after)
+
+            if after not in rules:
+                rules[after] = {'is_before': set(), 'is_after': set()}
+            rules[after]['is_after'].add(before)
+
+    return rules
 
 def make_updates_list(contents):
     return []
@@ -103,5 +117,6 @@ if __name__ == '__main__':
         contents = f.read()
 
     rules = make_rules_dictionary(contents)
+    pprint.pprint(rules)
     num = sum([get_middle_page_number(update) for update in make_updates_list(contents) if is_update_valid(rules, update)])
     print(num)
