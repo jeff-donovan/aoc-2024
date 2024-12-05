@@ -109,13 +109,22 @@ def make_updates_list(contents):
     return updates
 
 def is_update_valid(rules, update):
-    for page_number in update:
-        if not is_page_number_valid(rules, update, page_number):
+    for page_number_index, page_number in enumerate(update):
+        if not is_page_number_valid(rules, update, page_number_index, page_number):
             return False
     return True
 
-def is_page_number_valid(rules, update, page_number):
-    pass
+def is_page_number_valid(rules, update, page_number_index, page_number):
+    page_rules = rules[page_number]
+    for i in range(0, page_number_index):
+        compare_number = update[i]
+        if compare_number in page_rules['is_before']:
+            return False
+    for i in range(page_number_index + 1, len(update)):
+        compare_number = update[i]
+        if compare_number in page_rules['is_after']:
+            return False
+    return True
 
 def get_middle_page_number(update):
     middle_index = math.floor(len(update) / 2.0)
