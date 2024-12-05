@@ -132,7 +132,7 @@ def get_middle_page_number(update):
 
 
 if __name__ == '__main__':
-    with open('5/day_5_test.txt', 'r') as f:
+    with open('5/day_5_input.txt', 'r') as f:
         contents = f.read()
 
     rules = make_rules_dictionary(contents)
