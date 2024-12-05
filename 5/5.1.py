@@ -84,6 +84,8 @@ def make_rules_dictionary(contents):
     for row in contents.split('\n'):
         if '|' in row:
             before, after = row.split('|')
+            before = int(before)
+            after = int(after)
 
             if before not in rules:
                 rules[before] = {'is_before': set(), 'is_after': set()}
@@ -96,7 +98,15 @@ def make_rules_dictionary(contents):
     return rules
 
 def make_updates_list(contents):
-    return []
+    updates = []
+    for row in contents.split('\n'):
+        if ',' in row:
+            update_as_strings = row.split(',')
+            update = [int(page_number) for page_number in update_as_strings]
+            print(update)
+            updates.append(update)
+
+    return updates
 
 def is_update_valid(rules, update):
     for page_number in update:
