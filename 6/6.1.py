@@ -158,7 +158,7 @@ def change_direction(old_direction_i, old_direction_j):
 
 
 if __name__ == '__main__':
-    with open('6/day_6_test.txt', 'r') as f:
+    with open('6/day_6_input.txt', 'r') as f:
         contents = f.read()
 
     matrix = make_matrix(contents)
