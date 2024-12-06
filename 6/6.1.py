@@ -154,7 +154,6 @@ def change_direction(old_direction_i, old_direction_j):
 
     if old_direction_j == -1:  # left
         return (-1, 0)  # go up
-        
 
 
 if __name__ == '__main__':
