@@ -29,6 +29,7 @@ def make_operator_combos(len_numbers):
         if i == 0:
             combos.append(['add',])
             combos.append(['multiply',])
+            combos.append(['concat',])
             continue
 
         if i == len_numbers - 1:
@@ -38,6 +39,7 @@ def make_operator_combos(len_numbers):
         for combo in combos:
             new_combos.append(combo + ['add',])
             new_combos.append(combo + ['multiply',])
+            new_combos.append(combo + ['concat',])
         combos = new_combos
 
     return combos
@@ -51,6 +53,8 @@ def calculate_combo_total(numbers, operator_combo):
             total += number
         if operator == 'multiply':
             total = total * number
+        if operator == 'concat':
+            total = int(str(total) + str(number))
     return total
 
 def can_numbers_produce_test_value(test_value, numbers):
@@ -69,7 +73,7 @@ def get_total_calibration(mapping):
 
 
 if __name__ == '__main__':
-    with open('7/day_7_input.txt', 'r') as f:
+    with open('7/day_7_test.txt', 'r') as f:
         contents = f.read()
 
     mapping = make_mapping(contents)
