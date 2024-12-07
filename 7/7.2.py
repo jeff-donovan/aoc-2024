@@ -73,7 +73,7 @@ def get_total_calibration(mapping):
 
 
 if __name__ == '__main__':
-    with open('7/day_7_test.txt', 'r') as f:
+    with open('7/day_7_input.txt', 'r') as f:
         contents = f.read()
 
     mapping = make_mapping(contents)
