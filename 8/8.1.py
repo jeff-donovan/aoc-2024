@@ -1,94 +1,113 @@
 '''
---- Day 7: Bridge Repair ---
-The Historians take you to a familiar rope bridge over a river in the middle of a jungle. The Chief isn't on this side of the bridge, though; maybe he's on the other side?
+--- Day 8: Resonant Collinearity ---
+You find yourselves on the roof of a top-secret Easter Bunny installation.
 
-When you go to cross the bridge, you notice a group of engineers trying to repair it. (Apparently, it breaks pretty frequently.) You won't be able to cross until it's fixed.
+While The Historians do their thing, you take a look at the familiar huge antenna. Much to your surprise, it seems to have been reconfigured to emit a signal that makes people 0.1% more likely to buy Easter Bunny brand Imitation Mediocre Chocolate as a Christmas gift! Unthinkable!
 
-You ask how long it'll take; the engineers tell you that it only needs final calibrations, but some young elephants were playing nearby and stole all the operators from their calibration equations! They could finish the calibrations if only someone could determine which test values could possibly be produced by placing any combination of operators into their calibration equations (your puzzle input).
+Scanning across the city, you find that there are actually many such antennas. Each antenna is tuned to a specific frequency indicated by a single lowercase letter, uppercase letter, or digit. You create a map (your puzzle input) of these antennas. For example:
 
-For example:
+............
+........0...
+.....0......
+.......0....
+....0.......
+......A.....
+............
+............
+........A...
+.........A..
+............
+............
+The signal only applies its nefarious effect at specific antinodes based on the resonant frequencies of the antennas. In particular, an antinode occurs at any point that is perfectly in line with two antennas of the same frequency - but only when one of the antennas is twice as far away as the other. This means that for any pair of antennas with the same frequency, there are two antinodes, one on either side of them.
 
-190: 10 19
-3267: 81 40 27
-83: 17 5
-156: 15 6
-7290: 6 8 6 15
-161011: 16 10 13
-192: 17 8 14
-21037: 9 7 18 13
-292: 11 6 16 20
-Each line represents a single equation. The test value appears before the colon on each line; it is your job to determine whether the remaining numbers can be combined with operators to produce the test value.
+So, for these two antennas with frequency a, they create the two antinodes marked with #:
 
-Operators are always evaluated left-to-right, not according to precedence rules. Furthermore, numbers in the equations cannot be rearranged. Glancing into the jungle, you can see elephants holding two different types of operators: add (+) and multiply (*).
+..........
+...#......
+..........
+....a.....
+..........
+.....a....
+..........
+......#...
+..........
+..........
+Adding a third antenna with the same frequency creates several more antinodes. It would ideally add four antinodes, but two are off the right side of the map, so instead it adds only two:
 
-Only three of the above equations can be made true by inserting operators:
+..........
+...#......
+#.........
+....a.....
+........a.
+.....a....
+..#.......
+......#...
+..........
+..........
+Antennas with different frequencies don't create antinodes; A and a count as different frequencies. However, antinodes can occur at locations that contain antennas. In this diagram, the lone antenna with frequency capital A creates no antinodes but has a lowercase-a-frequency antinode at its location:
 
-190: 10 19 has only one position that accepts an operator: between 10 and 19. Choosing + would give 29, but choosing * would give the test value (10 * 19 = 190).
-3267: 81 40 27 has two positions for operators. Of the four possible configurations of the operators, two cause the right side to match the test value: 81 + 40 * 27 and 81 * 40 + 27 both equal 3267 (when evaluated left-to-right)!
-292: 11 6 16 20 can be solved in exactly one way: 11 + 6 * 16 + 20.
-The engineers just need the total calibration result, which is the sum of the test values from just the equations that could possibly be true. In the above example, the sum of the test values for the three equations listed above is 3749.
+..........
+...#......
+#.........
+....a.....
+........a.
+.....a....
+..#.......
+......A...
+..........
+..........
+The first example has antennas with two different frequencies, so the antinodes they create look like this, plus an antinode overlapping the topmost A-frequency antenna:
 
-Determine which equations could possibly be true. What is their total calibration result?
+......#....#
+...#....0...
+....#0....#.
+..#....0....
+....0....#..
+.#....A.....
+...#........
+#......#....
+........A...
+.........A..
+..........#.
+..........#.
+Because the topmost A-frequency antenna overlaps with a 0-frequency antinode, there are 14 total unique locations that contain an antinode within the bounds of the map.
+
+Calculate the impact of the signal. How many unique locations within the bounds of the map contain an antinode?
 '''
 
 
-def make_mapping(contents):
-    mapping = []
-    for line in contents.split('\n'):
-        if line:
-            test_value, numbers = line.split(': ')
-            mapping.append((int(test_value), [int(n) for n in numbers.split(' ')]))
-    return mapping
+def make_map(contents):
+    return [line for line in contents.split('\n') if line]
 
-def make_operator_combos(len_numbers):
-    combos = []
-    for i in range(len_numbers):
-        if i == 0:
-            combos.append(['add',])
-            combos.append(['multiply',])
-            continue
+def num_unique_antinode_locations(map):
+    antinode_locations = set([])
+    frequencies = get_frequencies(map)
+    for frequency in frequencies:
+        antenna_pairs = get_antenna_pairs(map, frequency)
+        for antenna_pair in antenna_pairs:
+            antinodes = calculate_antinode_coords_for_antenna_pair(antenna_pair)
+            for antinode in antinodes:
+                if is_on_map(map, antinode):
+                    antinode_locations.add(antinode)
+    return len(antinode_locations)
 
-        if i == len_numbers - 1:
-            break
+def get_frequencies(map):
+    pass
 
-        new_combos = []
-        for combo in combos:
-            new_combos.append(combo + ['add',])
-            new_combos.append(combo + ['multiply',])
-        combos = new_combos
+def get_antenna_pairs(map, frequency):
+    pass
 
-    return combos
+def calculate_antinode_coords_for_antenna_pair(antenna_pair):
+    pass
 
-def calculate_combo_total(numbers, operator_combo):
-    total = numbers[0]
-    for i in range(len(operator_combo)):
-        operator = operator_combo[i]
-        number = numbers[i + 1]
-        if operator == 'add':
-            total += number
-        if operator == 'multiply':
-            total = total * number
-    return total
-
-def can_numbers_produce_test_value(test_value, numbers):
-    combos = make_operator_combos(len(numbers))
-    for combo in combos:
-        if test_value == calculate_combo_total(numbers, combo):
-            return True
-    return False
-
-def get_total_calibration(mapping):
-    num = 0
-    for test_value, numbers in mapping:
-        if can_numbers_produce_test_value(test_value, numbers):
-            num += test_value
-    return num
+def is_on_map(map, antinode):
+    pass
 
 
 if __name__ == '__main__':
-    with open('8/day_8_input.txt', 'r') as f:
+    with open('8/day_8_test.txt', 'r') as f:
         contents = f.read()
 
-    mapping = make_mapping(contents)
-    num = get_total_calibration(mapping)
+    map = make_map(contents)
+    num = num_unique_antinode_locations(map)
     print(num)
