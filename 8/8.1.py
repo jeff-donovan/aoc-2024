@@ -131,7 +131,7 @@ def is_on_map(map, antinode):
 
 
 if __name__ == '__main__':
-    with open('8/day_8_test.txt', 'r') as f:
+    with open('8/day_8_input.txt', 'r') as f:
         contents = f.read()
 
     map = make_map(contents)
