@@ -78,7 +78,8 @@ def switch_end_block_with_first_free_space(blocks):
     for i in reversed(range(len(blocks))):
         char = blocks[i]
         if char != '.':
-            blocks = blocks[:first_free_space_index] + [char] + blocks[first_free_space_index + 1:i] + ['.'] + blocks[i + 1:]
+            blocks[first_free_space_index] = char
+            blocks[i] = '.'
             return blocks
 
 def calculate_checksum(blocks):
