@@ -49,14 +49,16 @@ Compact the amphipod's hard drive using the process he requested. What is the re
 
 
 def convert_disk_map_to_blocks(contents):
-    blocks = ''
+    blocks = []
     for i, char in enumerate(contents):
         if char != '\n':
             if i % 2 == 0:  # file
-                file_id = (i // 2) % 10
-                blocks += str(file_id) * int(char)
+                file_id = i // 2
+                for _ in range(int(char)):
+                    blocks.append(str(file_id))
             else:  # free space
-                blocks += '.' * int(char)
+                for _ in range(int(char)):
+                    blocks.append('.')
     return blocks
 
 def compact_entire_filesystem(blocks):
@@ -65,18 +67,18 @@ def compact_entire_filesystem(blocks):
     return blocks
 
 def is_filesystem_compacted(blocks):
-    first_free_space_index = blocks.find('.')
+    first_free_space_index = blocks.index('.')
     for char in blocks[first_free_space_index:]:
         if char != '.':
             return False
     return True
 
 def switch_end_block_with_first_free_space(blocks):
-    first_free_space_index = blocks.find('.')
+    first_free_space_index = blocks.index('.')
     for i in reversed(range(len(blocks))):
         char = blocks[i]
         if char != '.':
-            blocks = blocks[:first_free_space_index] + char + blocks[first_free_space_index + 1:i] + '.' + blocks[i + 1:]
+            blocks = blocks[:first_free_space_index] + [char] + blocks[first_free_space_index + 1:i] + ['.'] + blocks[i + 1:]
             return blocks
 
 def calculate_checksum(blocks):
@@ -87,10 +89,11 @@ def calculate_checksum(blocks):
     return sum
 
 if __name__ == '__main__':
-    with open('9/day_9_input.txt', 'r') as f:
+    with open('9/day_9_test.txt', 'r') as f:
         contents = f.read()
 
     blocks = convert_disk_map_to_blocks(contents)
+    print(blocks)
     blocks = compact_entire_filesystem(blocks)
     num = calculate_checksum(blocks)
     print(num)
