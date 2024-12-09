@@ -26,15 +26,16 @@ def convert_disk_map_to_blocks(contents):
             if i % 2 == 0:  # file
                 file_id = i // 2
                 for _ in range(int(char)):
-                    blocks.append(str(file_id))
+                    blocks.append(file_id)
             else:  # free space
                 for _ in range(int(char)):
                     blocks.append('.')
     return blocks
 
-def compact_entire_filesystem(blocks):
+def compact_entire_filesystem(contents):
+    blocks = convert_disk_map_to_blocks(contents)
     for file_id in reversed(range(get_largest_file_id(blocks) + 1)):
-        blocks = attempt_to_move_file(blocks, file_id)
+        blocks = attempt_to_move_file(contents, blocks, file_id)
     return blocks
 
 def get_largest_file_id(blocks):
@@ -42,9 +43,9 @@ def get_largest_file_id(blocks):
         if blocks[i] != '.':
             return int(blocks[i])
 
-def attempt_to_move_file(blocks, file_id):
-    file_size = get_file_size(blocks, file_id)
-    file_index = blocks.index(str(file_id))
+def attempt_to_move_file(contents, blocks, file_id):
+    file_size = get_file_size(contents, file_id)
+    file_index = blocks.index(file_id)
     free_space_index = get_free_space_index_for_file_size(blocks, file_size)
 
     # cant find free space big enough
@@ -57,15 +58,8 @@ def attempt_to_move_file(blocks, file_id):
 
     return switch_file_with_free_space(blocks, file_id, free_space_index)
 
-def get_file_size(blocks, file_id):
-    size = 0
-    for block in reversed(blocks):
-        if block == str(file_id):
-            size += 1
-        else:
-            if size > 0:
-                return size
-    return size
+def get_file_size(contents, file_id):
+    return int(contents[file_id * 2])
 
 def get_free_space_index_for_file_size(blocks, file_size):
     start = 0
@@ -91,10 +85,10 @@ def switch_file_with_free_space(blocks, file_id, free_space_index):
     current_free_space_index = free_space_index
     for i in reversed(range(len(blocks))):
         char = blocks[i]
-        if is_switching and char != str(file_id):
+        if is_switching and char != file_id:
             return blocks
 
-        if char == str(file_id):
+        if char == file_id:
             is_switching = True
             blocks[current_free_space_index] = char
             blocks[i] = '.'
@@ -110,10 +104,9 @@ def calculate_checksum(blocks):
     return sum
 
 if __name__ == '__main__':
-    with open('9/day_9_input.txt', 'r') as f:
+    with open('9/day_9_test.txt', 'r') as f:
         contents = f.read()
 
-    blocks = convert_disk_map_to_blocks(contents)
-    blocks = compact_entire_filesystem(blocks)
+    blocks = compact_entire_filesystem(contents)
     num = calculate_checksum(blocks)
     print(num)
