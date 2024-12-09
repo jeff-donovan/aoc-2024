@@ -56,7 +56,7 @@ def attempt_to_move_file(contents, blocks, file_id):
     if free_space_index > file_index:
         return blocks
 
-    return switch_file_with_free_space(blocks, file_id, free_space_index)
+    return switch_file_with_free_space(blocks, free_space_index, file_id, file_index, file_size)
 
 def get_file_size(contents, file_id):
     return int(contents[file_id * 2])
@@ -70,20 +70,10 @@ def get_free_space_index_for_file_size(blocks, file_size):
             blocks_as_string += 'N'
     return blocks_as_string.find('.' * file_size)
 
-def switch_file_with_free_space(blocks, file_id, free_space_index):
-    is_switching = False
-    current_free_space_index = free_space_index
-    for i in reversed(range(len(blocks))):
-        char = blocks[i]
-        if is_switching and char != file_id:
-            return blocks
-
-        if char == file_id:
-            is_switching = True
-            blocks[current_free_space_index] = char
-            blocks[i] = '.'
-            current_free_space_index += 1
-
+def switch_file_with_free_space(blocks, free_space_index, file_id, file_index, file_size):
+    for i in range(file_size):
+        blocks[free_space_index + i] = file_id
+        blocks[file_index + i] = '.'
     return blocks
 
 def calculate_checksum(blocks):
@@ -94,7 +84,7 @@ def calculate_checksum(blocks):
     return sum
 
 if __name__ == '__main__':
-    with open('9/day_9_test.txt', 'r') as f:
+    with open('9/day_9_input.txt', 'r') as f:
         contents = f.read()
 
     blocks = compact_entire_filesystem(contents)
