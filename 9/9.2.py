@@ -110,7 +110,7 @@ def calculate_checksum(blocks):
     return sum
 
 if __name__ == '__main__':
-    with open('9/day_9_test.txt', 'r') as f:
+    with open('9/day_9_input.txt', 'r') as f:
         contents = f.read()
 
     blocks = convert_disk_map_to_blocks(contents)
