@@ -59,11 +59,38 @@ def convert_disk_map_to_blocks(contents):
                 blocks += '.' * int(char)
     return blocks
 
+def compact_entire_filesystem(blocks):
+    while not is_filesystem_compacted(blocks):
+        blocks = switch_end_block_with_first_free_space(blocks)
+    return blocks
+
+def is_filesystem_compacted(blocks):
+    first_free_space_index = blocks.find('.')
+    for char in blocks[first_free_space_index:]:
+        if char != '.':
+            return False
+    return True
+
+def switch_end_block_with_first_free_space(blocks):
+    first_free_space_index = blocks.find('.')
+    for i in reversed(range(len(blocks))):
+        char = blocks[i]
+        if char != '.':
+            blocks = blocks[:first_free_space_index] + char + blocks[first_free_space_index + 1:i] + '.' + blocks[i + 1:]
+            return blocks
+
+def calculate_checksum(blocks):
+    sum = 0
+    for i, char in enumerate(blocks):
+        if char != '.':
+            sum += i * int(char)
+    return sum
+
 if __name__ == '__main__':
-    with open('9/day_9_test_12345.txt', 'r') as f:
+    with open('9/day_9_test.txt', 'r') as f:
         contents = f.read()
 
     blocks = convert_disk_map_to_blocks(contents)
-    print('blocks: ', blocks)
-    # num = num_unique_antinode_locations(map)
-    # print(num)
+    blocks = compact_entire_filesystem(blocks)
+    num = calculate_checksum(blocks)
+    print(num)
