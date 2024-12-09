@@ -100,7 +100,7 @@ def calculate_checksum(blocks):
     sum = 0
     for i, char in enumerate(blocks):
         if char != '.':
-            sum += i * int(char)
+            sum += i * char
     return sum
 
 if __name__ == '__main__':
