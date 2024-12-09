@@ -53,7 +53,7 @@ def convert_disk_map_to_blocks(contents):
     for i, char in enumerate(contents):
         if char != '\n':
             if i % 2 == 0:  # file
-                file_id = i // 2
+                file_id = (i // 2) % 10
                 blocks += str(file_id) * int(char)
             else:  # free space
                 blocks += '.' * int(char)
@@ -87,7 +87,7 @@ def calculate_checksum(blocks):
     return sum
 
 if __name__ == '__main__':
-    with open('9/day_9_test.txt', 'r') as f:
+    with open('9/day_9_input.txt', 'r') as f:
         contents = f.read()
 
     blocks = convert_disk_map_to_blocks(contents)
