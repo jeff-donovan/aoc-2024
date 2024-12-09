@@ -62,23 +62,13 @@ def get_file_size(contents, file_id):
     return int(contents[file_id * 2])
 
 def get_free_space_index_for_file_size(blocks, file_size):
-    start = 0
-    found_free_space = False
-    for i, block in enumerate(blocks):
-        if block != '.':
-            if found_free_space and (i - start >= file_size):
-                return start
-            start = 0
-            found_free_space = False
+    blocks_as_string = ''
+    for block in blocks:
+        if block == '.':
+            blocks_as_string += '.'
         else:
-            if not found_free_space:
-                start = i
-                found_free_space = True
-
-    if found_free_space and (i - start >= file_size):
-        return start
-
-    return -1
+            blocks_as_string += 'N'
+    return blocks_as_string.find('.' * file_size)
 
 def switch_file_with_free_space(blocks, file_id, free_space_index):
     is_switching = False
