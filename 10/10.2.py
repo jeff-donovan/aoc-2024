@@ -105,7 +105,7 @@ def is_in_map(map, i, j):
     return (0 <= i < len(map)) and (0 <= j < len(map[i]))
 
 if __name__ == '__main__':
-    with open('10/day_10_test.txt', 'r') as f:
+    with open('10/day_10_input.txt', 'r') as f:
         contents = f.read()
 
     map = make_map(contents)
