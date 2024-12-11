@@ -5,9 +5,25 @@ The Historians sure are taking a long time. To be fair, the infinite corridors a
 How many stones would you have after blinking a total of 75 times?
 '''
 
+from datetime import datetime
+
 
 def make_stones(contents):
     return [int(string_stone) for string_stone in contents.split(' ') if string_stone]
+
+def num_stones_for_blinks(stones, blinks):
+    current = datetime.now()
+
+    total_stones = 0
+    for stone in stones:
+        initial = [stone]
+        for i in range(blinks):
+            initial = blink(initial)
+            print('blink ', i, ': ', datetime.now() - current)
+            current = datetime.now()
+
+        total_stones += len(initial)
+    return total_stones
 
 def blink(stones):
     new_stones = []
@@ -31,9 +47,6 @@ if __name__ == '__main__':
         contents = f.read()
 
     stones = make_stones(contents)
-    for i in range(75):
-        print('blink ', i)
-        stones = blink(stones)
 
-    num = len(stones)
+    num = num_stones_for_blinks(stones, 25)
     print(num)
