@@ -28,19 +28,21 @@ def num_stones_for_blinks(stones, blinks):
 def blink(stones):
     new_stones = []
     for stone in stones:
-        string_stone = str(stone)
-        if stone == 0:
-            new_stones.append(1)
-
-        elif len(string_stone) % 2 == 0:
-            left_stone = int(string_stone[:len(string_stone) // 2])
-            right_stone = int(string_stone[len(string_stone) // 2:])
-            new_stones.extend([left_stone, right_stone])
-
-        else:
-            new_stones.append(stone * 2024)
+        new_stones.extend(blink_for_stone(stone))
 
     return new_stones
+
+def blink_for_stone(stone):
+    string_stone = str(stone)
+    if stone == 0:
+        return [1]
+
+    if len(string_stone) % 2 == 0:
+        left_stone = int(string_stone[:len(string_stone) // 2])
+        right_stone = int(string_stone[len(string_stone) // 2:])
+        return [left_stone, right_stone]
+
+    return [stone * 2024]
 
 if __name__ == '__main__':
     with open('11/day_11_input.txt', 'r') as f:
@@ -48,5 +50,5 @@ if __name__ == '__main__':
 
     stones = make_stones(contents)
 
-    num = num_stones_for_blinks(stones, 75)
+    num = num_stones_for_blinks(stones, 25)
     print(num)
