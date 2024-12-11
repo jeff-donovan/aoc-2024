@@ -48,5 +48,5 @@ if __name__ == '__main__':
 
     stones = make_stones(contents)
 
-    num = num_stones_for_blinks(stones, 25)
+    num = num_stones_for_blinks(stones, 75)
     print(num)
