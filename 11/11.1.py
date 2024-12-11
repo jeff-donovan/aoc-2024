@@ -75,7 +75,7 @@ def blink(stones):
     return new_stones
 
 if __name__ == '__main__':
-    with open('11/day_11_test_2.txt', 'r') as f:
+    with open('11/day_11_input.txt', 'r') as f:
         contents = f.read()
 
     stones = make_stones(contents)
