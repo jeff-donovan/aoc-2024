@@ -18,7 +18,6 @@ def num_stones_for_blinks(stones, blinks):
 
 def recursive_blink_for_stone(stone, level):
     if level == 0:
-        print(stone)
         return 1
 
     if stone == 0:
@@ -33,10 +32,10 @@ def recursive_blink_for_stone(stone, level):
     return recursive_blink_for_stone(stone * 2024, level - 1)
 
 if __name__ == '__main__':
-    with open('11/day_11_test.txt', 'r') as f:
+    with open('11/day_11_test_2.txt', 'r') as f:
         contents = f.read()
 
     stones = make_stones(contents)
 
-    num = num_stones_for_blinks(stones, 1)
+    num = num_stones_for_blinks(stones, 25)
     print(num)
