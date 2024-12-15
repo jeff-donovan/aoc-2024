@@ -3,7 +3,13 @@ def make_map_and_moves(contents):
     moves = []
     return map, moves
 
-def attempt_move(map, move):
+def attempt_move(map, direction):
+    i, j = get_robot_coords(map)
+    next_i, next_j = get_next_coords(i, j, direction)
+    if can_move(map, next_i, next_j, direction):
+        move()
+
+def move():
     pass
 
 def can_move(map, next_i, next_j, direction):
@@ -28,6 +34,12 @@ def get_next_coords(i, j, direction):
         return (i, j - 1)
     if direction == '>':
         return (i, j + 1)
+
+def get_robot_coords(map):
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if is_robot(map, i, j):
+                return (i, j)
 
 def is_robot(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == '@'
@@ -60,8 +72,8 @@ if __name__ == '__main__':
         contents = f.read()
 
     map, moves = make_map_and_moves(contents)
-    for move in moves:
-        attempt_move(map, move)
+    for direction in moves:
+        attempt_move(map, direction)
 
     num = sum([get_box_gps_coordinate(box) for box in get_all_boxes(map)])
     print(num)
