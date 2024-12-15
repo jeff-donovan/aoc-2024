@@ -1,5 +1,7 @@
 def make_map_and_moves(contents):
     map_contents, move_contents = contents.split('\n\n')
+    print('this is map contents: ', map_contents)
+    print('this is move contents: ', move_contents)
     map = []
     for line in map_contents.split('\n'):
         if line:
@@ -8,11 +10,15 @@ def make_map_and_moves(contents):
                 map_row.append(char)
             map.append(map_row)
 
+    print('this is map: ', map)
+
     moves = []
     for line in move_contents.split('\n'):
         if line:
             for char in line:
                 moves.append(char)
+
+    print('this is moves: ', moves)
 
     return map, moves
 
@@ -81,7 +87,7 @@ def get_box_gps_coordinate(box):
     return 100 * i + j
 
 if __name__ == '__main__':
-    with open('15/day_15_test.txt', 'r') as f:
+    with open('15/day_15_test_small.txt', 'r') as f:
         contents = f.read()
 
     map, moves = make_map_and_moves(contents)
