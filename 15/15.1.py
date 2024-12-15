@@ -1,29 +1,41 @@
 def make_map_and_moves(contents):
+    map_contents, move_contents = contents.split('\n\n')
     map = []
+    for line in map_contents.split('\n'):
+        if line:
+            map_row = []
+            for char in line:
+                map_row.append(char)
+            map.append(map_row)
+
     moves = []
+    for line in move_contents.split('\n'):
+        if line:
+            for char in line:
+                moves.append(char)
+
     return map, moves
 
 def attempt_move(map, direction):
     i, j = get_robot_coords(map)
     next_i, next_j = get_next_coords(i, j, direction)
-    if can_move(map, next_i, next_j, direction):
-        move()
+    return move(map, i, j, next_i, next_j, direction)
 
-def move():
-    pass
-
-def can_move(map, next_i, next_j, direction):
+def move(map, current_i, current_j, next_i, next_j, direction):
     if not is_in_map(map, next_i, next_j):
-        return False
+        return
 
     if is_wall(map, next_i, next_j):
-        return False
+        return
 
     if is_empty_space(map, next_i, next_j):
-        return True
+        current_object = map[current_i][current_j]
+        map[next_i][next_j] = current_object
+        return
 
-    next_i, next_j = get_next_coords(i, j, direction)
-    return can_move(map, next_i, next_j, direction)
+    current_i, current_j = next_i, next_j
+    next_i, next_j = get_next_coords(current_i, current_j, direction)
+    return move(map, current_i, current_j, next_i, next_j, direction)
 
 def get_next_coords(i, j, direction):
     if direction == '^':
@@ -64,7 +76,8 @@ def get_all_boxes(map):
                 boxes.append((i, j))
     return boxes
 
-def get_box_gps_coordinate(i, j):
+def get_box_gps_coordinate(box):
+    i, j = box
     return 100 * i + j
 
 if __name__ == '__main__':
