@@ -34,9 +34,11 @@ def make_map_and_moves(contents):
 def attempt_move(map, direction):
     i, j = get_robot_coords(map)
     next_i, next_j = get_next_coords(i, j, direction)
-    return move(map, i, j, next_i, next_j, direction)
+    if is_direction_vertical(direction):
+        return move_vertical(map, i, j, next_i, next_j, direction)
+    return move_horizontal(map, i, j, next_i, next_j, direction)
 
-def move(map, current_i, current_j, next_i, next_j, direction):
+def move_horizontal(map, current_i, current_j, next_i, next_j, direction):
     if not is_in_map(map, next_i, next_j):
         return
 
@@ -50,13 +52,22 @@ def move(map, current_i, current_j, next_i, next_j, direction):
         return
 
     next_next_i, next_next_j = get_next_coords(next_i, next_j, direction)
-    move(map, next_i, next_j, next_next_i, next_next_j, direction)
+    move_horizontal(map, next_i, next_j, next_next_i, next_next_j, direction)
 
     if is_empty_space(map, next_i, next_j):
         current_object = map[current_i][current_j]
         map[next_i][next_j] = current_object
         map[current_i][current_j] = '.'
         return
+
+def move_vertical(map, current_i, current_j, next_i, next_j, direction):
+    pass
+
+def is_direction_horizontal(direction):
+    return direction in ('<', '>')
+
+def is_direction_vertical(direction):
+    return direction in ('^', 'v')
 
 def get_next_coords(i, j, direction):
     if direction == '^':
@@ -77,8 +88,11 @@ def get_robot_coords(map):
 def is_robot(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == '@'
 
-def is_box(map, i, j):
-    return is_in_map(map, i, j) and map[i][j] == 'O'
+def is_left_box(map, i, j):
+    return is_in_map(map, i, j) and map[i][j] == '['
+
+def is_right_box(map, i, j):
+    return is_in_map(map, i, j) and map[i][j] == ']'
 
 def is_wall(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == '#'
@@ -89,11 +103,11 @@ def is_empty_space(map, i, j):
 def is_in_map(map, i, j):
     return (0 <= i < len(map)) and (0 <= j < len(map[i]))
 
-def get_all_boxes(map):
+def get_all_left_boxes(map):
     boxes = []
     for i in range(len(map)):
         for j in range(len(map[i])):
-            if is_box(map, i, j):
+            if is_left_box(map, i, j):
                 boxes.append((i, j))
     return boxes
 
@@ -119,5 +133,5 @@ if __name__ == '__main__':
     #     attempt_move(map, direction)
     #     # print_map(map)
 
-    # num = sum([get_box_gps_coordinate(box) for box in get_all_boxes(map)])
+    # num = sum([get_box_gps_coordinate(box) for box in get_all_left_boxes(map)])
     # print(num)
