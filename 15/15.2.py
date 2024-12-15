@@ -63,11 +63,34 @@ def move_horizontal(map, current_i, current_j, next_i, next_j, direction):
 def move_vertical(map, current_i, current_j, next_i, next_j, direction):
     pass
 
+def can_move_vertical(map, next_i, next_j, direction):
+    if not is_in_map(map, next_i, next_j):
+        return False
+
+    if is_wall(map, next_i, next_j):
+        return False
+
+    if is_empty_space(map, next_i, next_j):
+        return True
+
+    # otherwise it's a box!
+    next_box_coords = [get_next_coords(i, j, direction) for i, j in get_box_coords(map, next_i, next_j)]
+    return (
+        can_move_vertical(map, next_box_coords[0][0], next_box_coords[0][1], direction)
+        and
+        can_move_vertical(map, next_box_coords[1][0], next_box_coords[1][1], direction)
+    )
+
 def is_direction_horizontal(direction):
     return direction in ('<', '>')
 
 def is_direction_vertical(direction):
     return direction in ('^', 'v')
+
+def get_box_coords(map, i, j):
+    if is_left_box(map, i, j):
+        return [(i, j), (i, j + 1)]
+    return [(i, j), (i, j - 1)]
 
 def get_next_coords(i, j, direction):
     if direction == '^':
