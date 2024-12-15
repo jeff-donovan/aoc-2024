@@ -1,7 +1,5 @@
 def make_map_and_moves(contents):
     map_contents, move_contents = contents.split('\n\n')
-    print('this is map contents: ', map_contents)
-    print('this is move contents: ', move_contents)
     map = []
     for line in map_contents.split('\n'):
         if line:
@@ -10,15 +8,11 @@ def make_map_and_moves(contents):
                 map_row.append(char)
             map.append(map_row)
 
-    print('this is map: ', map)
-
     moves = []
     for line in move_contents.split('\n'):
         if line:
             for char in line:
                 moves.append(char)
-
-    print('this is moves: ', moves)
 
     return map, moves
 
@@ -37,6 +31,7 @@ def move(map, current_i, current_j, next_i, next_j, direction):
     if is_empty_space(map, next_i, next_j):
         current_object = map[current_i][current_j]
         map[next_i][next_j] = current_object
+        map[current_i][current_j] = '.'
         return
 
     current_i, current_j = next_i, next_j
@@ -86,13 +81,23 @@ def get_box_gps_coordinate(box):
     i, j = box
     return 100 * i + j
 
+def print_map(map):
+    for row in map:
+        print(''.join(row))
+
 if __name__ == '__main__':
     with open('15/day_15_test_small.txt', 'r') as f:
         contents = f.read()
 
     map, moves = make_map_and_moves(contents)
+    print('INITIAL MAP:')
+    print_map(map)
     for direction in moves:
+        print(direction)
+        if input('Do You Want To Continue? ') == 'n':
+            break
         attempt_move(map, direction)
+        print_map(map)
 
     num = sum([get_box_gps_coordinate(box) for box in get_all_boxes(map)])
     print(num)
