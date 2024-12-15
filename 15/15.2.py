@@ -162,18 +162,19 @@ def print_map(map):
         print(''.join(row))
 
 if __name__ == '__main__':
-    with open('15/day_15_test_small_part_2.txt', 'r') as f:
+    with open('15/day_15_test_large.txt', 'r') as f:
         contents = f.read()
 
     map, moves = make_map_and_moves(contents)
-    print('INITIAL MAP:')
-    print_map(map)
+    # print('INITIAL MAP:')
+    # print_map(map)
     for direction in moves:
-        print(direction)
-        if input('Do You Want To Continue? ') == 'n':
-            break
+        # print(direction)
+        # if input('Do You Want To Continue? ') == 'n':
+        #     break
         attempt_move(map, direction)
-        print_map(map)
+        # print_map(map)
+    print_map(map)
 
     num = sum([get_box_gps_coordinate(box) for box in get_all_left_boxes(map)])
     print(num)
