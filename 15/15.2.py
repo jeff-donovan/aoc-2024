@@ -168,12 +168,12 @@ if __name__ == '__main__':
     map, moves = make_map_and_moves(contents)
     print('INITIAL MAP:')
     print_map(map)
-    # for direction in moves:
-    #     # print(direction)
-    #     # if input('Do You Want To Continue? ') == 'n':
-    #     #     break
-    #     attempt_move(map, direction)
-    #     # print_map(map)
+    for direction in moves:
+        print(direction)
+        if input('Do You Want To Continue? ') == 'n':
+            break
+        attempt_move(map, direction)
+        print_map(map)
 
-    # num = sum([get_box_gps_coordinate(box) for box in get_all_left_boxes(map)])
-    # print(num)
+    num = sum([get_box_gps_coordinate(box) for box in get_all_left_boxes(map)])
+    print(num)
