@@ -6,6 +6,32 @@ def make_map_and_moves(contents):
 def attempt_move(map, move):
     pass
 
+def can_move(map, next_i, next_j, direction):
+    if not is_in_map(map, next_i, next_j):
+        return False
+
+    if is_wall(map, next_i, next_j):
+        return False
+
+    if is_empty_space(map, next_i, next_j):
+        return True
+
+    next_i, next_j = get_next_coords(i, j, direction)
+    return can_move(map, next_i, next_j, direction)
+
+def get_next_coords(i, j, direction):
+    if direction == '^':
+        return (i - 1, j)
+    if direction == 'v':
+        return (i + 1, j)
+    if direction == '<':
+        return (i, j - 1)
+    if direction == '>':
+        return (i, j + 1)
+
+def is_robot(map, i, j):
+    return is_in_map(map, i, j) and map[i][j] == '@'
+
 def is_box(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == 'O'
 
