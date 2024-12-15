@@ -34,9 +34,14 @@ def move(map, current_i, current_j, next_i, next_j, direction):
         map[current_i][current_j] = '.'
         return
 
-    current_i, current_j = next_i, next_j
-    next_i, next_j = get_next_coords(current_i, current_j, direction)
-    return move(map, current_i, current_j, next_i, next_j, direction)
+    next_next_i, next_next_j = get_next_coords(next_i, next_j, direction)
+    move(map, next_i, next_j, next_next_i, next_next_j, direction)
+
+    if is_empty_space(map, next_i, next_j):
+        current_object = map[current_i][current_j]
+        map[next_i][next_j] = current_object
+        map[current_i][current_j] = '.'
+        return
 
 def get_next_coords(i, j, direction):
     if direction == '^':
