@@ -61,7 +61,26 @@ def move_horizontal(map, current_i, current_j, next_i, next_j, direction):
         return
 
 def move_vertical(map, current_i, current_j, next_i, next_j, direction):
-    pass
+    if not can_move_vertical(map, next_i, next_j, direction):
+        return
+
+    if is_empty_space(map, next_i, next_j):
+        current_object = map[current_i][current_j]
+        map[next_i][next_j] = current_object
+        map[current_i][current_j] = '.'
+        return
+
+    # otherwise it's a box!
+    next_box_coords = get_box_coords(map, next_i, next_j)
+    next_next_box_coords = [get_next_coords(i, j, direction) for i, j in next_box_coords]
+    move_vertical(map, next_box_coords[0][0], next_box_coords[0][1], next_next_box_coords[0][0], next_next_box_coords[0][1], direction)
+    move_vertical(map, next_box_coords[1][0], next_box_coords[1][1], next_next_box_coords[1][0], next_next_box_coords[1][1], direction)
+
+    if is_empty_space(map, next_i, next_j):
+        current_object = map[current_i][current_j]
+        map[next_i][next_j] = current_object
+        map[current_i][current_j] = '.'
+        return
 
 def can_move_vertical(map, next_i, next_j, direction):
     if not is_in_map(map, next_i, next_j):
