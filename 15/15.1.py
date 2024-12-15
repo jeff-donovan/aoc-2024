@@ -91,7 +91,7 @@ def print_map(map):
         print(''.join(row))
 
 if __name__ == '__main__':
-    with open('15/day_15_test_small.txt', 'r') as f:
+    with open('15/day_15_test_large.txt', 'r') as f:
         contents = f.read()
 
     map, moves = make_map_and_moves(contents)
