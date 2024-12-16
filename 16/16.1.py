@@ -34,19 +34,27 @@ def find_end(map):
                 return (i, j)
 
 def travel(map_object, i, j, direction, score=0):
+    is_new_route = False
     if (i, j, direction) not in map_object['scores']:
+        is_new_route = True
         map_object['scores'][(i, j, direction)] = score
+
+    # base case - we have reached the end
+    if (i, j) == map_object['end']:
+        if score < map_object['scores'][(i, j, direction)]:
+            map_object['scores'][(i, j, direction)] = score
+        return
 
     # base case - we have previously found a better route
     if score > map_object['scores'][(i, j, direction)]:
         return
 
-    # we have not yet found a better route
-    map_object['scores'][(i, j, direction)] = score
-
-    # base case - we have reached the end
-    if (i, j) == map_object['end']:
+    # base case - we have already calculated this route
+    if not is_new_route and score == map_object['scores'][(i, j, direction)]:
         return
+
+    # now we know this is definitely a new route
+    map_object['scores'][(i, j, direction)] = score
 
     if can_move_forward(map_object['map'], i, j, direction):
         next_i, next_j = get_next_coords(i, j, direction)
@@ -104,7 +112,7 @@ def print_map(map):
         print(''.join(row))
 
 if __name__ == '__main__':
-    with open('16/day_16_input.txt', 'r') as f:
+    with open('16/day_16_test_2.txt', 'r') as f:
         contents = f.read()
 
     map_object = make_map_object(contents)
