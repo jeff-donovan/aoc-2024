@@ -33,35 +33,43 @@ def find_end(map):
             if map[i][j] == 'E':
                 return (i, j)
 
-def travel(map_object, i, j, direction, score=0):
-    is_new_route = False
-    if (i, j, direction) not in map_object['scores']:
-        is_new_route = True
+def travel(map_object):
+    i, j = map_object['start']
+    direction = 'right'
+    score = 0
+
+    point_directions_to_travel = [(i, j, direction, score)]
+    while point_directions_to_travel:
+        i, j, direction, score = point_directions_to_travel.pop()
+
+        is_new_route = False
+        if (i, j, direction) not in map_object['scores']:
+            is_new_route = True
+            map_object['scores'][(i, j, direction)] = score
+
+        # base case - we have reached the end
+        if (i, j) == map_object['end']:
+            if score < map_object['scores'][(i, j, direction)]:
+                map_object['scores'][(i, j, direction)] = score
+            continue
+
+        # base case - we have previously found a better route
+        if score > map_object['scores'][(i, j, direction)]:
+            continue
+
+        # base case - we have already calculated this route
+        if not is_new_route and score == map_object['scores'][(i, j, direction)]:
+            continue
+
+        # now we know this is definitely a new route
         map_object['scores'][(i, j, direction)] = score
 
-    # base case - we have reached the end
-    if (i, j) == map_object['end']:
-        if score < map_object['scores'][(i, j, direction)]:
-            map_object['scores'][(i, j, direction)] = score
-        return
+        if can_move_forward(map_object['map'], i, j, direction):
+            next_i, next_j = get_next_coords(i, j, direction)
+            point_directions_to_travel.append((next_i, next_j, direction, score + 1))
 
-    # base case - we have previously found a better route
-    if score > map_object['scores'][(i, j, direction)]:
-        return
-
-    # base case - we have already calculated this route
-    if not is_new_route and score == map_object['scores'][(i, j, direction)]:
-        return
-
-    # now we know this is definitely a new route
-    map_object['scores'][(i, j, direction)] = score
-
-    if can_move_forward(map_object['map'], i, j, direction):
-        next_i, next_j = get_next_coords(i, j, direction)
-        travel(map_object, next_i, next_j, direction, score + 1)
-
-    for next_direction in [turn_clockwise(direction), turn_counterclockwise(direction)]:
-        travel(map_object, i, j, next_direction, score + 1000)
+        for next_direction in [turn_clockwise(direction), turn_counterclockwise(direction)]:
+            point_directions_to_travel.append((i, j, next_direction, score + 1000))
 
 def can_move_forward(map, i, j, direction):
     next_i, next_j = get_next_coords(i, j, direction)
@@ -112,14 +120,13 @@ def print_map(map):
         print(''.join(row))
 
 if __name__ == '__main__':
-    with open('16/day_16_input.txt', 'r') as f:
+    with open('16/day_16_test_1.txt', 'r') as f:
         contents = f.read()
 
     map_object = make_map_object(contents)
     print_map(map_object['map'])
 
-    i, j = map_object['start']
-    travel(map_object, i, j, 'right', 0)
+    travel(map_object)
 
     end_i, end_j = map_object['end']
     scores = []
