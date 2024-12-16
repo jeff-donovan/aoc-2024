@@ -120,7 +120,7 @@ def print_map(map):
         print(''.join(row))
 
 if __name__ == '__main__':
-    with open('16/day_16_test_1.txt', 'r') as f:
+    with open('16/day_16_input.txt', 'r') as f:
         contents = f.read()
 
     map_object = make_map_object(contents)
