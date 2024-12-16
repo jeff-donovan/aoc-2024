@@ -143,6 +143,9 @@ def print_map_scores(map_object):
 
     print(tabulate.tabulate(scores))
 
+def get_best_routes(map_object):
+    return []
+
 if __name__ == '__main__':
     with open('16/day_16_test_1.txt', 'r') as f:
         contents = f.read()
@@ -154,8 +157,15 @@ if __name__ == '__main__':
     print_map_scores(map_object)
 
     end_i, end_j = map_object['end']
-    scores = []
+    end_scores = []
     for end_direction in ['up', 'down', 'right', 'left']:
         if (end_i, end_j, end_direction) in map_object['scores']:
-            scores.append(map_object['scores'][(end_i, end_j, end_direction)])
-    print(min(scores))
+            end_scores.append(map_object['scores'][(end_i, end_j, end_direction)])
+    print(min(end_scores))
+
+    best_routes = get_best_routes(map_object)
+    best_route_tiles = set([])
+    for route in best_routes:
+        for i, j, _ in route:
+            best_route_tiles.add((i, j))
+    print(len(best_route_tiles))
