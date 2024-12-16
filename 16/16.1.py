@@ -1,15 +1,59 @@
-def make_map(contents):
-    map = []
+def make_map_object(contents):
+    map_object = {
+        'map': [],
+        'start': (),
+        'end': (),
+        'scores': {}
+    }
+
     for line in contents.split('\n'):
         if line:
             map_row = []
             for char in line:
                 map_row.append(char)
-            map.append(map_row)
-    return map
+            map_object['map'].append(map_row)
+
+    map_object['start'] = find_start(map_object['map'])
+    map_object['end'] = find_end(map_object['map'])
+
+    return map_object
 
 # visited should be *set* of all (i, j, direction) combos
 # and then have a mapping where we store the "score" of a point/direction. if we get there with a lower score then we update the score. eventually we must get to the final point and have the lowest score.
+
+def find_start(map):
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if map[i][j] == 'S':
+                return (i, j)
+
+def find_end(map):
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if map[i][j] == 'E':
+                return (i, j)
+
+def travel(map_object, i, j, direction, score=0):
+    if (i, j, direction) not in map_object['scores']:
+        map_object['scores'][(i, j, direction)] = score
+
+    # base case - we have previously found a better route
+    if score > map_object['scores'][(i, j, direction)]:
+        return
+
+    # we have not yet found a better route
+    map_object['scores'][(i, j, direction)] = score
+
+    # base case - we have reached the end
+    if (i, j) == map_object['end']:
+        return
+
+    if can_move_forward(map_object['map'], i, j, direction):
+        next_i, next_j = get_next_coords(i, j, direction)
+        travel(map_object, next_i, next_j, direction, score + 1)
+
+    for next_direction in [turn_clockwise(direction), turn_counterclockwise(direction)]:
+        travel(map_object, i, j, next_direction, score + 1000)
 
 def can_move_forward(map, i, j, direction):
     next_i, next_j = get_next_coords(i, j, direction)
@@ -49,7 +93,7 @@ def turn_counterclockwise(current_direction):
 def is_wall(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == '#'
 
-def is_empty_space(map, i, j):
+def is_empty_tile(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == '.'
 
 def is_in_map(map, i, j):
@@ -63,5 +107,15 @@ if __name__ == '__main__':
     with open('16/day_16_test_1.txt', 'r') as f:
         contents = f.read()
 
-    map = make_map(contents)
-    print_map(map)
+    map_object = make_map_object(contents)
+    print_map(map_object['map'])
+
+    i, j = map_object['start']
+    travel(map_object, i, j, 'right', 0)
+
+    end_i, end_j = map_object['end']
+    scores = []
+    for end_direction in ['up', 'down', 'right', 'left']:
+        if (end_i, end_j, end_direction) in map_object['scores']:
+            scores.append(map_object['scores'][(end_i, end_j, end_direction)])
+    print(min(scores))
