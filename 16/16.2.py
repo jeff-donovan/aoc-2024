@@ -151,8 +151,65 @@ def get_min_end_score(map_object):
             end_scores.append(map_object['scores'][(end_i, end_j, end_direction)])
     return min(end_scores)
 
-def get_best_routes(map_object):
-    return []
+def get_best_routes_visited(map_object):
+    visited = []
+
+    end_i, end_j = map_object['end']
+    end_score = get_min_end_score(map_object)
+
+    for end_direction in ['up', 'down', 'right', 'left']:
+        if (end_i, end_j, end_direction) in map_object['scores']:
+            if end_score == map_object['scores'][(end_i, end_j, end_direction)]:
+                print('found a backwards route!')
+                visited.extend(backwards_travel_from(map_object, end_i, end_j, end_direction, end_score))
+
+    return visited
+
+def backwards_travel_from(map_object, i, j, direction, score):
+    visited = []
+    point_directions_to_travel = [(i, j, direction, score)]
+    while point_directions_to_travel:
+        i, j, direction, score = point_directions_to_travel.pop()
+        visited.append((i, j))
+
+        # base case - we have reached the start
+        if (i, j) == map_object['start']:
+            continue
+
+        previous_moves = []
+        if can_move_backwards(map_object['map'], i, j, direction):
+            prev_i, prev_j = get_prev_coords(i, j, direction)
+            if (prev_i, prev_j, direction) in map_object['scores']:
+                expected_prev_score = score - 1
+                prev_score = map_object['scores'][(prev_i, prev_j, direction)]
+                if expected_prev_score == prev_score:
+                    previous_moves.append((prev_i, prev_j, direction, prev_score))
+
+        for prev_direction in [turn_clockwise(direction), turn_counterclockwise(direction)]:
+            if (i, j, prev_direction) in map_object['scores']:
+                expected_prev_score = score - 1000
+                prev_score = map_object['scores'][(i, j, prev_direction)]
+                if expected_prev_score == prev_score:
+                    previous_moves.append((i, j, prev_direction, prev_score))
+
+        for move in previous_moves:
+            point_directions_to_travel.append(move)
+
+    return visited
+
+def can_move_backwards(map, i, j, direction):
+    prev_i, prev_j = get_prev_coords(i, j, direction)
+    return not is_wall(map, prev_i, prev_j)
+
+def get_prev_coords(i, j, direction):
+    if direction == 'up':
+        return (i + 1, j)
+    if direction == 'down':
+        return (i - 1, j)
+    if direction == 'left':
+        return (i, j + 1)
+    if direction == 'right':
+        return (i, j - 1)
 
 if __name__ == '__main__':
     with open('16/day_16_test_1.txt', 'r') as f:
@@ -166,9 +223,5 @@ if __name__ == '__main__':
     end_score = get_min_end_score(map_object)
     print(end_score)
 
-    best_routes = get_best_routes(map_object)
-    best_route_tiles = set([])
-    for route in best_routes:
-        for i, j, _ in route:
-            best_route_tiles.add((i, j))
-    print(len(best_route_tiles))
+    visited_tiles = get_best_routes_visited(map_object)
+    print(len(set(visited_tiles)))
