@@ -143,6 +143,14 @@ def print_map_scores(map_object):
 
     print(tabulate.tabulate(scores))
 
+def get_min_end_score(map_object):
+    end_i, end_j = map_object['end']
+    end_scores = []
+    for end_direction in ['up', 'down', 'right', 'left']:
+        if (end_i, end_j, end_direction) in map_object['scores']:
+            end_scores.append(map_object['scores'][(end_i, end_j, end_direction)])
+    return min(end_scores)
+
 def get_best_routes(map_object):
     return []
 
@@ -155,13 +163,8 @@ if __name__ == '__main__':
 
     travel(map_object)
     print_map_scores(map_object)
-
-    end_i, end_j = map_object['end']
-    end_scores = []
-    for end_direction in ['up', 'down', 'right', 'left']:
-        if (end_i, end_j, end_direction) in map_object['scores']:
-            end_scores.append(map_object['scores'][(end_i, end_j, end_direction)])
-    print(min(end_scores))
+    end_score = get_min_end_score(map_object)
+    print(end_score)
 
     best_routes = get_best_routes(map_object)
     best_route_tiles = set([])
