@@ -212,14 +212,14 @@ def get_prev_coords(i, j, direction):
         return (i, j - 1)
 
 if __name__ == '__main__':
-    with open('16/day_16_test_1.txt', 'r') as f:
+    with open('16/day_16_input.txt', 'r') as f:
         contents = f.read()
 
     map_object = make_map_object(contents)
     print_map(map_object['map'])
 
     travel(map_object)
-    print_map_scores(map_object)
+    # print_map_scores(map_object)
     end_score = get_min_end_score(map_object)
     print(end_score)
 
