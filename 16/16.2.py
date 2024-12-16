@@ -1,3 +1,6 @@
+import tabulate
+
+
 def make_map_object(contents):
     map_object = {
         'map': [],
@@ -119,14 +122,36 @@ def print_map(map):
     for row in map:
         print(''.join(row))
 
+def print_map_scores(map_object):
+    scores = []
+    for i in range(len(map_object['map'])):
+        score_row = []
+        for j in range(len(map_object['map'][i])):
+            if map_object['map'][i][j] == '#':
+                score_row.append('#')
+                continue
+
+            coord_scores = []
+            for direction in ['up', 'down', 'right', 'left']:
+                if (i, j, direction) in map_object['scores']:
+                    coord_scores.append(map_object['scores'][(i, j, direction)])
+            if len(coord_scores) > 0:
+                score_row.append(min(coord_scores))
+            else:
+                score_row.append('.')
+        scores.append(score_row)
+
+    print(tabulate.tabulate(scores))
+
 if __name__ == '__main__':
-    with open('16/day_16_input.txt', 'r') as f:
+    with open('16/day_16_test_1.txt', 'r') as f:
         contents = f.read()
 
     map_object = make_map_object(contents)
     print_map(map_object['map'])
 
     travel(map_object)
+    print_map_scores(map_object)
 
     end_i, end_j = map_object['end']
     scores = []
