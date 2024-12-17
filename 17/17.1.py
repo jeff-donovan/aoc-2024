@@ -1,19 +1,37 @@
-def make_registers_and_program_inputs(contents):
-    return {'A': 0, 'B': 0, 'C': 0}, []
+REGISTER = 'Register'
+
+def make_registers_and_inputs(contents):
+    register_contents, input_contents = contents.split('\n\n')
+    registers = {}
+    for line in register_contents.split('\n'):
+        if line:
+            register_data = line.split(': ')
+            register_code = register_data[0][len(REGISTER) + 1:]
+            register_value = int(register_data[1])
+            registers[register_code] = register_value
+
+    inputs = []
+    for line in input_contents.split('\n'):
+        if line:
+            inputs_data = line.split(': ')
+            for input in inputs_data[1].split(','):
+                if input:
+                    inputs.append(int(input))
+
+    return registers, inputs
 
 def get_combo_operand_value(combo_operand):
-    match combo_operand:
-        case 0 | 1 | 2 | 3:
-            return combo_operand
-        case 4:
-            # return self.A?
-            return get_A()
-        case 5:
-            return get_B()
-        case 6:
-            return get_C()
-        case 7 | _:
-            raise Exception()
+    mapping = {
+        0: 0,
+        1: 1,
+        2: 2,
+        3: 3,
+        4: get_A(),
+        5: get_B(),
+        6: get_C(),
+    }
+
+    return mapping[combo_operand]
 
 def get_A():
     pass
@@ -39,25 +57,18 @@ def set_instruction_pointer(val):
 def set_should_pointer_increase_by_2(flag):
     pass
 
-# 8 instructions/opcodes
-def get_instruction(opcode, literal_operand, combo_operand):
-    match opcode:
-        case 0:
-            return adv(combo_operand)
-        case 1:
-            return bxl(literal_operand)
-        case 2:
-            return bst(combo_operand)
-        case 3:
-            return jnz(literal_operand)
-        case 4:
-            return bxc(combo_operand)
-        case 5:
-            return out(combo_operand)
-        case 6:
-            return bdv(combo_operand)
-        case 7:
-            return cdv(combo_operand)
+def run_instruction(opcode, literal_operand, combo_operand):
+    mapping = {
+        0: adv,
+        1: bxl,
+        2: bst,
+        3: jnz,
+        4: bxc,
+        5: out,
+        6: bdv,
+        7: cdv,
+    }
+    return mapping[opcode]()  # TODO: once class method, this works
 
 def adv(combo_operand):
     new_A = get_A() // (2 ^ (get_combo_operand_value(combo_operand)))
@@ -96,17 +107,9 @@ def out(combo_operand):
     return val
 
 if __name__ == '__main__':
-    with open('16/day_16_input.txt', 'r') as f:
+    with open('17/day_17_test.txt', 'r') as f:
         contents = f.read()
 
-    map_object = make_map_object(contents)
-    print_map(map_object['map'])
-
-    travel(map_object)
-
-    end_i, end_j = map_object['end']
-    scores = []
-    for end_direction in ['up', 'down', 'right', 'left']:
-        if (end_i, end_j, end_direction) in map_object['scores']:
-            scores.append(map_object['scores'][(end_i, end_j, end_direction)])
-    print(min(scores))
+    registers, inputs = make_registers_and_inputs(contents)
+    print('registers: ', registers)
+    print('inputs: ', inputs)
