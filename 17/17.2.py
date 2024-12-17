@@ -1,3 +1,6 @@
+import argparse
+
+
 REGISTER = 'Register'
 
 class Day17(object):
@@ -142,17 +145,29 @@ def parse_contents(contents):
     return registers, inputs
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--num', action="store", dest="num", type=int)
+    results = parser.parse_args()
+
+    num = results.num
+    if num is None:
+        num = 0
+    register_a = 2976431 + num % 10
+
     with open('17/day_17_input.txt', 'r') as f:
         contents = f.read()
 
     registers, inputs = parse_contents(contents)
 
-    register_a = 0
     while True:
         print('register a: ', register_a)
         program = Day17(register_a, inputs)
         program.run()
         if program.is_copy():
-            print('SOLUTION IS: ', register_a)
-            break
-        register_a += 1
+            for i in range(100):
+                print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                print('SOLUTION IS: ', register_a)
+                print('------------------------------------------------')
+                print()
+                break
+        register_a += 10  # running 10 terminal windows concurrently
