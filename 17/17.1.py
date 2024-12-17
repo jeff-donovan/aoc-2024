@@ -76,7 +76,7 @@ def bxl(literal_operand):
     set_B(new_B)
 
 def bst(combo_operand):
-    new_B = combo_operand % 8
+    new_B = get_combo_operand_value(combo_operand) % 8
     set_B(new_B)
 
 def jnz(literal_operand):
@@ -91,7 +91,7 @@ def bxc(operand):
     set_B(new_B)
 
 def out(combo_operand):
-    val = combo_operand % 8
+    val = get_combo_operand_value(combo_operand) % 8
     print(val)  # unclear if we should print or return
     return val
 
