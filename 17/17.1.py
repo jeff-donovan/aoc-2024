@@ -52,9 +52,10 @@ class Day17(object):
         return mapping[self._operand]
 
     def run(self):
-        while self._instruction_pointer < len(self.inputs):
+        while self._instruction_pointer < len(self.inputs) - 1:
             self._has_jumped = False
             opcode = self.inputs[self._instruction_pointer]
+            self._operand = self.inputs[self._instruction_pointer + 1]
             self.run_instruction(opcode)
             if not self._has_jumped:
                 self._instruction_pointer += 2
@@ -125,7 +126,7 @@ class Day17(object):
 
     def out(self):
         val = self.combo_operand % 8
-        self._outputs.append(val)
+        self._outputs.append(str(val))
 
     def bitwise_xor(self, a, b):
         return a ^ b
