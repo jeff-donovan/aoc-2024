@@ -98,11 +98,11 @@ class Day17(object):
         self._register_a = new_a
 
     def bdv(self):
-        new_b = self.register_b // (2 ** self.combo_operand)
+        new_b = self.register_a // (2 ** self.combo_operand)
         self._register_b = new_b
 
     def cdv(self):
-        new_c = self.register_c // (2 ** self.combo_operand)
+        new_c = self.register_a // (2 ** self.combo_operand)
         self._register_c = new_c
 
     def bxl(self):
@@ -132,7 +132,7 @@ class Day17(object):
         return a ^ b
 
 if __name__ == '__main__':
-    with open('17/day_17_test.txt', 'r') as f:
+    with open('17/day_17_input.txt', 'r') as f:
         contents = f.read()
 
     program = Day17(contents)
