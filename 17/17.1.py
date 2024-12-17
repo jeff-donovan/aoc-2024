@@ -105,7 +105,7 @@ class Day17(object):
         self._register_c = new_c
 
     def bxl(self):
-        new_b = None  # calculate the bitwise XOR of register B and literal_operand
+        new_b = self.bitwise_xor(self.register_b, self.literal_operand)
         self._register_b = new_b
 
     def bst(self):
@@ -120,12 +120,15 @@ class Day17(object):
         self._has_jumped = True
 
     def bxc(self):
-        new_b = None  # calculate the bitwise XOR of register B and register C
+        new_b = self.bitwise_xor(self.register_b, self.register_c)
         self._register_b = new_b
 
     def out(self):
         val = self.combo_operand % 8
         self._outputs.append(val)
+
+    def bitwise_xor(self, a, b):
+        return a ^ b
 
 if __name__ == '__main__':
     with open('17/day_17_test.txt', 'r') as f:
