@@ -5,14 +5,22 @@ class Day17(object):
         registers, inputs = self.parse_contents(contents)
 
         self._inputs = inputs
+        self._outputs = []
 
         self._register_a = registers['A']
         self._register_b = registers['B']
         self._register_c = registers['C']
 
+        self._instruction_pointer = 0
+        self._has_jumped = False
+
     @property
     def inputs(self):
         return self._inputs
+
+    @property
+    def outputs(self):
+        return ','.join(self._outputs)
 
     @property
     def register_a(self):
@@ -43,6 +51,14 @@ class Day17(object):
         }
         return mapping[self._operand]
 
+    def run(self):
+        while self._instruction_pointer < len(self.inputs):
+            self._has_jumped = False
+            opcode = self.inputs[self._instruction_pointer]
+            self.run_instruction(opcode)
+            if not self._has_jumped:
+                self._instruction_pointer += 2
+
     def parse_contents(self, contents):
         register_contents, input_contents = contents.split('\n\n')
         registers = {}
@@ -63,13 +79,7 @@ class Day17(object):
 
         return registers, inputs
 
-    def set_instruction_pointer(val):
-        pass
-
-    def set_should_pointer_increase_by_2(flag):
-        pass
-
-    def run_instruction(self):
+    def run_instruction(self, opcode):
         mapping = {
             0: self.adv,
             1: self.bxl,
@@ -80,7 +90,7 @@ class Day17(object):
             6: self.bdv,
             7: self.cdv,
         }
-        return mapping[self._opcode]()
+        return mapping[opcode]()
 
     def adv(self):
         new_a = self.register_a // (2 ** self.combo_operand)
@@ -105,9 +115,9 @@ class Day17(object):
     def jnz(self):
         if self.register_a == 0:
             return
-        self.set_instruction_pointer(self.literal_operand)
-        # should we check the response of set_instruction_pointer() to see if the instruction "jumps"?
-        self.set_should_pointer_increase_by_2(False)
+
+        self._instruction_pointer = self.literal_operand
+        self._has_jumped = True
 
     def bxc(self):
         new_b = None  # calculate the bitwise XOR of register B and register C
@@ -115,8 +125,7 @@ class Day17(object):
 
     def out(self):
         val = self.combo_operand % 8
-        print(val)  # unclear if we should print or return
-        return val
+        self._outputs.append(val)
 
 if __name__ == '__main__':
     with open('17/day_17_test.txt', 'r') as f:
@@ -125,3 +134,6 @@ if __name__ == '__main__':
     program = Day17(contents)
     print('registers: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
     print('inputs: ', program.inputs)
+
+    program.run()
+    print(program.outputs)
