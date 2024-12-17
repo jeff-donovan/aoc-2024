@@ -147,12 +147,12 @@ if __name__ == '__main__':
 
     registers, inputs = parse_contents(contents)
 
-    program = Day17(117440, inputs)
-    print('registers before: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
-    print('inputs: ', program.inputs)
-
-    program.run()
-    program.print_outputs()
-    print('registers after: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
-
-    print('is copy? ', program.is_copy())
+    register_a = 0
+    while True:
+        print('register a: ', register_a)
+        program = Day17(register_a, inputs)
+        program.run()
+        if program.is_copy():
+            print('SOLUTION IS: ', register_a)
+            break
+        register_a += 1
