@@ -132,7 +132,7 @@ class Day17(object):
         return a ^ b
 
 if __name__ == '__main__':
-    with open('17/day_17_input.txt', 'r') as f:
+    with open('17/day_17_test2.txt', 'r') as f:
         contents = f.read()
 
     program = Day17(contents)
