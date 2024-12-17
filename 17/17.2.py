@@ -147,7 +147,7 @@ if __name__ == '__main__':
 
     registers, inputs = parse_contents(contents)
 
-    register_a = 2976431  # what i left off at last time
+    register_a = 168046722  # what i left off at last time
     while True:
         print('register a: ', register_a)
         program = Day17(register_a, inputs)
