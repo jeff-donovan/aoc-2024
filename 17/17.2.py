@@ -23,6 +23,15 @@ class Day17(object):
     def print_outputs(self):
         print(','.join([str(x) for x in self.outputs]))
 
+    def is_copy(self):
+        if len(self._inputs) != len(self._outputs):
+            return False
+
+        for i in range(len(self._inputs)):
+            if self._inputs[i] != self._outputs[i]:
+                return False
+        return True
+
     @property
     def register_a(self):
         return self._register_a
@@ -145,3 +154,5 @@ if __name__ == '__main__':
     program.run()
     program.print_outputs()
     print('registers after: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
+
+    print('is copy? ', program.is_copy())
