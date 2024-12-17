@@ -1,115 +1,127 @@
 REGISTER = 'Register'
 
-def make_registers_and_inputs(contents):
-    register_contents, input_contents = contents.split('\n\n')
-    registers = {}
-    for line in register_contents.split('\n'):
-        if line:
-            register_data = line.split(': ')
-            register_code = register_data[0][len(REGISTER) + 1:]
-            register_value = int(register_data[1])
-            registers[register_code] = register_value
+class Day17(object):
+    def __init__(self, contents):
+        registers, inputs = self.parse_contents(contents)
 
-    inputs = []
-    for line in input_contents.split('\n'):
-        if line:
-            inputs_data = line.split(': ')
-            for input in inputs_data[1].split(','):
-                if input:
-                    inputs.append(int(input))
+        self._inputs = inputs
 
-    return registers, inputs
+        self._register_a = registers['A']
+        self._register_b = registers['B']
+        self._register_c = registers['C']
 
-def get_combo_operand_value(combo_operand):
-    mapping = {
-        0: 0,
-        1: 1,
-        2: 2,
-        3: 3,
-        4: get_A(),
-        5: get_B(),
-        6: get_C(),
-    }
+    @property
+    def inputs(self):
+        return self._inputs
 
-    return mapping[combo_operand]
+    @property
+    def register_a(self):
+        return self._register_a
 
-def get_A():
-    pass
+    @property
+    def register_b(self):
+        return self._register_b
 
-def set_A(val):
-    pass
+    @property
+    def register_c(self):
+        return self._register_c
 
-def get_B():
-    pass
+    @property
+    def literal_operand(self):
+        return self._operand
 
-def set_B(val):
-    pass
+    @property
+    def combo_operand(self):
+        mapping = {
+            0: 0,
+            1: 1,
+            2: 2,
+            3: 3,
+            4: self.register_a,
+            5: self.register_b,
+            6: self.register_c,
+        }
+        return mapping[self._operand]
 
-def get_C():
-    pass
+    def parse_contents(self, contents):
+        register_contents, input_contents = contents.split('\n\n')
+        registers = {}
+        for line in register_contents.split('\n'):
+            if line:
+                register_data = line.split(': ')
+                register_code = register_data[0][len(REGISTER) + 1:]
+                register_value = int(register_data[1])
+                registers[register_code] = register_value
 
-def set_C(val):
-    pass
+        inputs = []
+        for line in input_contents.split('\n'):
+            if line:
+                inputs_data = line.split(': ')
+                for input in inputs_data[1].split(','):
+                    if input:
+                        inputs.append(int(input))
 
-def set_instruction_pointer(val):
-    pass
+        return registers, inputs
 
-def set_should_pointer_increase_by_2(flag):
-    pass
+    def set_instruction_pointer(val):
+        pass
 
-def run_instruction(opcode, literal_operand, combo_operand):
-    mapping = {
-        0: adv,
-        1: bxl,
-        2: bst,
-        3: jnz,
-        4: bxc,
-        5: out,
-        6: bdv,
-        7: cdv,
-    }
-    return mapping[opcode]()  # TODO: once class method, this works
+    def set_should_pointer_increase_by_2(flag):
+        pass
 
-def adv(combo_operand):
-    new_A = get_A() // (2 ^ (get_combo_operand_value(combo_operand)))
-    set_A(new_A)
+    def run_instruction(self):
+        mapping = {
+            0: self.adv,
+            1: self.bxl,
+            2: self.bst,
+            3: self.jnz,
+            4: self.bxc,
+            5: self.out,
+            6: self.bdv,
+            7: self.cdv,
+        }
+        return mapping[self._opcode]()
 
-def bdv(combo_operand):
-    new_B = get_B() // (2 ^ (get_combo_operand_value(combo_operand)))
-    set_B(new_B)
+    def adv(self):
+        new_a = self.register_a // (2 ** self.combo_operand)
+        self._register_a = new_a
 
-def cdv(combo_operand):
-    new_C = get_C() // (2 ^ (get_combo_operand_value(combo_operand)))
-    set_C(new_C)
+    def bdv(self):
+        new_b = self.register_b // (2 ** self.combo_operand)
+        self._register_b = new_b
 
-def bxl(literal_operand):
-    new_B = None  # calculate the bitwise XOR of register B and literal_operand
-    set_B(new_B)
+    def cdv(self):
+        new_c = self.register_c // (2 ** self.combo_operand)
+        self._register_c = new_c
 
-def bst(combo_operand):
-    new_B = get_combo_operand_value(combo_operand) % 8
-    set_B(new_B)
+    def bxl(self):
+        new_b = None  # calculate the bitwise XOR of register B and literal_operand
+        self._register_b = new_b
 
-def jnz(literal_operand):
-    if get_A() == 0:
-        return
-    set_instruction_pointer(literal_operand)
-    # should we check the response of set_instruction_pointer() to see if the instruction "jumps"?
-    set_should_pointer_increase_by_2(False)
+    def bst(self):
+        new_b = self.combo_operand % 8
+        self._register_b = new_b
 
-def bxc(operand):
-    new_B = None  # calculate the bitwise XOR of register B and register C
-    set_B(new_B)
+    def jnz(self):
+        if self.register_a == 0:
+            return
+        self.set_instruction_pointer(self.literal_operand)
+        # should we check the response of set_instruction_pointer() to see if the instruction "jumps"?
+        self.set_should_pointer_increase_by_2(False)
 
-def out(combo_operand):
-    val = get_combo_operand_value(combo_operand) % 8
-    print(val)  # unclear if we should print or return
-    return val
+    def bxc(self):
+        new_b = None  # calculate the bitwise XOR of register B and register C
+        self._register_b = new_b
+
+    def out(self):
+        val = self.combo_operand % 8
+        print(val)  # unclear if we should print or return
+        return val
 
 if __name__ == '__main__':
     with open('17/day_17_test.txt', 'r') as f:
         contents = f.read()
 
-    registers, inputs = make_registers_and_inputs(contents)
-    print('registers: ', registers)
-    print('inputs: ', inputs)
+    program = Day17(contents)
+    print('registers: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
+    print('inputs: ', program.inputs)
