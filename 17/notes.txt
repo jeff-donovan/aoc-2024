@@ -1,0 +1,29 @@
+0,3,5,4,3,0
+
+working backwards...
+
+1. need to end somehow, which means...
+    _instruction_pointer >= len(inputs) - 1
+    _instruction_pointer >= 6 - 1
+    _instruction_pointer >= 5
+
+2. output index 5 was 0, which means `out` was run:
+    0 = combo_operand % 8
+    - so the value of combo_operand must have been 0
+        - either self._operand was 0 or...
+        - self._operand was 4 AND self.register_a was a multiple of 8
+        - self._operand was 5 AND self.register_b was a multiple of 8
+            - MIGHT NOT HAVE BEEN POSSIBLE
+        - self._operand was 6 AND self.register_c was a multiple of 8
+            - DEFINITELY NOT POSSIBLE
+
+    - if self._operand was 0, self._instruction_pointer must have been 4 (aka value of 3 in the inputs list)
+    - if self._operand was 4, self._instruction_pointer must have been 2 (aka value of 5)
+    - if self._operand was 5 (unlikely), self._instruction_pointer
+    - for each scenario above, self._instruction_pointer must have been 4
+        - we either got there because we jumped OR
+        - because the _instruction_pointer value before that was 2
+
+3. output index 4 was 3, which means `out` was run:
+    3 = combo_operand % 8
+    - so combo_operand must have been
