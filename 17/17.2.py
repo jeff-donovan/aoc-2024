@@ -1,15 +1,13 @@
 REGISTER = 'Register'
 
 class Day17(object):
-    def __init__(self, contents, register_a):
-        registers, inputs = self.parse_contents(contents)
-
+    def __init__(self, register_a, inputs):
         self._inputs = inputs
         self._outputs = []
 
         self._register_a = register_a  # ignore register_a value from contents
-        self._register_b = registers['B']
-        self._register_c = registers['C']
+        self._register_b = 0
+        self._register_c = 0
 
         self._instruction_pointer = 0
         self._has_jumped = False
@@ -63,26 +61,6 @@ class Day17(object):
             if not self._has_jumped:
                 self._instruction_pointer += 2
 
-    def parse_contents(self, contents):
-        register_contents, input_contents = contents.split('\n\n')
-        registers = {}
-        for line in register_contents.split('\n'):
-            if line:
-                register_data = line.split(': ')
-                register_code = register_data[0][len(REGISTER) + 1:]
-                register_value = int(register_data[1])
-                registers[register_code] = register_value
-
-        inputs = []
-        for line in input_contents.split('\n'):
-            if line:
-                inputs_data = line.split(': ')
-                for input in inputs_data[1].split(','):
-                    if input:
-                        inputs.append(int(input))
-
-        return registers, inputs
-
     def run_instruction(self, opcode):
         mapping = {
             0: self.adv,
@@ -134,11 +112,33 @@ class Day17(object):
     def bitwise_xor(self, a, b):
         return a ^ b
 
+def parse_contents(contents):
+    register_contents, input_contents = contents.split('\n\n')
+    registers = {}
+    for line in register_contents.split('\n'):
+        if line:
+            register_data = line.split(': ')
+            register_code = register_data[0][len(REGISTER) + 1:]
+            register_value = int(register_data[1])
+            registers[register_code] = register_value
+
+    inputs = []
+    for line in input_contents.split('\n'):
+        if line:
+            inputs_data = line.split(': ')
+            for input in inputs_data[1].split(','):
+                if input:
+                    inputs.append(int(input))
+
+    return registers, inputs
+
 if __name__ == '__main__':
     with open('17/day_17_test2.txt', 'r') as f:
         contents = f.read()
 
-    program = Day17(contents, 117440)
+    registers, inputs = parse_contents(contents)
+
+    program = Day17(117440, inputs)
     print('registers before: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
     print('inputs: ', program.inputs)
 
