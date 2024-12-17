@@ -19,11 +19,19 @@ working backwards...
 
     - if self._operand was 0, self._instruction_pointer must have been 4 (aka value of 3 in the inputs list)
     - if self._operand was 4, self._instruction_pointer must have been 2 (aka value of 5)
-    - if self._operand was 5 (unlikely), self._instruction_pointer
-    - for each scenario above, self._instruction_pointer must have been 4
-        - we either got there because we jumped OR
-        - because the _instruction_pointer value before that was 2
+    - if self._operand was 5 (maybe not possible?), self._instruction_pointer
 
-3. output index 4 was 3, which means `out` was run:
-    3 = combo_operand % 8
-    - so combo_operand must have been
+3. let's consider case 1: self._operand was 0, self._instruction_pointer was 4
+    - could we have jumped to self._instruction_pointer of 4? YES! there is a 4 in the inputs list at index 3
+        in that scenario, current A must have been greater than 0
+    - IF we didn't jump, we had to come from 2 before
+        self._instruction_pointer = 2
+        self._operand = 5
+
+^^^ SOMETHING LIKE THIS, ALTHOUGH IT IS LATE AND I AM PROBABLY WRONG ON EXACT STUFF
+
+HOW TO SOLVE?!
+    * THE SOLUTION IS LIKELY TO FAN OUT ALL POSSIBLE COMBOS STARTING FROM THE END
+    * THEN WHATEVER THE MINIMUM A VALUE IS, THATS THE SOLUTION
+    * WILL WANT TO run the "is_copy()" helper to confirm
+    * THIS FEELS LIKE DEPTH FIRST SEARCH AGAIN
