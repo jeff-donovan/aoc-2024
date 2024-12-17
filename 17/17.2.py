@@ -1,13 +1,13 @@
 REGISTER = 'Register'
 
 class Day17(object):
-    def __init__(self, contents):
+    def __init__(self, contents, register_a):
         registers, inputs = self.parse_contents(contents)
 
         self._inputs = inputs
         self._outputs = []
 
-        self._register_a = registers['A']
+        self._register_a = register_a  # ignore register_a value from contents
         self._register_b = registers['B']
         self._register_c = registers['C']
 
@@ -138,9 +138,10 @@ if __name__ == '__main__':
     with open('17/day_17_test2.txt', 'r') as f:
         contents = f.read()
 
-    program = Day17(contents)
-    print('registers: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
+    program = Day17(contents, 117440)
+    print('registers before: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
     print('inputs: ', program.inputs)
 
     program.run()
     program.print_outputs()
+    print('registers after: ', { 'A': program.register_a, 'B': program.register_b, 'C': program.register_c })
