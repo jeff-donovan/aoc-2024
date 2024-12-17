@@ -20,7 +20,10 @@ class Day17(object):
 
     @property
     def outputs(self):
-        return ','.join(self._outputs)
+        return self._outputs
+
+    def print_outputs(self):
+        print(','.join([str(x) for x in self.outputs]))
 
     @property
     def register_a(self):
@@ -126,7 +129,7 @@ class Day17(object):
 
     def out(self):
         val = self.combo_operand % 8
-        self._outputs.append(str(val))
+        self._outputs.append(val)
 
     def bitwise_xor(self, a, b):
         return a ^ b
@@ -140,4 +143,4 @@ if __name__ == '__main__':
     print('inputs: ', program.inputs)
 
     program.run()
-    print(program.outputs)
+    program.print_outputs()
