@@ -104,12 +104,29 @@ def binary_search(initial_map_object):
     return low
 
 if __name__ == '__main__':
-    with open('18/day_18_test.txt', 'r') as f:
+    with open('18/day_18_input.txt', 'r') as f:
         contents = f.read()
 
-    max_x_y = 6
+    max_x_y = 70
     initial_map_object = make_map_object(contents, max_x_y)
     bytes_index = binary_search(initial_map_object)
     print('SOLUTION BYTES INDEX! ', bytes_index)
     i, j = initial_map_object['bytes'][bytes_index]
     print('SOLUTION! ', (j, i))
+
+    # sanity check
+    for num_bytes in [bytes_index - 1, bytes_index, bytes_index + 1]:
+        map_object = copy.deepcopy(initial_map_object)
+        add_bytes_to_map(map_object, num_bytes)
+        travel(map_object)
+        end_i, end_j = map_object['end']
+
+        print()
+        if (end_i, end_j) in map_object["scores"]:
+            print('SUCCESS: ', (num_bytes))
+        else:
+            print('FAIL: ', num_bytes)
+
+        success_i, success_j = map_object['bytes'][num_bytes]
+        print('coordinate: ', map_object['bytes'][num_bytes])
+        print('character: ', map_object['map'][success_i][success_j])
