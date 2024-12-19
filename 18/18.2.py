@@ -1,3 +1,6 @@
+import copy
+
+
 def make_map_object(contents, max_x_y):
     map_object = {
         'map': [],
@@ -82,17 +85,18 @@ if __name__ == '__main__':
         contents = f.read()
 
     max_x_y = 6
-    map_object = make_map_object(contents, max_x_y)
+    initial_map_object = make_map_object(contents, max_x_y)
 
-    num_bytes = 21
-    add_bytes_to_map(map_object, num_bytes)
-    print_map(map_object['map'])
-    # while True:
-        
-    # map_object = make_map_object(contents, max_x_y, num_bytes)
-    # print_map(map_object['map'])
+    num_bytes = 0
+    while True:
+        map_object = copy.deepcopy(initial_map_object)
+        add_bytes_to_map(map_object, num_bytes)
+        travel(map_object)
+        end_i, end_j = map_object['end']
 
-    # travel(map_object)
-
-    # end_i, end_j = map_object['end']
-    # print(map_object['scores'][(end_i, end_j)])
+        try:
+            print(map_object['scores'][(end_i, end_j)])
+            num_bytes += 1
+        except Exception as e:
+            print('SOLUTION! ', num_bytes)
+            break
