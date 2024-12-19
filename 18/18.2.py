@@ -83,7 +83,7 @@ def binary_search(initial_map_object):
     low = 0
     high = len(initial_map_object['bytes']) - 1
 
-    while low < high:
+    while low <= high:
         bytes_index = low + (high - low) // 2
         map_object = copy.deepcopy(initial_map_object)
         add_bytes_to_map(map_object, bytes_index)
@@ -122,7 +122,7 @@ if __name__ == '__main__':
         end_i, end_j = map_object['end']
 
         print()
-        if (end_i, end_j) in map_object["scores"]:
+        if (end_i, end_j) in map_object['scores']:
             print('SUCCESS: ', (num_bytes))
         else:
             print('FAIL: ', num_bytes)
