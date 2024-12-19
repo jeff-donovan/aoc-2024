@@ -83,7 +83,7 @@ def binary_search(initial_map_object):
     low = 1
     high = len(initial_map_object['bytes'])
 
-    while low < high:
+    while low <= high:
         num_bytes = low + (high - low) // 2
         map_object = copy.deepcopy(initial_map_object)
         add_bytes_to_map(map_object, num_bytes)
@@ -98,7 +98,7 @@ def binary_search(initial_map_object):
             # if we're here then we _could be_ at the correct number of bytes to produce an impossible state
             high = num_bytes - 1
 
-    # low must equal high, which means we've found the number of bytes
+    # low must now be 1 greater than high, which means we've found the number of bytes
     print('low: ', low)
     print('high: ', high)
     return low
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     print('SOLUTION! ', (j, i))
 
     # sanity check
-    for test_num in [num_bytes - 1, num_bytes, num_bytes + 1]:
+    for test_num in [num_bytes - 2, num_bytes - 1, num_bytes, num_bytes + 1, num_bytes + 2]:
         map_object = copy.deepcopy(initial_map_object)
         add_bytes_to_map(map_object, test_num)
         travel(map_object)
@@ -130,5 +130,5 @@ if __name__ == '__main__':
             print('FAIL: ', test_num)
 
         success_i, success_j = map_object['bytes'][test_num - 1]
-        print('coordinate: ', map_object['bytes'][test_num - 1])
+        print('coordinate: ', (success_j, success_i))
         print('character: ', map_object['map'][success_i][success_j])
