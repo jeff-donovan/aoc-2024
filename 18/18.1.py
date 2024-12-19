@@ -74,11 +74,11 @@ def print_map(map):
         print(''.join(row))
 
 if __name__ == '__main__':
-    with open('18/day_18_test.txt', 'r') as f:
+    with open('18/day_18_input.txt', 'r') as f:
         contents = f.read()
 
-    max_x_y = 6
-    num_bytes = 12
+    max_x_y = 70
+    num_bytes = 1024
     map_object = make_map_object(contents, max_x_y, num_bytes)
     print_map(map_object['map'])
 
