@@ -1,0 +1,87 @@
+2,4,1,5,7,5,4,5,0,3,1,6,5,5,3,0
+
+iterations...
+
+i = 0
+    outputs = []
+    A = initial_A
+    B = 0
+    C = 0
+    pointer = 0
+    opcode  = inputs[0]
+            = 2
+    operand = inputs[1]
+            = 4
+    literal = 4
+    combo   = A
+            = initial_A // 8
+
+    opcode of 2 -> bst()
+    bst()
+        B = combo % 8
+        B = (initial_A // 8) % 8
+
+i = 1
+    outputs = []
+    A = initial_A // 8
+    B = (initial_A // 8) % 8
+    C = 0
+    pointer = 2
+    opcode  = inputs[2]
+            = 1
+    operand = inputs[3]
+            = 5
+    literal = 5
+    combo   = B
+            = (initial_A // 8) % 8
+
+    opcode of 1 -> adv()
+    adv()
+        A = A // (2 ** combo)
+        A = (initial_A // 8) // (2 ** ((initial_A // 8) % 8))
+
+
+i = 2
+    outputs = []
+    A = (initial_A // 8) // (2 ** ((initial_A // 8) % 8))
+    B = (initial_A // 8) % 8
+    C = 0
+    pointer = 4
+    opcode  = inputs[4]
+            = 7
+    operand = inputs[5]
+            = 5
+    literal = 5
+    combo   = B
+            = (initial_A // 8) % 8
+
+    opcode of 7 -> cdv()
+    cdv()
+        C = A // (2 ** combo)
+        C = ((initial_A // 8) // (2 ** ((initial_A // 8) % 8))) // (2 ** ((initial_A // 8) % 8))
+
+i = 3
+    outputs = []
+    A = (initial_A // 8) // (2 ** ((initial_A // 8) % 8))
+    B = (initial_A // 8) % 8
+    C = ((initial_A // 8) // (2 ** ((initial_A // 8) % 8))) // (2 ** ((initial_A // 8) % 8))
+    pointer = 6
+    opcode  = inputs[6]
+            = 4
+    operand = inputs[7]
+            = 5
+    literal = 5
+    combo   = B
+            = (initial_A // 8) % 8
+
+    opcode of 4 -> bxc()
+    bxc()
+        B = bxc(B, C)
+        B = bxc((initial_A // 8) % 8, ((initial_A // 8) // (2 ** ((initial_A // 8) % 8))) // (2 ** ((initial_A // 8) % 8)))
+
+i = 4
+    outputs = []
+    A = (initial_A // 8) // (2 ** ((initial_A // 8) % 8))
+    B = bxc((initial_A // 8) % 8, ((initial_A // 8) // (2 ** ((initial_A // 8) % 8))) // (2 ** ((initial_A // 8) % 8)))
+    C = ((initial_A // 8) // (2 ** ((initial_A // 8) % 8))) // (2 ** ((initial_A // 8) % 8))
+    pointer = 8
