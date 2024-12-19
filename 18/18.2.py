@@ -99,6 +99,8 @@ def binary_search(initial_map_object):
             high = bytes_index - 1
 
     # low must equal high, which means we've found the index
+    print('low: ', low)
+    print('high: ', high)
     return low
 
 if __name__ == '__main__':
