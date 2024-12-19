@@ -54,7 +54,7 @@ def num_design_combos(combo_cache, towels, remaining_design):
     return combo_cache[remaining_design]
 
 if __name__ == '__main__':
-    with open('19/day_19_test.txt', 'r') as f:
+    with open('19/day_19_input.txt', 'r') as f:
         contents = f.read()
 
     towels, designs = make_towels_and_designs(contents)
