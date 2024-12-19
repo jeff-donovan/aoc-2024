@@ -80,53 +80,55 @@ def print_map(map):
         print(''.join(row))
 
 def binary_search(initial_map_object):
-    low = 0
-    high = len(initial_map_object['bytes']) - 1
+    low = 1
+    high = len(initial_map_object['bytes'])
 
-    while low <= high:
-        bytes_index = low + (high - low) // 2
-        map_object = copy.deepcopy(initial_map_object)
-        add_bytes_to_map(map_object, bytes_index)
-        travel(map_object)
-        end_i, end_j = map_object['end']
-
-        try:
-            print(f'bytes_index: {bytes_index} | {map_object["scores"][(end_i, end_j)]}')
-            # if we find a valid path, we know byte is later in the list
-            low = bytes_index + 1
-        except:
-            # if we're here then we _could be_ at the correct index
-            high = bytes_index - 1
-
-    # low must equal high, which means we've found the index
-    print('low: ', low)
-    print('high: ', high)
-    return low
-
-if __name__ == '__main__':
-    with open('18/day_18_input.txt', 'r') as f:
-        contents = f.read()
-
-    max_x_y = 70
-    initial_map_object = make_map_object(contents, max_x_y)
-    bytes_index = binary_search(initial_map_object)
-    print('SOLUTION BYTES INDEX! ', bytes_index)
-    i, j = initial_map_object['bytes'][bytes_index]
-    print('SOLUTION! ', (j, i))
-
-    # sanity check
-    for num_bytes in [bytes_index - 1, bytes_index, bytes_index + 1]:
+    while low < high:
+        num_bytes = low + (high - low) // 2
         map_object = copy.deepcopy(initial_map_object)
         add_bytes_to_map(map_object, num_bytes)
         travel(map_object)
         end_i, end_j = map_object['end']
 
+        try:
+            print(f'num_bytes: {num_bytes} | {map_object["scores"][(end_i, end_j)]}')
+            # if we find a valid path, we know that number of bytes doesn't produce the first impossible state
+            low = num_bytes + 1
+        except:
+            # if we're here then we _could be_ at the correct number of bytes to produce an impossible state
+            high = num_bytes - 1
+
+    # low must equal high, which means we've found the number of bytes
+    print('low: ', low)
+    print('high: ', high)
+    return low
+
+if __name__ == '__main__':
+    with open('18/day_18_test.txt', 'r') as f:
+        contents = f.read()
+
+    max_x_y = 6
+    initial_map_object = make_map_object(contents, max_x_y)
+    num_bytes = binary_search(initial_map_object)
+    print('SOLUTION NUM BYTES! ', num_bytes)
+    index = num_bytes - 1
+    print('SOLUTION INDEX: ', index)
+    i, j = initial_map_object['bytes'][index]
+    print('SOLUTION! ', (j, i))
+
+    # sanity check
+    for test_num in [num_bytes - 1, num_bytes, num_bytes + 1]:
+        map_object = copy.deepcopy(initial_map_object)
+        add_bytes_to_map(map_object, test_num)
+        travel(map_object)
+        end_i, end_j = map_object['end']
+
         print()
         if (end_i, end_j) in map_object['scores']:
-            print('SUCCESS: ', (num_bytes))
+            print('SUCCESS: ', (test_num))
         else:
-            print('FAIL: ', num_bytes)
+            print('FAIL: ', test_num)
 
-        success_i, success_j = map_object['bytes'][num_bytes]
-        print('coordinate: ', map_object['bytes'][num_bytes])
+        success_i, success_j = map_object['bytes'][test_num - 1]
+        print('coordinate: ', map_object['bytes'][test_num - 1])
         print('character: ', map_object['map'][success_i][success_j])
