@@ -104,10 +104,10 @@ def binary_search(initial_map_object):
     return low
 
 if __name__ == '__main__':
-    with open('18/day_18_test.txt', 'r') as f:
+    with open('18/day_18_input.txt', 'r') as f:
         contents = f.read()
 
-    max_x_y = 6
+    max_x_y = 70
     initial_map_object = make_map_object(contents, max_x_y)
     num_bytes = binary_search(initial_map_object)
     print('SOLUTION NUM BYTES! ', num_bytes)
