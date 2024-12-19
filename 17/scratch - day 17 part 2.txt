@@ -192,55 +192,22 @@ i = 8
 3 = floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8) % 8
 0 = floor(floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8) / 8) % 8
 
-i = ???
-    outputs = [0, 3, 5, 4, 3, 0]
-    A = floor(floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8) / 8)
-    B = 0
-    C = 0
-    pointer = 4
-    opcode = 3
-    operand = 0
-    literal = 0
-    combo = 0
+just kidding... ^^^ this worked! BOOM
 
-    opcode of 3 -> jnz
-    jnz()
-        A = 0
+here is a programmatic way to check it:
 
+initial_A = 0
+while not is_valid(initial_A):
+    initial_A += 1
 
-0 = A
-0 = floor(floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8) / 8)
+print(initial_A)
 
-3 = floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8)
-4 = floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8
-32 = floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8)
-33 = floor(floor(floor(initial_A / 8) / 8) / 8) / 8
-264 = floor(floor(floor(initial_A / 8) / 8) / 8)
-265 = floor(floor(initial_A / 8) / 8) / 8
-2120 = floor(floor(initial_A / 8) / 8)
-2121 = floor(initial_A / 8) / 8
-16968 = floor(initial_A / 8)
-16969 = initial_A / 8
-135752 = initial_A
-
-
-0 = floor(floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8) / 8)
-1 = floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8) / 8
-8 = floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8)
-9 = floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8
-72 = floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8)
-73 = floor(floor(floor(initial_A / 8) / 8) / 8) / 8
-584 = floor(floor(floor(initial_A / 8) / 8) / 8)
-585 = floor(floor(initial_A / 8) / 8) / 8
-4680 = floor(floor(initial_A / 8) / 8)
-4681 = floor(initial_A / 8) / 8
-37448 = floor(initial_A / 8)
-37449 = initial_A / 8
-299592 = initial_A
-
-
-0 = floor(floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8) / 8)
-1 = floor(floor(floor(floor(floor(initial_A / 8) / 8) / 8) / 8) / 8) / 8
-1 = (((((initial_A / 8) / 8) / 8) / 8) / 8) / 8
-8 = ((((initial_A / 8) / 8) / 8) / 8) / 8
-64 = (((initial_A / 8) / 8) / 8) / 8
+def is_valid(initial_A):
+    return (
+        (0 == (initial_A // 8) % 8) and
+        (3 == ((initial_A // 8) // 8) % 8) and
+        (5 == (((initial_A // 8) // 8) // 8) % 8) and
+        (4 == ((((initial_A // 8) // 8) // 8) // 8) % 8) and
+        (3 == (((((initial_A // 8) // 8) // 8) // 8) // 8) % 8) and
+        (0 == ((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) % 8)
+    )
