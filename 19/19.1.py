@@ -20,7 +20,7 @@ def is_design_possible(towels, towel, remaining_design):
     return any([is_design_possible(towels, t, next_remaining_design) for t in towels])
 
 if __name__ == '__main__':
-    with open('19/day_19_test.txt', 'r') as f:
+    with open('19/day_19_input.txt', 'r') as f:
         contents = f.read()
 
     towels, designs = make_towels_and_designs(contents)
