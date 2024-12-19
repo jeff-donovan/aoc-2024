@@ -23,6 +23,11 @@ class Day17(object):
     def outputs(self):
         return self._outputs
 
+    def raise_if_outputs_invalid(self):
+        for i, output in enumerate(self._outputs):
+            if output != self._inputs[i]:
+                raise Exception()
+
     def print_outputs(self):
         print(','.join([str(x) for x in self.outputs]))
 
@@ -120,6 +125,7 @@ class Day17(object):
     def out(self):
         val = self.combo_operand % 8
         self._outputs.append(val)
+        self.raise_if_outputs_invalid()
 
     def bitwise_xor(self, a, b):
         return a ^ b
@@ -162,23 +168,40 @@ if __name__ == '__main__':
 
     # register_a = 168046722  # what i left off at last time
 
+    # start = datetime.datetime.now()
+    # register_a = 0
+    # while True:
+    #     print('register a: ', register_a)
+    #     program = Day17(register_a, inputs)
+    #     program.run()
+    #     if program.is_copy():
+    #         print('SOLUTION IS: ', register_a)
+    #         break
+    #     register_a += 1
+    # print('SOLUTION APPROACH 1 TOOK: ', datetime.datetime.now() - start)
+    # print()
+
+    # start = datetime.datetime.now()
+    # initial_A = 0
+    # while not is_valid(initial_A):
+    #     initial_A += 1
+
+    # print(initial_A)
+    # print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
+
     start = datetime.datetime.now()
     register_a = 0
     while True:
-        print('register a: ', register_a)
+        if register_a % 1000 == 0:
+            print('register a: ', register_a)
         program = Day17(register_a, inputs)
-        program.run()
-        if program.is_copy():
-            print('SOLUTION IS: ', register_a)
-            break
-        register_a += 1
-    print('SOLUTION APPROACH 1 TOOK: ', datetime.datetime.now() - start)
+        try:
+            program.run()
+            if program.is_copy():
+                print('SOLUTION IS: ', register_a)
+                break
+            register_a += 1
+        except:
+            register_a += 1
+    print('SOLUTION APPROACH 3 TOOK: ', datetime.datetime.now() - start)
     print()
-
-    start = datetime.datetime.now()
-    initial_A = 0
-    while not is_valid(initial_A):
-        initial_A += 1
-
-    print(initial_A)
-    print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
