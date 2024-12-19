@@ -190,7 +190,7 @@ if __name__ == '__main__':
     # print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
 
     start = datetime.datetime.now()
-    register_a = 168046722
+    register_a = 2563700000  # what i left off at last time
     while True:
         if register_a % 10000 == 0:
             print('register a: ', register_a)
