@@ -161,7 +161,7 @@ def is_valid(initial_A):
     )
 
 if __name__ == '__main__':
-    with open('17/day_17_test2.txt', 'r') as f:
+    with open('17/day_17_input.txt', 'r') as f:
         contents = f.read()
 
     registers, inputs = parse_contents(contents)
@@ -190,9 +190,9 @@ if __name__ == '__main__':
     # print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
 
     start = datetime.datetime.now()
-    register_a = 0
+    register_a = 168046722
     while True:
-        if register_a % 1000 == 0:
+        if register_a % 10000 == 0:
             print('register a: ', register_a)
         program = Day17(register_a, inputs)
         try:
