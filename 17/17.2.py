@@ -1,3 +1,6 @@
+import datetime
+
+
 REGISTER = 'Register'
 
 class Day17(object):
@@ -141,13 +144,26 @@ def parse_contents(contents):
 
     return registers, inputs
 
+def is_valid(initial_A):
+    return (
+        (0 == (initial_A // 8) % 8) and
+        (3 == ((initial_A // 8) // 8) % 8) and
+        (5 == (((initial_A // 8) // 8) // 8) % 8) and
+        (4 == ((((initial_A // 8) // 8) // 8) // 8) % 8) and
+        (3 == (((((initial_A // 8) // 8) // 8) // 8) // 8) % 8) and
+        (0 == ((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) % 8)
+    )
+
 if __name__ == '__main__':
-    with open('17/day_17_input.txt', 'r') as f:
+    with open('17/day_17_test2.txt', 'r') as f:
         contents = f.read()
 
     registers, inputs = parse_contents(contents)
 
-    register_a = 168046722  # what i left off at last time
+    # register_a = 168046722  # what i left off at last time
+
+    start = datetime.datetime.now()
+    register_a = 0
     while True:
         print('register a: ', register_a)
         program = Day17(register_a, inputs)
@@ -156,3 +172,13 @@ if __name__ == '__main__':
             print('SOLUTION IS: ', register_a)
             break
         register_a += 1
+    print('SOLUTION APPROACH 1 TOOK: ', datetime.datetime.now() - start)
+    print()
+
+    start = datetime.datetime.now()
+    initial_A = 0
+    while not is_valid(initial_A):
+        initial_A += 1
+
+    print(initial_A)
+    print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
