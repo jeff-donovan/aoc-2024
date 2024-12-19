@@ -1,6 +1,7 @@
-def make_map_object(contents, max_x_y, num_bytes):
+def make_map_object(contents, max_x_y):
     map_object = {
         'map': [],
+        'bytes': [],
         'start': (0, 0),
         'end': (max_x_y, max_x_y),
         'scores': {}
@@ -12,15 +13,18 @@ def make_map_object(contents, max_x_y, num_bytes):
             map_row.append('.')
         map_object['map'].append(map_row)
 
-    for byte, line in enumerate(contents.split('\n')):
-        if byte >= num_bytes:
-            break
+    for line in contents.split('\n'):
         if line:
             x, y = line.split(',')
             i, j = int(y), int(x)  # x/y maps to j/i indexes when accessing list elements
-            map_object['map'][i][j] = '#'
+            map_object['bytes'].append((i, j))
 
     return map_object
+
+def add_bytes_to_map(map_object, num_bytes):
+    for i, j in map_object['bytes'][0:num_bytes]:
+        map_object['map'][i][j] = '#'
+    # return map_object
 
 def travel(map_object):
     i, j = map_object['start']
@@ -78,11 +82,17 @@ if __name__ == '__main__':
         contents = f.read()
 
     max_x_y = 6
+    map_object = make_map_object(contents, max_x_y)
+
     num_bytes = 21
-    map_object = make_map_object(contents, max_x_y, num_bytes)
+    add_bytes_to_map(map_object, num_bytes)
     print_map(map_object['map'])
+    # while True:
+        
+    # map_object = make_map_object(contents, max_x_y, num_bytes)
+    # print_map(map_object['map'])
 
-    travel(map_object)
+    # travel(map_object)
 
-    end_i, end_j = map_object['end']
-    print(map_object['scores'][(end_i, end_j)])
+    # end_i, end_j = map_object['end']
+    # print(map_object['scores'][(end_i, end_j)])
