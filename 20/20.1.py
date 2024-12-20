@@ -1,3 +1,6 @@
+import pprint
+
+
 def make_map_object(contents):
     map_object = {
         'map': [],
@@ -58,6 +61,12 @@ def next_coord(map_object, i, j):
 def has_not_been_visited(scores, i, j):
     return (i, j) not in scores
 
+def is_end(map, i, j):
+    return is_in_map(map, i, j) and map[i][j] == 'E'
+
+def is_wall(map, i, j):
+    return is_in_map(map, i, j) and map[i][j] == '#'
+
 def is_empty_tile(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == '.'
 
@@ -78,6 +87,58 @@ def print_map_with_scores(map, scores):
                 row.append(str(scores[(i, j)]))
         print(''.join(row))
 
+def group_by_cheat_code_score(cheat_coords_with_scores):
+    mapping = {}
+    for coord, score in cheat_coords_with_scores:
+        if score not in mapping:
+            mapping[score] = set([])
+        mapping[score].add(coord)
+    return mapping
+
+def get_all_valid_cheat_coords(map_object):
+    map = map_object['map']
+    scores = map_object['scores']
+    walls = get_all_walls(map)
+    walls_with_cheat_codes = []
+    for wall in walls:
+        cheat_code_score = get_cheat_coord_score(map, scores, wall[0], wall[1])
+        if cheat_code_score is not None and cheat_code_score > 0:
+            walls_with_cheat_codes.append((wall, cheat_code_score))
+    return walls_with_cheat_codes
+
+def get_cheat_coord_score(map, scores, i, j):
+    vertical = get_vertical_coords(map, i, j)
+    horizontal = get_horizontal_coords(map, i, j)
+
+    if all([is_empty_tile(map, coord[0], coord[1]) or is_end(map, coord[0], coord[1]) for coord in vertical]):
+        return get_diff(scores, vertical[0], vertical[1]) - 2
+
+    if all([is_empty_tile(map, coord[0], coord[1]) or is_end(map, coord[0], coord[1]) for coord in horizontal]):
+        return get_diff(scores, horizontal[0], horizontal[1]) - 2
+
+def get_diff(scores, coord1, coord2):
+    return abs(scores[coord1] - scores[coord2])
+
+def get_vertical_coords(map, i, j):
+    return [
+        (i - 1, j),  # up
+        (i + 1, j),  # down
+    ]
+
+def get_horizontal_coords(map, i, j):
+    return [
+        (i, j - 1),  # left
+        (i, j + 1),  # right
+    ]
+
+def get_all_walls(map):
+    walls = []
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if is_wall(map, i, j):
+                walls.append((i, j))
+    return walls
+
 if __name__ == '__main__':
     with open('20/day_20_test.txt', 'r') as f:
         contents = f.read()
@@ -87,3 +148,7 @@ if __name__ == '__main__':
     print()
     set_scores(map_object)
     print_map_with_scores(map_object['map'], map_object['scores'])
+    # pprint.pprint(sorted(get_all_valid_cheat_coords(map_object), key=lambda x: x[1]))
+    cheat_coords_with_scores = get_all_valid_cheat_coords(map_object)
+    grouped = group_by_cheat_code_score(cheat_coords_with_scores)
+    pprint.pprint({score: len(grouped[score]) for score in grouped})
