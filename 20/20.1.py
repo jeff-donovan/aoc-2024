@@ -1,68 +1,62 @@
-def make_map_object(contents, max_x_y, num_bytes):
+def make_map_object(contents):
     map_object = {
         'map': [],
-        'start': (0, 0),
-        'end': (max_x_y, max_x_y),
+        'start': (),
+        'end': (),
         'scores': {}
     }
 
-    for _ in range(max_x_y + 1):
-        map_row = []
-        for _ in range(max_x_y + 1):
-            map_row.append('.')
-        map_object['map'].append(map_row)
-
-    for byte, line in enumerate(contents.split('\n')):
-        if byte >= num_bytes:
-            break
+    for line in contents.split('\n'):
         if line:
-            x, y = line.split(',')
-            i, j = int(y), int(x)  # x/y maps to j/i indexes when accessing list elements
-            map_object['map'][i][j] = '#'
+            row = []
+            for char in line:
+                row.append(char)
+            map_object['map'].append(row)
+
+    map_object['start'] = find_start(map_object['map'])
+    map_object['end'] = find_end(map_object['map'])
 
     return map_object
 
-def travel(map_object):
+def find_start(map):
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if map[i][j] == 'S':
+                return (i, j)
+
+def find_end(map):
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if map[i][j] == 'E':
+                return (i, j)
+
+def set_scores(map_object):
     i, j = map_object['start']
+    score = 0
 
-    points_to_travel = [(i, j, 0)]
-    while points_to_travel:
-        i, j, score = points_to_travel.pop()
-
-        is_new_route = False
+    while True:
         if (i, j) not in map_object['scores']:
-            is_new_route = True
             map_object['scores'][(i, j)] = score
-
-        # base case - we have reached the end
         if (i, j) == map_object['end']:
-            if score < map_object['scores'][(i, j)]:
-                map_object['scores'][(i, j)] = score
-            continue
+            break
+        i, j = next_coord(map_object, i, j)
+        score += 1
 
-        # base case - we have previously found a better route
-        if score > map_object['scores'][(i, j)]:
-            continue
-
-        # base case - we have already calculated this route
-        if not is_new_route and score == map_object['scores'][(i, j)]:
-            continue
-
-        # now we know this is definitely a new route
-        map_object['scores'][(i, j)] = score
-
-        for next_i, next_j in get_next_coords(i, j):
-            if is_empty_tile(map_object['map'], next_i, next_j):
-                points_to_travel.append((next_i, next_j, score + 1))
-
-def get_next_coords(i, j):
-    return [
+def next_coord(map_object, i, j):
+    possible_next_coords = [
         (i - 1, j),  # up
         (i + 1, j),  # down
         (i, j - 1),  # left
         (i, j + 1),  # right
     ]
-    
+
+    for next_i, next_j in possible_next_coords:
+        if (is_empty_tile(map_object['map'], next_i, next_j) or map_object['end'] == (next_i, next_j)) and has_not_been_visited(map_object['scores'], next_i, next_j):
+            return (next_i, next_j)
+
+def has_not_been_visited(scores, i, j):
+    return (i, j) not in scores
+
 def is_empty_tile(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == '.'
 
@@ -73,16 +67,22 @@ def print_map(map):
     for row in map:
         print(''.join(row))
 
+def print_map_with_scores(map, scores):
+    for i in range(len(map)):
+        row = []
+        for j in range(len(map[i])):
+            if map[i][j] == '#':
+                row.append('#')
+            else:
+                row.append(str(scores[(i, j)]))
+        print(''.join(row))
+
 if __name__ == '__main__':
-    with open('20/day_20_input.txt', 'r') as f:
+    with open('20/day_20_test.txt', 'r') as f:
         contents = f.read()
 
-    max_x_y = 70
-    num_bytes = 1024
-    map_object = make_map_object(contents, max_x_y, num_bytes)
+    map_object = make_map_object(contents)
     print_map(map_object['map'])
-
-    travel(map_object)
-
-    end_i, end_j = map_object['end']
-    print(map_object['scores'][(end_i, end_j)])
+    print()
+    set_scores(map_object)
+    print_map_with_scores(map_object['map'], map_object['scores'])
