@@ -61,6 +61,12 @@ def next_coord(map_object, i, j):
 def has_not_been_visited(scores, i, j):
     return (i, j) not in scores
 
+def is_start_or_end(map, i, j):
+    return is_start(map, i, j) or is_end(map, i, j)
+
+def is_start(map, i, j):
+    return is_in_map(map, i, j) and map[i][j] == 'S'
+
 def is_end(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == 'E'
 
@@ -110,10 +116,10 @@ def get_cheat_coord_score(map, scores, i, j):
     vertical = get_vertical_coords(map, i, j)
     horizontal = get_horizontal_coords(map, i, j)
 
-    if all([is_empty_tile(map, coord[0], coord[1]) or is_end(map, coord[0], coord[1]) for coord in vertical]):
+    if all([is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]) for coord in vertical]):
         return get_diff(scores, vertical[0], vertical[1]) - 2
 
-    if all([is_empty_tile(map, coord[0], coord[1]) or is_end(map, coord[0], coord[1]) for coord in horizontal]):
+    if all([is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]) for coord in horizontal]):
         return get_diff(scores, horizontal[0], horizontal[1]) - 2
 
 def get_diff(scores, coord1, coord2):
