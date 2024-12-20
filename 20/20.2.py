@@ -207,6 +207,27 @@ def get_all_walls(map):
                 walls.append((i, j))
     return walls
 
+def get_all_non_walls_missing_route(map, cheat_coords_with_scores):
+    routes = [route for route, _ in cheat_coords_with_scores]
+    routes_coords = set([])
+    for start, end in routes:
+        routes_coords.add(start)
+        routes_coords.add(end)
+
+    missing = []
+    for coord in get_all_non_walls(map):
+        if coord not in routes_coords:
+            missing.append(coord)
+    return missing
+
+def get_all_non_walls(map):
+    non_walls = []
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if is_in_map(map, i, j) and not is_wall(map, i, j):
+                non_walls.append((i, j))
+    return non_walls
+
 if __name__ == '__main__':
     with open('20/day_20_test.txt', 'r') as f:
         contents = f.read()
@@ -219,6 +240,8 @@ if __name__ == '__main__':
     # pprint.pprint(sorted(get_all_valid_cheat_coords(map_object), key=lambda x: x[1]))
 
     cheat_coords_with_scores = get_all_valid_cheat_coords(map_object)
+    print('HI JEFF!')
+    print(get_all_non_walls_missing_route(map_object['map'], cheat_coords_with_scores))
     # pprint.pprint(cheat_coords_with_scores)
     grouped = group_by_cheat_code_score(cheat_coords_with_scores)
     pprint.pprint({score: len(grouped[score]) for score in grouped})
