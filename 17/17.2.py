@@ -190,10 +190,12 @@ if __name__ == '__main__':
     # print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
 
     start = datetime.datetime.now()
-    register_a = 2563700000  # what i left off at last time
+    # register_a = 2563700000  # what i left off at last time
+    register_a = 0
+    num_outputs = 0
     while True:
-        if register_a % 10000 == 0:
-            print('register a: ', register_a)
+        # if register_a % 100 == 0:
+        #     print('register a: ', register_a)
         program = Day17(register_a, inputs)
         try:
             program.run()
@@ -203,5 +205,9 @@ if __name__ == '__main__':
             register_a += 1
         except:
             register_a += 1
+
+        if len(program.outputs) > num_outputs:
+            num_outputs = len(program.outputs)
+            print(f'{num_outputs} OUTPUTS | {register_a}')
     print('SOLUTION APPROACH 3 TOOK: ', datetime.datetime.now() - start)
     print()
