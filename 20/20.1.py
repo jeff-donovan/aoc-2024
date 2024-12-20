@@ -146,7 +146,7 @@ def get_all_walls(map):
     return walls
 
 if __name__ == '__main__':
-    with open('20/day_20_test.txt', 'r') as f:
+    with open('20/day_20_input.txt', 'r') as f:
         contents = f.read()
 
     map_object = make_map_object(contents)
@@ -158,3 +158,5 @@ if __name__ == '__main__':
     cheat_coords_with_scores = get_all_valid_cheat_coords(map_object)
     grouped = group_by_cheat_code_score(cheat_coords_with_scores)
     pprint.pprint({score: len(grouped[score]) for score in grouped})
+
+    print(sum([len(grouped[score]) for score in grouped if score >= 100]))
