@@ -191,7 +191,7 @@ if __name__ == '__main__':
 
     start = datetime.datetime.now()
     # register_a = 2563700000  # what i left off at last time
-    register_a = 0
+    register_a = 372803995000
     num_outputs = 0
     while True:
         # if register_a % 100 == 0:
