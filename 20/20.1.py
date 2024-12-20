@@ -1,40 +1,88 @@
-def make_towels_and_designs(contents):
-    towels_contents, designs_contents = contents.split('\n\n')
+def make_map_object(contents, max_x_y, num_bytes):
+    map_object = {
+        'map': [],
+        'start': (0, 0),
+        'end': (max_x_y, max_x_y),
+        'scores': {}
+    }
 
-    towels = [t for t in towels_contents.split(', ') if t]
-    designs = [d for d in designs_contents.split('\n') if d]
+    for _ in range(max_x_y + 1):
+        map_row = []
+        for _ in range(max_x_y + 1):
+            map_row.append('.')
+        map_object['map'].append(map_row)
 
-    return towels, designs
+    for byte, line in enumerate(contents.split('\n')):
+        if byte >= num_bytes:
+            break
+        if line:
+            x, y = line.split(',')
+            i, j = int(y), int(x)  # x/y maps to j/i indexes when accessing list elements
+            map_object['map'][i][j] = '#'
 
-def is_design_possible(cache, towels, remaining_design):
-    if remaining_design in cache:
-        return cache[remaining_design]
+    return map_object
 
-    # base case - all we have left is an exact towel match
-    for towel in towels:
-        if towel == remaining_design:
-            cache[remaining_design] = True
-            return True
+def travel(map_object):
+    i, j = map_object['start']
 
-    # base case - no towel exists *at the start* of the design
-    remaining_designs_to_check = set([])
-    for towel in towels:
-        if remaining_design.startswith(towel):
-            next_remaining_design = remaining_design[len(towel):]
-            remaining_designs_to_check.add(next_remaining_design)
+    points_to_travel = [(i, j, 0)]
+    while points_to_travel:
+        i, j, score = points_to_travel.pop()
 
-    if len(remaining_designs_to_check) == 0:
-        cache[remaining_design] = False
-        return False
+        is_new_route = False
+        if (i, j) not in map_object['scores']:
+            is_new_route = True
+            map_object['scores'][(i, j)] = score
 
-    # at this point we know a towel starts off the remaining design so we can check the truncated designs
-    cache[remaining_design] = any([is_design_possible(cache, towels, next_remaining_design) for next_remaining_design in remaining_designs_to_check])
-    return cache[remaining_design]
+        # base case - we have reached the end
+        if (i, j) == map_object['end']:
+            if score < map_object['scores'][(i, j)]:
+                map_object['scores'][(i, j)] = score
+            continue
+
+        # base case - we have previously found a better route
+        if score > map_object['scores'][(i, j)]:
+            continue
+
+        # base case - we have already calculated this route
+        if not is_new_route and score == map_object['scores'][(i, j)]:
+            continue
+
+        # now we know this is definitely a new route
+        map_object['scores'][(i, j)] = score
+
+        for next_i, next_j in get_next_coords(i, j):
+            if is_empty_tile(map_object['map'], next_i, next_j):
+                points_to_travel.append((next_i, next_j, score + 1))
+
+def get_next_coords(i, j):
+    return [
+        (i - 1, j),  # up
+        (i + 1, j),  # down
+        (i, j - 1),  # left
+        (i, j + 1),  # right
+    ]
+    
+def is_empty_tile(map, i, j):
+    return is_in_map(map, i, j) and map[i][j] == '.'
+
+def is_in_map(map, i, j):
+    return (0 <= i < len(map)) and (0 <= j < len(map[i]))
+
+def print_map(map):
+    for row in map:
+        print(''.join(row))
 
 if __name__ == '__main__':
-    with open('20/day_20_test.txt', 'r') as f:
+    with open('20/day_20_input.txt', 'r') as f:
         contents = f.read()
 
-    towels, designs = make_towels_and_designs(contents)
-    cache = {}
-    print(sum([is_design_possible(cache, towels, d) for d in designs]))
+    max_x_y = 70
+    num_bytes = 1024
+    map_object = make_map_object(contents, max_x_y, num_bytes)
+    print_map(map_object['map'])
+
+    travel(map_object)
+
+    end_i, end_j = map_object['end']
+    print(map_object['scores'][(end_i, end_j)])
