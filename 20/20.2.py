@@ -103,8 +103,7 @@ def cheat_code_travel(map_object, cheat_coord):
     distances = get_all_connecting_empty_tiles_and_distances(map_object['map'], cheat_coord)
     for start in adjacent_empty_tiles:
         for end, distance in distances.items():
-            route = sorted((start, end))
-            route = (route[0], route[1])
+            route = tuple(sorted((start, end)))
             if route not in map_object['cheat_scores']:
                 map_object['cheat_scores'][route] = 0
             if distance < 20:
@@ -147,22 +146,26 @@ def get_all_connecting_empty_tiles_and_distances(map, cheat_coord):
         if not is_new_route and distance == distances[(i, j)]:
             continue
 
-        # definitely a new route
+        # definitely a new or better route
         distances[(i, j)] = distance
 
         for next_i, next_j in get_next_coords(i, j):
             if is_in_map(map, next_i, next_j):
                 points_to_travel.append((next_i, next_j, distance + 1))
 
-    return {coord: distance for coord, distance in distances.items() if (is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]))}
+    mapping = {}
+    for coord, distance in distances.items():
+        if is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]):
+            mapping[coord] = distance
+    return mapping
 
 def group_by_cheat_code_score(cheat_coords_with_scores):
     print('inside group_by_cheat_code_score')
     mapping = {}
     for route, score in cheat_coords_with_scores:
         if score not in mapping:
-            mapping[score] = set([])
-        mapping[score].add(route)
+            mapping[score] = []
+        mapping[score].append(route)
     return mapping
 
 def get_all_valid_cheat_coords(map_object):
