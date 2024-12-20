@@ -133,22 +133,22 @@ def get_next_coords(i, j):
 
 def group_by_cheat_code_score(cheat_coords_with_scores):
     mapping = {}
-    for coord, score in cheat_coords_with_scores:
+    for start, end, score in cheat_coords_with_scores:
         if score not in mapping:
             mapping[score] = set([])
-        mapping[score].add(coord)
+        mapping[score].add((start, end))
     return mapping
 
 def get_all_valid_cheat_coords(map_object):
-    map = map_object['map']
-    scores = map_object['scores']
-    walls = get_all_walls(map)
-    walls_with_cheat_codes = []
-    for wall in walls:
-        cheat_code_score = get_cheat_coord_score(map, scores, wall[0], wall[1])
-        if cheat_code_score is not None and cheat_code_score > 0:
-            walls_with_cheat_codes.append((wall, cheat_code_score))
-    return walls_with_cheat_codes
+    for wall in get_all_walls(map_object['map']):
+        cheat_code_travel(map_object, wall)
+
+    cheat_codes = []
+    for cheat_start in map_object['cheat_scores']:
+        for cheat_end in map_object['cheat_scores'][cheat_start]:
+            cheat_code_score = map_object['cheat_scores'][cheat_start][cheat_end]
+            cheat_codes.append((cheat_start, cheat_end, cheat_code_score))
+    return cheat_codes
 
 def calculate_cheat_code_score(map, scores, cheat_coord, i, j, distance_traveled):
     best_score = 0
@@ -199,7 +199,7 @@ def get_all_walls(map):
     return walls
 
 if __name__ == '__main__':
-    with open('20/day_20_input.txt', 'r') as f:
+    with open('20/day_20_test.txt', 'r') as f:
         contents = f.read()
 
     map_object = make_map_object(contents)
@@ -208,8 +208,9 @@ if __name__ == '__main__':
     set_scores(map_object)
     print_map_with_scores(map_object['map'], map_object['scores'])
     # pprint.pprint(sorted(get_all_valid_cheat_coords(map_object), key=lambda x: x[1]))
+
     cheat_coords_with_scores = get_all_valid_cheat_coords(map_object)
     grouped = group_by_cheat_code_score(cheat_coords_with_scores)
     pprint.pprint({score: len(grouped[score]) for score in grouped})
 
-    print(sum([len(grouped[score]) for score in grouped if score >= 100]))
+    # print(sum([len(grouped[score]) for score in grouped if score >= 100]))
