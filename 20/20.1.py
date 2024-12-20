@@ -51,7 +51,8 @@ def next_coord(map_object, i, j):
     ]
 
     for next_i, next_j in possible_next_coords:
-        if (is_empty_tile(map_object['map'], next_i, next_j) or map_object['end'] == (next_i, next_j)) and has_not_been_visited(map_object['scores'], next_i, next_j):
+        can_visit = is_empty_tile(map_object['map'], next_i, next_j) or map_object['end'] == (next_i, next_j)
+        if can_visit and has_not_been_visited(map_object['scores'], next_i, next_j):
             return (next_i, next_j)
 
 def has_not_been_visited(scores, i, j):
