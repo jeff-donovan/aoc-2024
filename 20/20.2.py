@@ -131,6 +131,42 @@ def get_next_coords(i, j):
         (i, j + 1),  # right
     ]
 
+def get_all_connecting_empty_tiles_and_distances(map, cheat_coord):
+    i, j = cheat_coord
+
+    distances = {}
+    points_to_travel = [i, j, 0]
+    while points_to_travel:
+        i, j, distance = points_to_travel.pop()
+
+        is_new_route = False
+        if (i, j) not in distances:
+            is_new_route = True
+            distances[(i, j)] = distance
+
+        # base case - we have reached an empty or start/end
+        if is_empty_tile(map, i, j) or is_start_or_end(map, i, j):
+            if distance < distances[(i, j)]:
+                distances[(i, j)] = distance
+            continue
+
+        # base case - we have previously found a better route
+        if distance > distances[(i, j)]:
+            continue
+
+        # base case - we have already calculated this route
+        if not is_new_route and distance == distances[(i, j)]:
+            continue
+
+        # definitely a new route
+        distances[(i, j)] = distance
+
+        for next_i, next_j in get_next_coords(i, j):
+            if is_in_map(map, next_i, next_j) and distance:
+                points_to_travel.append((next_i, next_j, distance + 1))
+
+    return {coord: distances[coord] for coord in distances if (is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]))}
+
 def group_by_cheat_code_score(cheat_coords_with_scores):
     mapping = {}
     for start, end, score in cheat_coords_with_scores:
