@@ -102,26 +102,32 @@ def cheat_code_travel(map_object, cheat_coord):
     if cheat_coord not in map_object['cheat_scores']:
         map_object['cheat_scores'][cheat_coord] = {}
 
-    points_to_travel = [(i, j, 1)]
-    while points_to_travel:
-        i, j, distance_traveled = points_to_travel.pop()
+    distances = get_all_connecting_empty_tiles_and_distances(map_object['map'], cheat_coord)
+    # print(f'cheat coord {cheat_coord} distances: ', distances)
+    for end, distance in distances.items():
+        if distance < 20:
+            map_object['cheat_scores'][cheat_coord][end] = calculate_cheat_code_score(map_object['map'], map_object['scores'], cheat_coord, end[0], end[1], distance + 1)
 
-        # if is_wall(): keep going (as long as distance_traveled does not become 21)
-        # if is_empty_tile() or start or end: calculate score, DONE
+    # points_to_travel = [(i, j, 1)]
+    # while points_to_travel:
+    #     i, j, distance_traveled = points_to_travel.pop()
 
-        if is_wall(map_object['map'], i, j) and distance_traveled < 20:
-            for next_i, next_j in get_next_coords(i, j):
-                if is_in_map(map_object['map'], next_i, next_j):
-                    points_to_travel.append((next_i, next_j, distance_traveled + 1))
+    #     # if is_wall(): keep going (as long as distance_traveled does not become 21)
+    #     # if is_empty_tile() or start or end: calculate score, DONE
 
-        if is_empty_tile(map_object['map'], i, j) or is_start_or_end(map_object['map'], i, j):
-            if (i, j) not in map_object['cheat_scores'][cheat_coord]:
-                map_object['cheat_scores'][cheat_coord][(i, j)] = 0
+    #     if is_wall(map_object['map'], i, j) and distance_traveled < 20:
+    #         for next_i, next_j in get_next_coords(i, j):
+    #             if is_in_map(map_object['map'], next_i, next_j):
+    #                 points_to_travel.append((next_i, next_j, distance_traveled + 1))
 
-            current_cheat_score = map_object['cheat_scores'][cheat_coord][(i, j)]
-            new_cheat_score = calculate_cheat_code_score(map_object['map'], map_object['scores'], cheat_coord, i, j, distance_traveled)
-            if new_cheat_score > current_cheat_score:
-                map_object['cheat_scores'][cheat_coord][(i, j)] = new_cheat_score
+    #     if is_empty_tile(map_object['map'], i, j) or is_start_or_end(map_object['map'], i, j):
+    #         if (i, j) not in map_object['cheat_scores'][cheat_coord]:
+    #             map_object['cheat_scores'][cheat_coord][(i, j)] = 0
+
+    #         current_cheat_score = map_object['cheat_scores'][cheat_coord][(i, j)]
+    #         new_cheat_score = 
+    #         if new_cheat_score > current_cheat_score:
+    #             map_object['cheat_scores'][cheat_coord][(i, j)] = new_cheat_score
 
 def get_next_coords(i, j):
     return [
@@ -135,7 +141,7 @@ def get_all_connecting_empty_tiles_and_distances(map, cheat_coord):
     i, j = cheat_coord
 
     distances = {}
-    points_to_travel = [i, j, 0]
+    points_to_travel = [(i, j, 0)]
     while points_to_travel:
         i, j, distance = points_to_travel.pop()
 
@@ -162,12 +168,13 @@ def get_all_connecting_empty_tiles_and_distances(map, cheat_coord):
         distances[(i, j)] = distance
 
         for next_i, next_j in get_next_coords(i, j):
-            if is_in_map(map, next_i, next_j) and distance:
+            if is_in_map(map, next_i, next_j):
                 points_to_travel.append((next_i, next_j, distance + 1))
 
-    return {coord: distances[coord] for coord in distances if (is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]))}
+    return {coord: distance for coord, distance in distances.items() if (is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]))}
 
 def group_by_cheat_code_score(cheat_coords_with_scores):
+    print('inside group_by_cheat_code_score')
     mapping = {}
     for start, end, score in cheat_coords_with_scores:
         if score not in mapping:
@@ -197,19 +204,9 @@ def calculate_cheat_code_score(map, scores, cheat_coord, i, j, distance_traveled
 def get_adjacent_empty_tiles(map, i, j):
     adjacent_empty = []
     for next_i, next_j in get_next_coords(i, j):
-        if is_empty_tile(map, next_i, next_j) or is_start_or_end(map, next_i, next_j):  # TODO: consider only including start, not end
+        if is_empty_tile(map, next_i, next_j) or is_start(map, next_i, next_j):  # TODO: consider only including start, not end
             adjacent_empty.append((next_i, next_j))
     return adjacent_empty
-
-def get_cheat_coord_score(map, scores, i, j):
-    vertical = get_vertical_coords(map, i, j)
-    horizontal = get_horizontal_coords(map, i, j)
-
-    if all([is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]) for coord in vertical]):
-        return get_diff(scores, vertical[0], vertical[1]) - 2
-
-    if all([is_empty_tile(map, coord[0], coord[1]) or is_start_or_end(map, coord[0], coord[1]) for coord in horizontal]):
-        return get_diff(scores, horizontal[0], horizontal[1]) - 2
 
 def get_diff(scores, coord1, coord2):
     return abs(scores[coord1] - scores[coord2])
@@ -246,6 +243,7 @@ if __name__ == '__main__':
     # pprint.pprint(sorted(get_all_valid_cheat_coords(map_object), key=lambda x: x[1]))
 
     cheat_coords_with_scores = get_all_valid_cheat_coords(map_object)
+    # pprint.pprint(cheat_coords_with_scores)
     grouped = group_by_cheat_code_score(cheat_coords_with_scores)
     pprint.pprint({score: len(grouped[score]) for score in grouped})
 
