@@ -44,23 +44,13 @@ if __name__ == '__main__':
         contents = f.read()
 
     secret_numbers = parse_input(contents)
-    print(secret_numbers)
-    # for i in range(10):
     for i in range(2000):
         for n, secret_num_sequence in enumerate(secret_numbers):
             secret_num_sequence.append(calculate_secret_number(secret_num_sequence[-1]))
             secret_numbers[n] = secret_num_sequence
 
-    print(secret_numbers)
-    # print([secret_numbers[i][0] in range(len(secret_numbers))])
-
     price_sequences = [calculate_all_prices(seq) for seq in secret_numbers]
-    print(price_sequences)
     price_change_combos = [calculate_price_change_combos(price_seq) for price_seq in price_sequences]
-    print(price_change_combos)
-    # all_combos = set([])
-    # for combo_to_price in price_change_combos:
-    #     all_combos.update(set([combo for combo in combo_to_price]))
 
     combo_bananas_mapping = {}
     for combo_to_price in price_change_combos:
@@ -71,4 +61,3 @@ if __name__ == '__main__':
 
     max_bananas = max([bananas for _, bananas in combo_bananas_mapping.items()])
     print(max_bananas)
-    # print(price_change_combos)
