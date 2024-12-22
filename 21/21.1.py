@@ -104,6 +104,22 @@ def calculate_min_path_length(paths):
         return 0
     return min([len(path) for path in paths])
 
+def numerical_to_direction(code):
+    sequences = [[]]
+    for i in range(len(code)):
+        if i == 0:
+            start = 'A'
+        else:
+            start = code[i - 1]
+        end = code[i]
+        paths = find_shortest_paths(NUMERICAL_KEYPAD, start, end)
+        new_sequences = []
+        for path in paths:
+            for seq in sequences:
+                new_sequences.append(seq + path)
+        sequences = new_sequences
+    return sequences
+
 if __name__ == '__main__':
     with open('21/day_21_input.txt', 'r') as f:
         contents = f.read()
@@ -122,3 +138,5 @@ if __name__ == '__main__':
         for end_char in DIRECTIONAL_KEYPAD:
             shortest_paths = find_shortest_paths(DIRECTIONAL_KEYPAD, start_char, end_char)
             print(f'{start_char} to {end_char}: {shortest_paths}')
+
+    print(numerical_to_direction('029A'))
