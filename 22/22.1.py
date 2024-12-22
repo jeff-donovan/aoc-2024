@@ -6,13 +6,16 @@ def make_towels_and_designs(contents):
 
     return towels, designs
 
-def secret_number(previous):
-    first_result = prune(mix(previous * 64))
-    second_result = prune(mix((first_result // 32)))
-    return prune(mix(second_result * 2048))
+def calculate_secret_number(secret):
+    first_result = prune(mix(secret * 64, secret))
+    second_result = prune(mix(first_result // 32, first_result))
+    return prune(mix(second_result * 2048, second_result))
 
-def mix(secret, value):
-    return 0
+def mix(a, b):
+    return bitwise_xor(a, b)
+
+def bitwise_xor(a, b):
+    return a ^ b
 
 def prune(secret):
     return secret % 16777216
@@ -43,9 +46,14 @@ def is_design_possible(cache, towels, remaining_design):
     return cache[remaining_design]
 
 if __name__ == '__main__':
-    with open('22/day_22_input.txt', 'r') as f:
-        contents = f.read()
+    # with open('22/day_22_input.txt', 'r') as f:
+    #     contents = f.read()
 
-    towels, designs = make_towels_and_designs(contents)
-    cache = {}
-    print(sum([is_design_possible(cache, towels, d) for d in designs]))
+    # towels, designs = make_towels_and_designs(contents)
+    # cache = {}
+    # print(sum([is_design_possible(cache, towels, d) for d in designs]))
+
+    secret_number = 123
+    for i in range(10):
+        secret_number = calculate_secret_number(secret_number)
+        print(secret_number)
