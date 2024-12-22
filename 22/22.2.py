@@ -17,6 +17,9 @@ def calculate_secret_number(secret):
     second_result = prune(mix(first_result // 32, first_result))
     return prune(mix(second_result * 2048, second_result))
 
+def calculate_all_prices(secret_num_sequence):
+    return [n % 10 for n in secret_num_sequence]
+
 def mix(a, b):
     return bitwise_xor(a, b)
 
@@ -35,4 +38,5 @@ if __name__ == '__main__':
         for n, secret_num_sequence in enumerate(secret_numbers):
             secret_num_sequence.append(calculate_secret_number(secret_num_sequence[-1]))
             secret_numbers[n] = secret_num_sequence
-    print(secret_numbers)
+
+    price_sequences = [calculate_all_prices(seq) for seq in secret_numbers]
