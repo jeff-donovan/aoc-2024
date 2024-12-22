@@ -80,7 +80,7 @@ DIRECTIONAL_KEYPAD = {
 }
 
 def make_codes(contents):
-    return [[char for char in line] for line in contents.split('\n') if line]
+    return [line for line in contents.split('\n') if line]
 
 def find_shortest_paths(keypad, start_char, end_char, visited=None):
     if visited is None:
@@ -150,11 +150,10 @@ def calculate_complexity(code, sequences):
     return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
 
 if __name__ == '__main__':
-    with open('21/day_21_input.txt', 'r') as f:
+    with open('21/day_21_test.txt', 'r') as f:
         contents = f.read()
 
     codes = make_codes(contents)
-    pprint.pprint(codes)
 
     print('NUMERICAL_KEYPAD')
     for start_char in NUMERICAL_KEYPAD:
