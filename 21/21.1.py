@@ -120,6 +120,22 @@ def numerical_to_direction(code):
         sequences = new_sequences
     return sequences
 
+def directional_to_directional(directional_seq):
+    sequences = [[]]
+    for i in range(len(directional_seq)):
+        if i == 0:
+            start = 'A'
+        else:
+            start = directional_seq[i - 1]
+        end = directional_seq[i]
+        paths = find_shortest_paths(DIRECTIONAL_KEYPAD, start, end)
+        new_sequences = []
+        for path in paths:
+            for seq in sequences:
+                new_sequences.append(seq + path)
+        sequences = new_sequences
+    return sequences
+
 if __name__ == '__main__':
     with open('21/day_21_input.txt', 'r') as f:
         contents = f.read()
@@ -140,3 +156,4 @@ if __name__ == '__main__':
             print(f'{start_char} to {end_char}: {shortest_paths}')
 
     print(numerical_to_direction('029A'))
+    pprint.pprint(directional_to_directional(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']))
