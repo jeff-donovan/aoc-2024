@@ -90,11 +90,7 @@ def find_shortest_paths(keypad, start_char, end_char, visited=None):
         return []
 
     if start_char == end_char:
-        return []
-
-    for direction, destination in keypad[start_char].items():
-        if destination == end_char:
-            return [[direction]]
+        return [['A']]
 
     paths = []
     for direction, next_start_char in keypad[start_char].items():
