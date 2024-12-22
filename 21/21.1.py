@@ -104,6 +104,16 @@ def calculate_min_path_length(paths):
         return 0
     return min([len(path) for path in paths])
 
+def find_all_sequences(code):
+    seq_num_to_dir = numerical_to_direction(code)
+    seq_dir_to_dir = []
+    for seq in seq_num_to_dir:
+        seq_dir_to_dir.extend(directional_to_directional(seq))
+    final_seq = []
+    for seq in seq_dir_to_dir:
+        final_seq.extend(directional_to_directional(seq))
+    return final_seq
+
 def numerical_to_direction(code):
     sequences = [[]]
     for i in range(len(code)):
@@ -136,6 +146,9 @@ def directional_to_directional(directional_seq):
         sequences = new_sequences
     return sequences
 
+def calculate_complexity(code, sequences):
+    return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
+
 if __name__ == '__main__':
     with open('21/day_21_input.txt', 'r') as f:
         contents = f.read()
@@ -155,5 +168,4 @@ if __name__ == '__main__':
             shortest_paths = find_shortest_paths(DIRECTIONAL_KEYPAD, start_char, end_char)
             print(f'{start_char} to {end_char}: {shortest_paths}')
 
-    print(numerical_to_direction('029A'))
-    pprint.pprint(directional_to_directional(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']))
+    print(sum([calculate_complexity(code, find_all_sequences(code)) for code in codes]))
