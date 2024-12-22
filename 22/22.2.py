@@ -18,16 +18,16 @@ def calculate_secret_number(secret):
 def calculate_all_prices(secret_num_sequence):
     return [n % 10 for n in secret_num_sequence]
 
-def calculate_price_change_combos(secret_num_sequence):
+def calculate_price_change_combos(price_sequence):
     combo_to_price = {}
-    for i in range(4, len(secret_num_sequence)):
-        first = secret_num_sequence[i - 3] - secret_num_sequence[i - 4]
-        second = secret_num_sequence[i - 2] - secret_num_sequence[i - 3]
-        third = secret_num_sequence[i - 1] - secret_num_sequence[i - 2]
-        fourth = secret_num_sequence[i] - secret_num_sequence[i - 1]
+    for i in range(4, len(price_sequence)):
+        first = price_sequence[i - 3] - price_sequence[i - 4]
+        second = price_sequence[i - 2] - price_sequence[i - 3]
+        third = price_sequence[i - 1] - price_sequence[i - 2]
+        fourth = price_sequence[i] - price_sequence[i - 1]
         combo = (first, second, third, fourth)
         if combo not in combo_to_price:
-            combo_to_price[combo] = secret_num_sequence[i]
+            combo_to_price[combo] = price_sequence[i]
     return combo_to_price
 
 def mix(a, b):
@@ -45,8 +45,8 @@ if __name__ == '__main__':
 
     secret_numbers = parse_input(contents)
     print(secret_numbers)
-    for i in range(2):
-    # for i in range(2000):
+    # for i in range(10):
+    for i in range(2000):
         for n, secret_num_sequence in enumerate(secret_numbers):
             secret_num_sequence.append(calculate_secret_number(secret_num_sequence[-1]))
             secret_numbers[n] = secret_num_sequence
@@ -54,19 +54,21 @@ if __name__ == '__main__':
     print(secret_numbers)
     # print([secret_numbers[i][0] in range(len(secret_numbers))])
 
-    # price_sequences = [calculate_all_prices(seq) for seq in secret_numbers]
-    # price_change_combos = [calculate_price_change_combos(seq) for seq in secret_numbers]
-    # # all_combos = set([])
-    # # for combo_to_price in price_change_combos:
-    # #     all_combos.update(set([combo for combo in combo_to_price]))
-
-    # combo_bananas_mapping = {}
+    price_sequences = [calculate_all_prices(seq) for seq in secret_numbers]
+    print(price_sequences)
+    price_change_combos = [calculate_price_change_combos(price_seq) for price_seq in price_sequences]
+    print(price_change_combos)
+    # all_combos = set([])
     # for combo_to_price in price_change_combos:
-    #     for combo, price in combo_to_price.items():
-    #         if combo not in combo_bananas_mapping:
-    #             combo_bananas_mapping[combo] = 0
-    #         combo_bananas_mapping[combo] += price
+    #     all_combos.update(set([combo for combo in combo_to_price]))
 
-    # max_bananas = max([bananas for _, bananas in combo_bananas_mapping.items()])
-    # print(max_bananas)
+    combo_bananas_mapping = {}
+    for combo_to_price in price_change_combos:
+        for combo, price in combo_to_price.items():
+            if combo not in combo_bananas_mapping:
+                combo_bananas_mapping[combo] = 0
+            combo_bananas_mapping[combo] += price
+
+    max_bananas = max([bananas for _, bananas in combo_bananas_mapping.items()])
+    print(max_bananas)
     # print(price_change_combos)
