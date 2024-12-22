@@ -115,7 +115,14 @@ if __name__ == '__main__':
     codes = make_codes(contents)
     pprint.pprint(codes)
 
+    print('NUMERICAL_KEYPAD')
     for start_char in NUMERICAL_KEYPAD:
         for end_char in NUMERICAL_KEYPAD:
             shortest_paths = find_shortest_paths(NUMERICAL_KEYPAD, start_char, end_char)
+            print(f'{start_char} to {end_char}: {shortest_paths}')
+
+    print('DIRECTIONAL_KEYPAD')
+    for start_char in DIRECTIONAL_KEYPAD:
+        for end_char in DIRECTIONAL_KEYPAD:
+            shortest_paths = find_shortest_paths(DIRECTIONAL_KEYPAD, start_char, end_char)
             print(f'{start_char} to {end_char}: {shortest_paths}')
