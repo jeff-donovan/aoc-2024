@@ -20,7 +20,7 @@ def prune(secret):
     return secret % 16777216
 
 if __name__ == '__main__':
-    with open('22/day_22_test.txt', 'r') as f:
+    with open('22/day_22_input.txt', 'r') as f:
         contents = f.read()
 
     secret_numbers = parse_input(contents)
