@@ -120,6 +120,15 @@ def find_all_sequences(code, depth):
 
     return sequences
 
+def group_by_A(seq):
+    a_indices = [i for i, char in enumerate(seq) if char == 'A']
+    new_sequences = []
+    start = 0
+    for a_index in a_indices:
+        new_sequences.append(seq[start : a_index + 1])
+        start = a_index + 1
+    return new_sequences
+
 def numerical_to_direction(code):
     sequences = [[]]
     for i in range(len(code)):
@@ -161,18 +170,29 @@ if __name__ == '__main__':
 
     codes = make_codes(contents)
 
-    start = datetime.datetime.now()
-    # depth = 2
-    # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
-    code = '029A'
-    for depth in range(10):
-        print(f'{depth} - ', calculate_min_path_length(find_all_sequences(code, depth)))
-        print('took ', datetime.datetime.now() - start)
-        print()
+    for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']):
+        print(f'group {group} -> {directional_to_directional(group)[0]}')
+
+    jeff = []
+    [jeff.extend(directional_to_directional(group)[0]) for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A'])]
+    print(f'{len(jeff)} - {jeff}')
+
+    jeff2 = []
+    [jeff2.extend(directional_to_directional(group)[0]) for group in group_by_A(jeff)]
+    print(f'{len(jeff2)} - {jeff2}')
+
+    # start = datetime.datetime.now()
+    # # depth = 2
+    # # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
+    # code = '029A'
+    # for depth in range(10):
+    #     print(f'{depth} - ', calculate_min_path_length(find_all_sequences(code, depth)))
+    #     print('took ', datetime.datetime.now() - start)
+    #     print()
 
 # IDEAS:
 #  - find all repeated subsequences within a sequence
 #    - somehow group these together to minimize re-calculations
 #    - build the next depth
- - **CHECK THIS ONE OUT TOMORROW** rather than find repeated subsequences, use the 'A' to split the sequence up
+#  - **CHECK THIS ONE OUT TOMORROW** rather than find repeated subsequences, use the 'A' to split the sequence up
 #  - is this a math problem where we don't need to generate all combos, and instead can calculate size of smallest combo with a formula?
