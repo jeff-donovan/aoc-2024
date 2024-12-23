@@ -162,6 +162,10 @@ if __name__ == '__main__':
     codes = make_codes(contents)
 
     start = datetime.datetime.now()
-    depth = 2
-    print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
-    print('took ', datetime.datetime.now() - start)
+    # depth = 2
+    # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
+    code = '029A'
+    for depth in range(10):
+        print(f'{depth} - ', calculate_min_path_length(find_all_sequences(code, depth)))
+        print('took ', datetime.datetime.now() - start)
+        print()
