@@ -162,11 +162,12 @@ def calculate_complexity(code, sequences):
     return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
 
 if __name__ == '__main__':
-    with open('21/day_21_input.txt', 'r') as f:
+    with open('21/day_21_test.txt', 'r') as f:
         contents = f.read()
 
     codes = make_codes(contents)
 
     start = datetime.datetime.now()
-    print(sum([calculate_complexity(code, find_all_sequences(code, 2)) for code in codes]))
+    depth = 2
+    print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
     print('took ', datetime.datetime.now() - start)
