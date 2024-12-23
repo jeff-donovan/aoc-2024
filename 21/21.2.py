@@ -1,3 +1,6 @@
+import datetime
+
+
 NUMERICAL_KEYPAD = {
     'A': {
         '^': '3',
@@ -150,6 +153,8 @@ if __name__ == '__main__':
     with open('21/day_21_input.txt', 'r') as f:
         contents = f.read()
 
+    start = datetime.datetime.now()
     codes = make_codes(contents)
 
     print(sum([calculate_complexity(code, find_all_sequences(code)) for code in codes]))
+    print('took ', datetime.datetime.now() - start)
