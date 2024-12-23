@@ -1,4 +1,4 @@
-import pprint
+import datetime
 
 
 NUMERICAL_KEYPAD = {
@@ -150,7 +150,7 @@ def calculate_complexity(code, sequences):
     return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
 
 if __name__ == '__main__':
-    with open('21/day_21_input.txt', 'r') as f:
+    with open('21/day_21_test.txt', 'r') as f:
         contents = f.read()
 
     codes = make_codes(contents)
@@ -167,4 +167,6 @@ if __name__ == '__main__':
             shortest_paths = find_shortest_paths(DIRECTIONAL_KEYPAD, start_char, end_char)
             print(f'{start_char} to {end_char}: {shortest_paths}')
 
+    start = datetime.datetime.now()
     print(sum([calculate_complexity(code, find_all_sequences(code)) for code in codes]))
+    print('took ', datetime.datetime.now() - start)
