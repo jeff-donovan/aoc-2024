@@ -14,21 +14,20 @@ def parse_input(contents):
             connections[b].add(a)
     return connections
 
-def is_lan_party(cache, connections, combo):
-    key = cache_key(combo)
-    if key in cache:
-        return cache[key]
-
+def is_lan_party(connections, combo):
     for computer in combo:
         for other_computer in combo:
             if (computer != other_computer) and computer not in connections[other_computer]:
-                cache[key] = False
                 return False
-    cache[key] = True
     return True
 
 def largest_lan_party_for_group(cache, connections, group):
-    if is_lan_party(cache, connections, group):
+    key = cache_key(group)
+    if key in cache:
+        return cache[key]
+
+    if is_lan_party(connections, group):
+        cache[key] = group
         return group
 
     largest_lan_party = set([])
@@ -38,13 +37,15 @@ def largest_lan_party_for_group(cache, connections, group):
         new_lan_party = largest_lan_party_for_group(cache, connections, new_group)
         if len(new_lan_party) > len(largest_lan_party):
             largest_lan_party = new_lan_party
+
+    cache[key] = largest_lan_party
     return largest_lan_party
 
 def cache_key(combo_set):
     return tuple(sorted(combo_set))
 
 if __name__ == '__main__':
-    with open('23/day_23_input.txt', 'r') as f:
+    with open('23/day_23_test.txt', 'r') as f:
         contents = f.read()
 
     start = datetime.datetime.now()
@@ -54,6 +55,7 @@ if __name__ == '__main__':
     print('finished setting up connections in ', datetime.datetime.now() - start)
 
     cache = {}
+    # is_lan_party_cache = {}
     largest_lan_party = set([])
     for computer in connections:
         group = set(list(connections[computer]) + [computer])
