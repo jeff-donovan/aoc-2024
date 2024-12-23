@@ -41,7 +41,7 @@ def cache_key(combo_set):
     return tuple(sorted(combo_set))
 
 if __name__ == '__main__':
-    with open('23/day_23_test.txt', 'r') as f:
+    with open('23/day_23_input.txt', 'r') as f:
         contents = f.read()
 
     connections = parse_input(contents)
