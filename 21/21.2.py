@@ -112,11 +112,10 @@ def find_all_sequences(code, depth):
     for _ in range(depth):
         new_sequences = []
         for seq in sequences:
-            new_paths = directional_to_directional(seq)
-            for path in new_paths:
-                new_sequences.append(path)
+            new_paths = directional_transformation(seq)
+            new_sequences.extend(new_paths)
 
-        sequences = new_sequences
+        sequences = tidy_up(new_sequences)
 
     return sequences
 
@@ -145,6 +144,14 @@ def numerical_to_direction(code):
         sequences = new_sequences
     return sequences
 
+def directional_transformation(seq):
+    possible_sequences = directional_to_directional(seq)
+    return tidy_up(possible_sequences)
+
+def tidy_up(sequences):
+    min_length = calculate_min_path_length(sequences)
+    return [seq for seq in sequences if len(seq) == min_length]
+
 def directional_to_directional(directional_seq):
     sequences = [[]]
     for i in range(len(directional_seq)):
@@ -170,20 +177,29 @@ if __name__ == '__main__':
 
     codes = make_codes(contents)
 
-    for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']):
-        print(f'group {group} -> {directional_to_directional(group)[0]}')
+    # numerical_transform = ['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']
+    # final = []
+    # for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']):
+    #     first_dir_transform = directional_transformation(group)
+    #     second_dir_transform = directional_transformation(first_dir_transform)
+    #     final.extend(second_dir_transform)
+    # print(len(final), final)
 
-    jeff = []
-    [jeff.extend(directional_to_directional(group)[0]) for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A'])]
-    print(f'{len(jeff)} - {jeff}')
+    # for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']):
+    #     print(f'group {group} -> {directional_to_directional(group)[0]}')
 
-    jeff2 = []
-    [jeff2.extend(directional_to_directional(group)[0]) for group in group_by_A(jeff)]
-    print(f'{len(jeff2)} - {jeff2}')
+    # jeff = []
+    # [jeff.extend(directional_to_directional(group)[0]) for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A'])]
+    # print(f'{len(jeff)} - {jeff}')
 
-    # start = datetime.datetime.now()
-    # # depth = 2
-    # # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
+    # jeff2 = []
+    # [jeff2.extend(directional_to_directional(group)[0]) for group in group_by_A(jeff)]
+    # print(f'{len(jeff2)} - {jeff2}')
+
+    start = datetime.datetime.now()
+    depth = 2
+    print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
+    print('took ', datetime.datetime.now() - start)
     # code = '029A'
     # for depth in range(10):
     #     print(f'{depth} - ', calculate_min_path_length(find_all_sequences(code, depth)))
