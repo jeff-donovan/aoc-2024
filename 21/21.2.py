@@ -82,9 +82,13 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
-def find_shortest_paths(keypad, start_char, end_char, visited=None):
+def find_shortest_paths(cache, keypad, start_char, end_char, visited=None):
     if visited is None:
         visited = []
+
+    key = cache_key(keypad, start_char, end_char, visited)
+    if key in cache:
+        return cache[key]
 
     if start_char in visited:
         return []
@@ -94,10 +98,18 @@ def find_shortest_paths(keypad, start_char, end_char, visited=None):
 
     paths = []
     for direction, next_start_char in keypad[start_char].items():
-        next_paths = [[direction] + path for path in find_shortest_paths(keypad, next_start_char, end_char, visited + [start_char])]
+        next_paths = [[direction] + path for path in find_shortest_paths(cache, keypad, next_start_char, end_char, visited + [start_char])]
         paths += next_paths
 
-    return [path for path in paths if len(path) == calculate_min_path_length(paths)]
+    cache[key] = [path for path in paths if len(path) == calculate_min_path_length(paths)]
+    return cache[key]
+
+def cache_key(keypad, start, end, visited):
+    if keypad == NUMERICAL_KEYPAD:
+        keypad_type = 'numerical'
+    else:
+        keypad_type = 'directional'
+    return (keypad_type, start, end, tuple(sorted(visited)))
 
 def calculate_min_path_length(paths):
     if len(paths) == 0:
@@ -122,14 +134,7 @@ def numerical_to_direction(cache, code):
         else:
             start = code[i - 1]
         end = code[i]
-
-        key = ('numerical', start, end)
-        if key in cache:
-            paths = cache[key]
-        else:
-            paths = find_shortest_paths(NUMERICAL_KEYPAD, start, end)
-            cache[key] = paths
-
+        paths = find_shortest_paths(cache, NUMERICAL_KEYPAD, start, end)
         new_sequences = []
         for path in paths:
             for seq in sequences:
@@ -145,14 +150,7 @@ def directional_to_directional(cache, directional_seq):
         else:
             start = directional_seq[i - 1]
         end = directional_seq[i]
-
-        key = ('directional', start, end)
-        if key in cache:
-            paths = cache[key]
-        else:
-            paths = find_shortest_paths(DIRECTIONAL_KEYPAD, start, end)
-            cache[key] = paths
-
+        paths = find_shortest_paths(cache, DIRECTIONAL_KEYPAD, start, end)
         new_sequences = []
         for path in paths:
             for seq in sequences:
@@ -164,7 +162,7 @@ def calculate_complexity(code, sequences):
     return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
 
 if __name__ == '__main__':
-    with open('21/day_21_input.txt', 'r') as f:
+    with open('21/day_21_test.txt', 'r') as f:
         contents = f.read()
 
     start = datetime.datetime.now()
