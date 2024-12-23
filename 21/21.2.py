@@ -168,6 +168,6 @@ if __name__ == '__main__':
     codes = make_codes(contents)
 
     start = datetime.datetime.now()
-    depth = 2
+    depth = 3
     print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
     print('took ', datetime.datetime.now() - start)
