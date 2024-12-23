@@ -169,3 +169,10 @@ if __name__ == '__main__':
         print(f'{depth} - ', calculate_min_path_length(find_all_sequences(code, depth)))
         print('took ', datetime.datetime.now() - start)
         print()
+
+# IDEAS:
+#  - find all repeated subsequences within a sequence
+#    - somehow group these together to minimize re-calculations
+#    - build the next depth
+ - **CHECK THIS ONE OUT TOMORROW** rather than find repeated subsequences, use the 'A' to split the sequence up
+#  - is this a math problem where we don't need to generate all combos, and instead can calculate size of smallest combo with a formula?
