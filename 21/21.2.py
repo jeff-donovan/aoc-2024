@@ -145,7 +145,7 @@ def numerical_to_direction(code):
         sequences = new_sequences
     return sequences
 
-def directional_to_directional(directional_seq):
+def directional_to_directional(directional_seq, check_next_level=True):
     sequences = [[]]
     for i in range(len(directional_seq)):
         if i == 0:
@@ -159,7 +159,20 @@ def directional_to_directional(directional_seq):
             for seq in sequences:
                 new_sequences.append(seq + path)
         sequences = new_sequences
-    return sequences
+
+    if not check_next_level:
+        return sequences
+
+    result = sequences[0]
+    min_length = len(directional_to_directional(sequences[0]), check_next_level=False)
+
+    for seq in sequences:
+        length_next_level_seq = len(directional_to_directional(seq), check_next_level=False)
+        if length_next_level_seq < min_length:
+            min_length = length_next_level_seq
+            result = seq
+
+    return [result]
 
 def calculate_complexity(code, sequences):
     return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
@@ -170,25 +183,25 @@ if __name__ == '__main__':
 
     codes = make_codes(contents)
 
-    for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']):
-        print(f'group {group} -> {directional_to_directional(group)[0]}')
+    # for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']):
+    #     print(f'group {group} -> {directional_to_directional(group)[0]}')
 
-    jeff = []
-    [jeff.extend(directional_to_directional(group)[0]) for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A'])]
-    print(f'{len(jeff)} - {jeff}')
+    # jeff = []
+    # [jeff.extend(directional_to_directional(group)[0]) for group in group_by_A(['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A'])]
+    # print(f'{len(jeff)} - {jeff}')
 
-    jeff2 = []
-    [jeff2.extend(directional_to_directional(group)[0]) for group in group_by_A(jeff)]
-    print(f'{len(jeff2)} - {jeff2}')
+    # jeff2 = []
+    # [jeff2.extend(directional_to_directional(group)[0]) for group in group_by_A(jeff)]
+    # print(f'{len(jeff2)} - {jeff2}')
 
-    # start = datetime.datetime.now()
-    # # depth = 2
-    # # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
-    # code = '029A'
-    # for depth in range(10):
-    #     print(f'{depth} - ', calculate_min_path_length(find_all_sequences(code, depth)))
-    #     print('took ', datetime.datetime.now() - start)
-    #     print()
+    start = datetime.datetime.now()
+    # depth = 2
+    # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
+    code = '029A'
+    for depth in range(10):
+        print(f'{depth} - ', calculate_min_path_length(find_all_sequences(code, depth)))
+        print('took ', datetime.datetime.now() - start)
+        print()
 
 # IDEAS:
 #  - find all repeated subsequences within a sequence
