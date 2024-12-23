@@ -145,8 +145,7 @@ def numerical_to_direction(code):
         sequences = new_sequences
     return sequences
 
-def directional_to_directional(directional_seq, check_next_level=True):
-    print('inside directional_to_directional')
+def directional_to_directional(directional_seq):
     sequences = [[]]
     for i in range(len(directional_seq)):
         if i == 0:
@@ -160,20 +159,7 @@ def directional_to_directional(directional_seq, check_next_level=True):
             for seq in sequences:
                 new_sequences.append(seq + path)
         sequences = new_sequences
-
-    if not check_next_level:
-        return sequences
-
-    result = sequences[0]
-    min_length = len(directional_to_directional(sequences[0]), check_next_level=False)
-
-    for seq in sequences:
-        length_next_level_seq = len(directional_to_directional(seq), check_next_level=False)
-        if length_next_level_seq < min_length:
-            min_length = length_next_level_seq
-            result = seq
-
-    return result
+    return sequences
 
 def calculate_complexity(code, sequences):
     return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
