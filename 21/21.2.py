@@ -111,16 +111,10 @@ def find_all_sequences(code, depth):
 
     for _ in range(depth):
         new_sequences = []
-        min_length = None
         for seq in sequences:
             new_paths = directional_to_directional(seq)
-            first_path_length = len(new_paths[0])
-            if min_length is None or first_path_length < min_length:
-                min_length = first_path_length
-
             for path in new_paths:
-                if len(path) <= min_length:
-                    new_sequences.append(path)
+                new_sequences.append(path)
 
         sequences = new_sequences
 
@@ -168,6 +162,6 @@ if __name__ == '__main__':
     codes = make_codes(contents)
 
     start = datetime.datetime.now()
-    depth = 3
+    depth = 2
     print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
     print('took ', datetime.datetime.now() - start)
