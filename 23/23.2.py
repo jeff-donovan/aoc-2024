@@ -32,7 +32,7 @@ def largest_lan_party_for_group(connections, group):
     return largest_lan_party
 
 if __name__ == '__main__':
-    with open('23/day_23_test.txt', 'r') as f:
+    with open('23/day_23_input.txt', 'r') as f:
         contents = f.read()
 
     connections = parse_input(contents)
@@ -44,4 +44,5 @@ if __name__ == '__main__':
         new_lan_party = largest_lan_party_for_group(connections, group)
         if len(new_lan_party) > len(largest_lan_party):
             largest_lan_party = new_lan_party
+            print('new largest lan party: ', largest_lan_party)
     print(','.join(sorted(list(largest_lan_party))))
