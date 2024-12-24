@@ -197,7 +197,7 @@ if __name__ == '__main__':
     # print(f'{len(jeff2)} - {jeff2}')
 
     start = datetime.datetime.now()
-    depth = 2
+    depth = 3
     print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
     print('took ', datetime.datetime.now() - start)
     # code = '029A'
