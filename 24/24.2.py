@@ -93,7 +93,8 @@ def get_output_swap_combos(gates, num_swap_pairs):
             if i_output != j_output:
                 pairs.add(tuple(sorted([i_output, j_output])))
 
-    combos = itertools.combinations(pairs, num_swap_pairs)
+    combos = list(itertools.combinations(pairs, num_swap_pairs))
+    print('combos: ', combos)
 
     # since itertools.combinations() does not care if z00 is used across multiple pairs within a combo, we have to remove invalid combos where this occurs
     final = []
@@ -115,6 +116,10 @@ def is_valid_addition(values):
     x_vals = get_all_x(values)
     y_vals = get_all_y(values)
     z_vals = get_all_z(values)
+    print(f'{as_binary_string(x_vals)} + {as_binary_string(y_vals)} = {as_binary_string(z_vals)}')
+    print(f'{as_decimal(x_vals)} + {as_decimal(y_vals)} = {as_decimal(z_vals)}')
+    print('(as_decimal(x_vals) + as_decimal(y_vals)): ', (as_decimal(x_vals) + as_decimal(y_vals)))
+    print('as_decimal(z_vals): ', as_decimal(z_vals))
     return (as_decimal(x_vals) + as_decimal(y_vals)) == as_decimal(z_vals)
 
 def swap_outputs(gates, combo):
@@ -137,18 +142,21 @@ if __name__ == '__main__':
 
     num_swap_pairs = 2
     swap_combos = get_output_swap_combos(gates, num_swap_pairs)
+    print('swap_combos: ', swap_combos)
     for combo in swap_combos:
+        print()
         print('combo: ', combo)
         combo_values = copy.deepcopy(values)
         combo_gates = swap_outputs(copy.deepcopy(gates), combo)
         print('combo_values: ', combo_values)
         print('gates: ', gates)
         print('combo_gates: ', combo_gates)
-        # apply_all_gates(combo_values, combo_gates)
-        # if is_valid_addition(combo_values):
-        #     outputs = []
-        #     for pair in combo:
-        #         outputs.append(pair[0])
-        #         outputs.append(pair[1])
-        #     print(','.join(sorted(outputs)))
-        #     break
+        apply_all_gates(combo_values, combo_gates)
+        print('values after: ', combo_values)
+        if is_valid_addition(combo_values):
+            outputs = []
+            for pair in combo:
+                outputs.append(pair[0])
+                outputs.append(pair[1])
+            print(','.join(sorted(outputs)))
+            break
