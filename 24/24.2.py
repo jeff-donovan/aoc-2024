@@ -23,6 +23,7 @@ def parse_input(contents):
 def apply_all_gates(values, gates):
     i = 0
     while len(gates) > 0:
+        i = i % len(gates)
         command, x, y, z = gates[i]
         success = apply_gate(values, command, x, y, z)
         if not success:
@@ -92,16 +93,7 @@ def get_output_swap_combos(gates, num_swap_pairs):
             j_output = j[3]
             if i_output != j_output:
                 pairs.add(tuple(sorted([i_output, j_output])))
-
-    combos = list(itertools.combinations(pairs, num_swap_pairs))
-    print('combos: ', combos)
-
-    # since itertools.combinations() does not care if z00 is used across multiple pairs within a combo, we have to remove invalid combos where this occurs
-    final = []
-    for combo in combos:
-        if is_valid_combo(combo):
-            final.append(combo)
-    return final
+    return itertools.combinations(pairs, num_swap_pairs)
 
 def is_valid_combo(combo):
     outputs = set([])
@@ -116,10 +108,6 @@ def is_valid_addition(values):
     x_vals = get_all_x(values)
     y_vals = get_all_y(values)
     z_vals = get_all_z(values)
-    print(f'{as_binary_string(x_vals)} + {as_binary_string(y_vals)} = {as_binary_string(z_vals)}')
-    print(f'{as_decimal(x_vals)} + {as_decimal(y_vals)} = {as_decimal(z_vals)}')
-    print('(as_decimal(x_vals) + as_decimal(y_vals)): ', (as_decimal(x_vals) + as_decimal(y_vals)))
-    print('as_decimal(z_vals): ', as_decimal(z_vals))
     return binary_addition(as_binary_string(x_vals), as_binary_string(y_vals)) == as_binary_string(z_vals)
 
 def binary_addition(x_val, y_val):
@@ -138,24 +126,22 @@ def swap_outputs(gates, combo):
     return gates
 
 if __name__ == '__main__':
-    with open('24/day_24_test_part2.txt', 'r') as f:
+    with open('24/day_24_input.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
 
-    num_swap_pairs = 2
-    swap_combos = get_output_swap_combos(gates, num_swap_pairs)
-    print('swap_combos: ', swap_combos)
-    for combo in swap_combos:
+    num_swap_pairs = 4
+    for combo in get_output_swap_combos(gates, num_swap_pairs):
+        if not is_valid_combo(combo):
+            continue
+
         print()
+        print('valid combo!')
         print('combo: ', combo)
         combo_values = copy.deepcopy(values)
         combo_gates = swap_outputs(copy.deepcopy(gates), combo)
-        print('combo_values: ', combo_values)
-        print('gates: ', gates)
-        print('combo_gates: ', combo_gates)
         apply_all_gates(combo_values, combo_gates)
-        print('values after: ', combo_values)
         if is_valid_addition(combo_values):
             outputs = []
             for pair in combo:
