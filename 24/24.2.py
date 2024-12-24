@@ -70,11 +70,17 @@ def as_decimal(values):
 def as_binary_string(values):
     return ''.join([str(val) for _, val in values])
 
+def get_all_x(values):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('x')], key=lambda x: x[0], reverse=True)
+
+def get_all_y(values):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('y')], key=lambda y: y[0], reverse=True)
+
 def get_all_z(values):
     return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0], reverse=True)
 
 if __name__ == '__main__':
-    with open('24/day_24_input.txt', 'r') as f:
+    with open('24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
@@ -84,5 +90,9 @@ if __name__ == '__main__':
     apply_all_gates(values, gates)
     print('values after: ', values)
 
+    x_vals = get_all_x(values)
+    y_vals = get_all_y(values)
     z_vals = get_all_z(values)
-    print(as_decimal(z_vals))
+    print('x: ', as_decimal(x_vals))
+    print('y: ', as_decimal(y_vals))
+    print('z: ', as_decimal(z_vals))
