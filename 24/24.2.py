@@ -140,12 +140,19 @@ if __name__ == '__main__':
     x_values = get_all_x(values)
     y_values = get_all_y(values)
     z_values = get_all_z(values)
+    # for z in z_values:
+    #     if z[0] == 'z08':
+    #         print(z[1])
 
     print('x: ', x_values)
+    print()
     print('y: ', y_values)
+    print()
     print('z: ', z_values)
+    print()
 
     for i in range(len(x_values) - 1, 0, -1):
+        print('i: ', i)
         x_bin = as_binary_string(x_values[i:])
         y_bin = as_binary_string(y_values[i:])
         bin_sum = binary_addition(x_bin, y_bin)
