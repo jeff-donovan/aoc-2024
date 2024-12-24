@@ -138,8 +138,7 @@ if __name__ == '__main__':
     values, gates = parse_input(contents)
     apply_all_gates(values, gates)
 
-    # values['z04'] = 1
-    # values['z05'] = 1
+    values['z16'] = 0
 
     x_values = get_all_x(values, reverse=False)
     y_values = get_all_y(values, reverse=False)
@@ -152,43 +151,21 @@ if __name__ == '__main__':
     print('z: ', z_values)
     print()
 
-    for i in range(1, len(x_values)):
-        print('i: ', i)
-        x_bin = as_binary_string(sorted(x_values[:i], reverse=True))
-        y_bin = as_binary_string(sorted(y_values[:i], reverse=True))
-        z_bin = as_binary_string(sorted(z_values[:i], reverse=True))
-        bin_sum = binary_addition(x_bin, y_bin)
-        is_valid = bin_sum.endswith(z_bin)
-        if is_valid:
-            print('valid bin_sum')
-            print(f'{x_bin} + {y_bin} = {bin_sum}')
-            print(f'z: ', z_bin)
-            print()
-            continue
+    x_bin = as_binary_string(sorted(x_values, reverse=True))
+    y_bin = as_binary_string(sorted(y_values, reverse=True))
+    bin_sum = binary_addition(x_bin, y_bin)
+    z_bin = as_binary_string(sorted(z_values, reverse=True))
 
-        print('------------------------')
-        print('wrong!')
+    if bin_sum == z_bin:
+        print('valid bin_sum')
         print(f'{x_bin} + {y_bin} = {bin_sum}')
-        print('z: ', z_bin)
-        # print(f'{x_values[i][1]} + {y_values[i][1]} = {z_values[i][1]}')
-        break
+        print(f'z: ', z_bin)
+        print()
 
-    # num_swap_pairs = 2
-    # for combo in get_output_swap_combos(gates, num_swap_pairs):
-    #     if not is_valid_combo(combo):
-    #         # print('INVALID')
-    #         continue
-
-    #     print()
-    #     print('valid combo!')
-    #     print('combo: ', combo)
-    #     combo_values = copy.deepcopy(values)
-    #     combo_gates = swap_outputs(copy.deepcopy(gates), combo)
-    #     apply_all_gates(combo_values, combo_gates)
-    #     if is_valid_addition(combo_values):
-    #         outputs = []
-    #         for pair in combo:
-    #             outputs.append(pair[0])
-    #             outputs.append(pair[1])
-    #         print(','.join(sorted(outputs)))
-    #         break
+    for i in range(len(z_bin)):
+        if z_bin[::-1][i] != bin_sum[::-1][i]:
+            print(f'{i} - check there')
+    print('------------------------')
+    print('wrong!')
+    print(f'{x_bin} + {y_bin} = {bin_sum}')
+    print('z: ', z_bin)
