@@ -137,12 +137,9 @@ if __name__ == '__main__':
 
     values, gates = parse_input(contents)
     apply_all_gates(values, gates)
-    x_values = get_all_x(values)
-    y_values = get_all_y(values)
-    z_values = get_all_z(values)
-    # for z in z_values:
-    #     if z[0] == 'z08':
-    #         print(z[1])
+    x_values = get_all_x(values, reverse=False)
+    y_values = get_all_y(values, reverse=False)
+    z_values = get_all_z(values, reverse=False)
 
     print('x: ', x_values)
     print()
@@ -151,24 +148,25 @@ if __name__ == '__main__':
     print('z: ', z_values)
     print()
 
-    for i in range(len(x_values) - 1, 0, -1):
+    for i in range(1, len(x_values)):
         print('i: ', i)
-        x_bin = as_binary_string(x_values[i:])
-        y_bin = as_binary_string(y_values[i:])
+        x_bin = as_binary_string(sorted(x_values[:i], reverse=True))
+        y_bin = as_binary_string(sorted(y_values[:i], reverse=True))
+        z_bin = as_binary_string(sorted(z_values[:i], reverse=True))
         bin_sum = binary_addition(x_bin, y_bin)
-        is_valid = bin_sum.endswith(as_binary_string(z_values[i + 1:]))
+        is_valid = bin_sum.endswith(z_bin)
         if is_valid:
             print('valid bin_sum')
             print(f'{x_bin} + {y_bin} = {bin_sum}')
-            print(f'z: ', as_binary_string(z_values[i + 1:]))
+            print(f'z: ', z_bin)
             print()
             continue
 
         print('------------------------')
         print('wrong!')
         print('bin_sum: ', bin_sum)
-        print('z: ', as_binary_string(z_values[i + 1:]))
-        print(f'{x_values[i][0]} + {y_values[i][0]} = {z_values[i + 1][0]}')
+        print('z: ', z_bin)
+        print(f'{x_bin} + {y_bin} = {z_bin}')
         # print(f'{x_values[i][1]} + {y_values[i][1]} = {z_values[i][1]}')
         break
 
