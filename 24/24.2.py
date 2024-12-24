@@ -132,7 +132,7 @@ def swap_outputs(gates, combo):
     return gates
 
 if __name__ == '__main__':
-    with open('24/day_24_input.txt', 'r') as f:
+    with open('24/day_24_test_input_updated.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
