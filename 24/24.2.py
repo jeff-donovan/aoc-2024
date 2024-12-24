@@ -139,6 +139,15 @@ if __name__ == '__main__':
     apply_all_gates(values, gates)
 
     values['z16'] = 0
+    values['z17'] = 0
+    values['z18'] = 0
+    values['z19'] = 1
+    values['z20'] = 1
+    values['z21'] = 0
+    values['z27'] = 0
+    values['z28'] = 1
+    values['z33'] = 0
+    values['z34'] = 1
 
     x_values = get_all_x(values, reverse=False)
     y_values = get_all_y(values, reverse=False)
@@ -162,10 +171,11 @@ if __name__ == '__main__':
         print(f'z: ', z_bin)
         print()
 
-    for i in range(len(z_bin)):
-        if z_bin[::-1][i] != bin_sum[::-1][i]:
-            print(f'{i} - check there')
-    print('------------------------')
-    print('wrong!')
-    print(f'{x_bin} + {y_bin} = {bin_sum}')
-    print('z: ', z_bin)
+    else:
+        for i in range(len(z_bin)):
+            if z_bin[::-1][i] != bin_sum[::-1][i]:
+                print(f'{i} - check there')
+        print('------------------------')
+        print('wrong!')
+        print(f'{x_bin} + {y_bin} = {bin_sum}')
+        print('z: ', z_bin)
