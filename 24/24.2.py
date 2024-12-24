@@ -132,7 +132,7 @@ def swap_outputs(gates, combo):
     return gates
 
 if __name__ == '__main__':
-    with open('24/day_24_test_input_updated.txt', 'r') as f:
+    with open('24/day_24_input.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
@@ -155,6 +155,14 @@ if __name__ == '__main__':
     # swapping jgr and fcd fixes these:
     # values['z33'] = 0
     # values['z34'] = 1
+
+    for combo in [
+        ('z16', 'vmr'),
+        ('z20', 'fhp'),
+        ('z27', 'rmv'),
+        ('jgr', 'fcd'),
+    ]:
+        gates = swap_outputs(gates, combo)
 
     x_values = get_all_x(values, reverse=False)
     y_values = get_all_y(values, reverse=False)
