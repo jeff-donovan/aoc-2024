@@ -141,17 +141,28 @@ if __name__ == '__main__':
     y_values = get_all_y(values)
     z_values = get_all_z(values)
 
+    print('x: ', x_values)
+    print('y: ', y_values)
+    print('z: ', z_values)
+
     for i in range(len(x_values) - 1, 0, -1):
-        bin_sum = binary_addition(as_binary_string(x_values[i:]), as_binary_string(y_values[i:]))
+        x_bin = as_binary_string(x_values[i:])
+        y_bin = as_binary_string(y_values[i:])
+        bin_sum = binary_addition(x_bin, y_bin)
         is_valid = bin_sum.endswith(as_binary_string(z_values[i + 1:]))
         if is_valid:
-            print('hi jeff')
+            print('valid bin_sum')
+            print(f'{x_bin} + {y_bin} = {bin_sum}')
+            print(f'z: ', as_binary_string(z_values[i + 1:]))
+            print()
             continue
-        print('bin_sum: ', bin_sum)
-        print('z: ', as_binary_string(z_values[i:]))
-        print(f'{x_values[i][0]} + {y_values[i][0]} = {z_values[i][0]}')
-        # print(f'{x_values[i][1]} + {y_values[i][1]} = {z_values[i][1]}')
+
+        print('------------------------')
         print('wrong!')
+        print('bin_sum: ', bin_sum)
+        print('z: ', as_binary_string(z_values[i + 1:]))
+        print(f'{x_values[i][0]} + {y_values[i][0]} = {z_values[i + 1][0]}')
+        # print(f'{x_values[i][1]} + {y_values[i][1]} = {z_values[i][1]}')
         break
 
     # num_swap_pairs = 2
