@@ -138,10 +138,12 @@ if __name__ == '__main__':
     values, gates = parse_input(contents)
     apply_all_gates(values, gates)
 
-    values['z16'] = 0
-    values['z17'] = 0
-    values['z18'] = 0
-    values['z19'] = 1
+    # swapping z16 and vmr fixes these:
+    # values['z16'] = 0
+    # values['z17'] = 0
+    # values['z18'] = 0
+    # values['z19'] = 1
+
     values['z20'] = 1
     values['z21'] = 0
     values['z27'] = 0
