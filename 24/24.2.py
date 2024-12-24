@@ -120,7 +120,10 @@ def is_valid_addition(values):
     print(f'{as_decimal(x_vals)} + {as_decimal(y_vals)} = {as_decimal(z_vals)}')
     print('(as_decimal(x_vals) + as_decimal(y_vals)): ', (as_decimal(x_vals) + as_decimal(y_vals)))
     print('as_decimal(z_vals): ', as_decimal(z_vals))
-    return (as_decimal(x_vals) + as_decimal(y_vals)) == as_decimal(z_vals)
+    return binary_addition(as_binary_string(x_vals), as_binary_string(y_vals)) == as_binary_string(z_vals)
+
+def binary_addition(x_val, y_val):
+    return bin(int(x_val, 2) + int(y_val, 2))[2:]
 
 def swap_outputs(gates, combo):
     for pair in combo:
