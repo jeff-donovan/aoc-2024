@@ -136,6 +136,14 @@ if __name__ == '__main__':
         contents = f.read()
 
     values, gates = parse_input(contents)
+    for combo in [
+        ('z16', 'vmr'),
+        ('z20', 'fhp'),
+        ('z27', 'rmv'),
+        ('jgr', 'fcd'),
+    ]:
+        gates = swap_outputs(gates, combo)
+
     apply_all_gates(values, gates)
 
     # swapping z16 and vmr fixes these:
@@ -155,14 +163,6 @@ if __name__ == '__main__':
     # swapping jgr and fcd fixes these:
     # values['z33'] = 0
     # values['z34'] = 1
-
-    for combo in [
-        ('z16', 'vmr'),
-        ('z20', 'fhp'),
-        ('z27', 'rmv'),
-        ('jgr', 'fcd'),
-    ]:
-        gates = swap_outputs(gates, combo)
 
     x_values = get_all_x(values, reverse=False)
     y_values = get_all_y(values, reverse=False)
