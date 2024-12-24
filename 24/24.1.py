@@ -52,6 +52,9 @@ def gate_xor(x_val, y_val):
         return 1
     return 0
 
+def get_all_z(values):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0])
+
 if __name__ == '__main__':
     with open('24/day_24_test.txt', 'r') as f:
         contents = f.read()
@@ -62,5 +65,7 @@ if __name__ == '__main__':
 
     for (command, x, y, z) in gates:
         apply_gate(values, command, x, y, z)
-
     print('values after: ', values)
+
+    z_vals = get_all_z(values)
+    print(z_vals)
