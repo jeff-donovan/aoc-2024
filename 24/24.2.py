@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
     values, gates = parse_input(contents)
     for combo in [
-        ('z16', 'vmr'),
+        # ('z16', 'vmr'),
         # ('z16', 'vmr'),
         # ('z20', 'fhp'),
         # ('z27', 'rmv'),
