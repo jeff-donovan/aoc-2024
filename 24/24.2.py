@@ -137,6 +137,10 @@ if __name__ == '__main__':
 
     values, gates = parse_input(contents)
     apply_all_gates(values, gates)
+
+    # values['z04'] = 1
+    # values['z05'] = 1
+
     x_values = get_all_x(values, reverse=False)
     y_values = get_all_y(values, reverse=False)
     z_values = get_all_z(values, reverse=False)
@@ -152,9 +156,9 @@ if __name__ == '__main__':
         print('i: ', i)
         x_bin = as_binary_string(sorted(x_values[:i], reverse=True))
         y_bin = as_binary_string(sorted(y_values[:i], reverse=True))
-        z_bin = as_binary_string(sorted(z_values[:i + 1], reverse=True))
+        z_bin = as_binary_string(sorted(z_values[:i], reverse=True))
         bin_sum = binary_addition(x_bin, y_bin)
-        is_valid = z_bin.endswith(bin_sum)
+        is_valid = bin_sum.endswith(z_bin)
         if is_valid:
             print('valid bin_sum')
             print(f'{x_bin} + {y_bin} = {bin_sum}')
