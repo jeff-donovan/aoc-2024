@@ -164,9 +164,8 @@ if __name__ == '__main__':
 
         print('------------------------')
         print('wrong!')
-        print('bin_sum: ', bin_sum)
+        print(f'{x_bin} + {y_bin} = {bin_sum}')
         print('z: ', z_bin)
-        print(f'{x_bin} + {y_bin} = {z_bin}')
         # print(f'{x_values[i][1]} + {y_values[i][1]} = {z_values[i][1]}')
         break
 
