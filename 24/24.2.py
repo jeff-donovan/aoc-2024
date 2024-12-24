@@ -23,7 +23,9 @@ def parse_input(contents):
 def apply_all_gates(values, gates):
     i = 0
     while len(gates) > 0:
-        i = i % len(gates)
+        if i >= len(gates):
+            return
+
         command, x, y, z = gates[i]
         success = apply_gate(values, command, x, y, z)
         if not success:
@@ -75,14 +77,14 @@ def as_decimal(values):
 def as_binary_string(values):
     return ''.join([str(val) for _, val in values])
 
-def get_all_x(values):
-    return sorted([(key, val) for key, val in values.items() if key.startswith('x')], key=lambda x: x[0], reverse=True)
+def get_all_x(values, reverse=True):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('x')], key=lambda x: x[0], reverse=reverse)
 
-def get_all_y(values):
-    return sorted([(key, val) for key, val in values.items() if key.startswith('y')], key=lambda y: y[0], reverse=True)
+def get_all_y(values, reverse=True):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('y')], key=lambda y: y[0], reverse=reverse)
 
-def get_all_z(values):
-    return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0], reverse=True)
+def get_all_z(values, reverse=True):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0], reverse=reverse)
 
 def get_output_swap_combos(gates, num_swap_pairs):
     # first - get all pairs
@@ -108,6 +110,7 @@ def is_valid_addition(values):
     x_vals = get_all_x(values)
     y_vals = get_all_y(values)
     z_vals = get_all_z(values)
+
     return binary_addition(as_binary_string(x_vals), as_binary_string(y_vals)) == as_binary_string(z_vals)
 
 def binary_addition(x_val, y_val):
@@ -126,26 +129,36 @@ def swap_outputs(gates, combo):
     return gates
 
 if __name__ == '__main__':
-    with open('24/day_24_input.txt', 'r') as f:
+    with open('24/day_24_test_input_updated.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
+    apply_all_gates(values, gates)
+    x_values = get_all_x(values, False)
+    y_values = get_all_y(values, False)
+    z_values = get_all_z(values, False)
 
-    num_swap_pairs = 4
-    for combo in get_output_swap_combos(gates, num_swap_pairs):
-        if not is_valid_combo(combo):
-            continue
-
+    for i in range(len(x_values)):
+        print(f'{x_values[i][0]} + {y_values[i][0]} = {z_values[i][0]}')
+        print(f'{x_values[i][1]} + {y_values[i][1]} = {z_values[i][1]}')
         print()
-        print('valid combo!')
-        print('combo: ', combo)
-        combo_values = copy.deepcopy(values)
-        combo_gates = swap_outputs(copy.deepcopy(gates), combo)
-        apply_all_gates(combo_values, combo_gates)
-        if is_valid_addition(combo_values):
-            outputs = []
-            for pair in combo:
-                outputs.append(pair[0])
-                outputs.append(pair[1])
-            print(','.join(sorted(outputs)))
-            break
+
+    # num_swap_pairs = 2
+    # for combo in get_output_swap_combos(gates, num_swap_pairs):
+    #     if not is_valid_combo(combo):
+    #         # print('INVALID')
+    #         continue
+
+    #     print()
+    #     print('valid combo!')
+    #     print('combo: ', combo)
+    #     combo_values = copy.deepcopy(values)
+    #     combo_gates = swap_outputs(copy.deepcopy(gates), combo)
+    #     apply_all_gates(combo_values, combo_gates)
+    #     if is_valid_addition(combo_values):
+    #         outputs = []
+    #         for pair in combo:
+    #             outputs.append(pair[0])
+    #             outputs.append(pair[1])
+    #         print(','.join(sorted(outputs)))
+    #         break
