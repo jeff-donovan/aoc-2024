@@ -144,8 +144,10 @@ if __name__ == '__main__':
     # values['z18'] = 0
     # values['z19'] = 1
 
-    values['z20'] = 1
-    values['z21'] = 0
+    # swapping z20 and fhp fixes these:
+    # values['z20'] = 1
+    # values['z21'] = 0
+
     values['z27'] = 0
     values['z28'] = 1
     values['z33'] = 0
