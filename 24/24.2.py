@@ -1,3 +1,6 @@
+import itertools
+
+
 def parse_input(contents):
     values_content, gates_content = contents.split('\n\n')
 
@@ -79,11 +82,44 @@ def get_all_y(values):
 def get_all_z(values):
     return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0], reverse=True)
 
+def get_output_swap_combos(gates, num_swap_pairs):
+    # first - get all pairs
+    pairs = set([])
+    for i in gates:
+        for j in gates:
+            i_output = i[3]
+            j_output = j[3]
+            if i_output != j_output:
+                pairs.add(tuple(sorted([i_output, j_output])))
+
+    combos = itertools.combinations(pairs, num_swap_pairs)
+
+    # since itertools.combinations() does not care if z00 is used across multiple pairs within a combo, we have to remove invalid combos where this occurs
+    final = []
+    for combo in combos:
+        if is_valid_combo(combo):
+            final.append(combo)
+    return final
+
+def is_valid_combo(combo):
+    outputs = set([])
+    for pair in combo:
+        if pair[0] in outputs or pair[1] in outputs:
+            return False
+        outputs.add(pair[0])
+        outputs.add(pair[1])
+    return True
+
 if __name__ == '__main__':
     with open('24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
+
+    num_swap_pairs = 2
+    swap_combos = get_output_swap_combos(gates, num_swap_pairs)
+    print('swap_combos: ', list(swap_combos))
+
     print('values: ', values)
     print('gates: ', gates)
 
