@@ -1,3 +1,4 @@
+import copy
 import itertools
 
 
@@ -110,6 +111,24 @@ def is_valid_combo(combo):
         outputs.add(pair[1])
     return True
 
+def is_valid_addition(values):
+    x_vals = get_all_x(values)
+    y_vals = get_all_y(values)
+    z_vals = get_all_z(values)
+    return (as_decimal(x_vals) + as_decimal(y_vals)) == as_decimal(z_vals)
+
+def swap_outputs(gates, combo):
+    for pair in combo:
+        for i, (command, x, y, output) in enumerate(gates):
+            if output not in pair:
+                continue
+            if output == pair[0]:
+                swapped_gate = (command, x, y, pair[1])
+            else:
+                swapped_gate = (command, x, y, pair[0])
+            gates[i] = swapped_gate
+    return gates
+
 if __name__ == '__main__':
     with open('24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
@@ -118,17 +137,18 @@ if __name__ == '__main__':
 
     num_swap_pairs = 2
     swap_combos = get_output_swap_combos(gates, num_swap_pairs)
-    print('swap_combos: ', list(swap_combos))
-
-    print('values: ', values)
-    print('gates: ', gates)
-
-    apply_all_gates(values, gates)
-    print('values after: ', values)
-
-    x_vals = get_all_x(values)
-    y_vals = get_all_y(values)
-    z_vals = get_all_z(values)
-    print('x: ', as_decimal(x_vals))
-    print('y: ', as_decimal(y_vals))
-    print('z: ', as_decimal(z_vals))
+    for combo in swap_combos:
+        print('combo: ', combo)
+        combo_values = copy.deepcopy(values)
+        combo_gates = swap_outputs(copy.deepcopy(gates), combo)
+        print('combo_values: ', combo_values)
+        print('gates: ', gates)
+        print('combo_gates: ', combo_gates)
+        # apply_all_gates(combo_values, combo_gates)
+        # if is_valid_addition(combo_values):
+        #     outputs = []
+        #     for pair in combo:
+        #         outputs.append(pair[0])
+        #         outputs.append(pair[1])
+        #     print(','.join(sorted(outputs)))
+        #     break
