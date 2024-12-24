@@ -148,8 +148,10 @@ if __name__ == '__main__':
     # values['z20'] = 1
     # values['z21'] = 0
 
-    values['z27'] = 0
-    values['z28'] = 1
+    # swapping z27 and rmv fixes these:
+    # values['z27'] = 0
+    # values['z28'] = 1
+
     values['z33'] = 0
     values['z34'] = 1
 
