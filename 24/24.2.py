@@ -106,10 +106,13 @@ def is_valid_combo(combo):
         outputs.add(pair[1])
     return True
 
-def is_valid_addition(values):
-    x_vals = get_all_x(values)
-    y_vals = get_all_y(values)
-    z_vals = get_all_z(values)
+def is_valid_addition(values, x_vals=None, y_vals=None, z_vals=None):
+    if x_vals is None:
+        x_vals = get_all_x(values)
+    if y_vals is None:
+        y_vals = get_all_y(values)
+    if z_vals is None:
+        z_vals = get_all_z(values)
 
     return binary_addition(as_binary_string(x_vals), as_binary_string(y_vals)) == as_binary_string(z_vals)
 
@@ -134,14 +137,22 @@ if __name__ == '__main__':
 
     values, gates = parse_input(contents)
     apply_all_gates(values, gates)
-    x_values = get_all_x(values, False)
-    y_values = get_all_y(values, False)
-    z_values = get_all_z(values, False)
+    x_values = get_all_x(values)
+    y_values = get_all_y(values)
+    z_values = get_all_z(values)
 
-    for i in range(len(x_values)):
+    for i in range(len(x_values) - 1, 0, -1):
+        bin_sum = binary_addition(as_binary_string(x_values[i:]), as_binary_string(y_values[i:]))
+        is_valid = bin_sum.endswith(as_binary_string(z_values[i + 1:]))
+        if is_valid:
+            print('hi jeff')
+            continue
+        print('bin_sum: ', bin_sum)
+        print('z: ', as_binary_string(z_values[i:]))
         print(f'{x_values[i][0]} + {y_values[i][0]} = {z_values[i][0]}')
-        print(f'{x_values[i][1]} + {y_values[i][1]} = {z_values[i][1]}')
-        print()
+        # print(f'{x_values[i][1]} + {y_values[i][1]} = {z_values[i][1]}')
+        print('wrong!')
+        break
 
     # num_swap_pairs = 2
     # for combo in get_output_swap_combos(gates, num_swap_pairs):
