@@ -145,8 +145,18 @@ def numerical_to_direction(code):
     return sequences
 
 def directional_transformation(seq):
+    # for group in group_by_A(seq):
+    #     print(directional_to_directional(group))
     possible_sequences = directional_to_directional(seq)
-    return tidy_up(possible_sequences)
+    print(len(possible_sequences[0]))
+    # return tidy_up(possible_sequences)
+
+def combine(a, b):
+    combos = []
+    for a_elem in a:
+        for b_elem in b:
+            combos.append(a_elem + b_elem)
+    return combos
 
 def tidy_up(sequences):
     min_length = calculate_min_path_length(sequences)
@@ -197,7 +207,7 @@ if __name__ == '__main__':
     # print(f'{len(jeff2)} - {jeff2}')
 
     start = datetime.datetime.now()
-    depth = 3
+    depth = 1
     print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
     print('took ', datetime.datetime.now() - start)
     # code = '029A'
