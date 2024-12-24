@@ -52,8 +52,16 @@ def gate_xor(x_val, y_val):
         return 1
     return 0
 
+def z_as_decimal(z_values):
+    z_as_bin_str = z_as_binary_string(z_values)
+    print('z binary: ', z_as_bin_str)
+    return int(z_as_binary_string(z_values), 2)
+
+def z_as_binary_string(z_values):
+    return ''.join([str(val) for _, val in z_values])
+
 def get_all_z(values):
-    return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0])
+    return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0], reverse=True)
 
 if __name__ == '__main__':
     with open('24/day_24_test.txt', 'r') as f:
@@ -68,4 +76,4 @@ if __name__ == '__main__':
     print('values after: ', values)
 
     z_vals = get_all_z(values)
-    print(z_vals)
+    print(z_as_decimal(z_vals))
