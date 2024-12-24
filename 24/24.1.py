@@ -64,7 +64,7 @@ def get_all_z(values):
     return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0], reverse=True)
 
 if __name__ == '__main__':
-    with open('24/day_24_test.txt', 'r') as f:
+    with open('24/day_24_test2.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
