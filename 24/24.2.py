@@ -152,8 +152,9 @@ if __name__ == '__main__':
     # values['z27'] = 0
     # values['z28'] = 1
 
-    values['z33'] = 0
-    values['z34'] = 1
+    # swapping jgr and fcd fixes these:
+    # values['z33'] = 0
+    # values['z34'] = 1
 
     x_values = get_all_x(values, reverse=False)
     y_values = get_all_y(values, reverse=False)
