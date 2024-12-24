@@ -16,6 +16,18 @@ def parse_input(contents):
 
     return values, gates
 
+def apply_all_gates(values, gates):
+    i = 0
+    while len(gates) > 0:
+        command, x, y, z = gates[i]
+        success = apply_gate(values, command, x, y, z)
+        if not success:
+            i += 1
+            continue
+
+        gates.pop(i)
+        i = 0
+
 def apply_gate(values, command, x, y, z):
     if z in values:
         return True
@@ -71,8 +83,7 @@ if __name__ == '__main__':
     print('values: ', values)
     print('gates: ', gates)
 
-    for (command, x, y, z) in gates:
-        apply_gate(values, command, x, y, z)
+    apply_all_gates(values, gates)
     print('values after: ', values)
 
     z_vals = get_all_z(values)
