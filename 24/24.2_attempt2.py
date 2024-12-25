@@ -20,12 +20,12 @@ def parse_input(contents):
 
     return values, gates
 
-def setup(values, gates):
+def setup(values, gates, expected_fn):
     x_values = get_all_x(values)
     y_values = get_all_y(values)
 
     # TODO: update to addition when using input
-    expected_result = bitwise_and(x_values, y_values)
+    expected_result = expected_fn(x_values, y_values)
 
     locked = set([])
     for xkey, _ in x_values:
@@ -204,8 +204,8 @@ def is_valid_addition(values, x_vals=None, y_vals=None, z_vals=None):
 def bitwise_and(x_values, y_values):
     return bin(as_decimal(x_values) & as_decimal(y_values))[2:]
 
-def binary_addition(x_val, y_val):
-    return bin(int(x_val, 2) + int(y_val, 2))[2:]
+def binary_addition(x_values, y_values):
+    return bin(as_decimal(x_values) + as_decimal(y_values))[2:]
 
 def swap_outputs(gates, combo):
     for i, (command, x, y, output) in enumerate(gates):
@@ -223,9 +223,10 @@ if __name__ == '__main__':
         contents = f.read()
 
     num_pairs = 2
+    system_function = bitwise_and
 
     values, gates = parse_input(contents)
-    expected, locked, available = setup(values, gates)
+    expected, locked, available = setup(values, gates, system_function)
 
     pairs = find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
     print(pairs)
