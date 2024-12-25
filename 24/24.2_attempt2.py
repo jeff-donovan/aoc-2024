@@ -56,7 +56,10 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
             copied_locked.add(output)
             if output in copied_available:
                 copied_available.remove(output)
-    apply_all_gates(copied_values, copied_gates)
+    try:
+        apply_all_gates(copied_values, copied_gates)
+    except:
+        return  # this path doesn't lead anywhere
 
     z_bin = as_binary_string(get_all_z(copied_values))
 
@@ -219,11 +222,11 @@ def swap_outputs(gates, combo):
     return gates
 
 if __name__ == '__main__':
-    with open('24/day_24_test_part2.txt', 'r') as f:
+    with open('24/day_24_input.txt', 'r') as f:
         contents = f.read()
 
-    num_pairs = 2
-    system_function = bitwise_and
+    num_pairs = 4
+    system_function = binary_addition
 
     values, gates = parse_input(contents)
     expected, locked, available = setup(values, gates, system_function)
