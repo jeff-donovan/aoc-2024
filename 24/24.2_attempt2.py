@@ -76,7 +76,7 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
     for zkey, zval in z_values:
         expected_index = int(zkey[1:])
         if zval == expected[expected_index]:
-            add_output_recursively_to_locked(copied_values, copied_gates, copied_locked, zkey)
+            add_output_recursively_to_locked(copied_gates, copied_locked, copied_available, zkey)
         else:
             z_to_fix = zkey
             break
@@ -92,8 +92,16 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
             if pairs is not None and len(pairs) == num_pairs:
                 return pairs
 
-def add_output_recursively_to_locked(copied_values, copied_gates, copied_locked, output):
-    pass
+def add_output_recursively_to_locked(gates, locked, available, output):
+    if output in locked:
+        return
+
+    locked.add(output)
+    available.remove(output)
+    for (_, x, y, z) in gates:
+        if z == output:
+            add_output_recursively_to_locked(gates, locked, available, x)
+            add_output_recursively_to_locked(gates, locked, available, y)
 
 def apply_all_gates(values, gates):
     i = 0
