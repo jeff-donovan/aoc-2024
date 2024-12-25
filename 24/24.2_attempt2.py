@@ -24,8 +24,11 @@ def setup(values, gates, expected_fn):
     x_values = get_all_x(values)
     y_values = get_all_y(values)
 
-    # TODO: update to addition when using input
     expected_result = expected_fn(x_values, y_values)
+
+    print('x_values: ', x_values)
+    print('y_values: ', y_values)
+    print('expected_result: ', expected_result)
 
     locked = set([])
     for xkey, _ in x_values:
@@ -40,9 +43,18 @@ def setup(values, gates, expected_fn):
 
     return (expected_result, locked, available)
 
-def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked, available, num_pairs, swap_pairs=None):
+def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked, available, num_pairs, checked=None, swap_pairs=None):
+    # we want to pass around the same checked to all function calls
+    if checked is None:
+        checked = set([])
+
     if swap_pairs is None:
         swap_pairs = []
+
+    # exit if we've already checked that this is false (from a different pair ordering)
+    checked_key = sort_for_checked(swap_pairs)
+    if checked_key in checked:
+        return
 
     copied_values = copy.deepcopy(initial_values)
     copied_gates = copy.deepcopy(initial_gates)
@@ -59,6 +71,7 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
     try:
         apply_all_gates(copied_values, copied_gates)
     except:
+        checked.add(checked_key)
         return  # this path doesn't lead anywhere
 
     z_bin = as_binary_string(get_all_z(copied_values))
@@ -68,10 +81,12 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
         if expected == z_bin:
             return copied_swap_pairs
         else:
+            checked.add(checked_key)
             return
 
     # base case - we don't have any other keys to check - this path was incorrect
     if len(copied_available) == 0:
+        checked.add(checked_key)
         return
 
     # check each z until we find one we need to fix
@@ -87,15 +102,23 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
 
     # base case - we've already supposedly fixed this z
     if z_to_fix in locked:
+        checked.add(checked_key)
         return
 
     for remaining_output in copied_available:
         if z_to_fix != remaining_output:
             new_pair = tuple(sorted((z_to_fix, remaining_output)))
-            pairs = find_remaining_pairs_to_swap(initial_values, initial_gates, expected, copied_locked, copied_available, num_pairs, copied_swap_pairs + [new_pair])
+            pairs = find_remaining_pairs_to_swap(initial_values, initial_gates, expected, copied_locked, copied_available, num_pairs, checked, copied_swap_pairs + [new_pair])
             if pairs is not None and len(pairs) == num_pairs:
                 # TODO: check result before returning
                 return pairs
+
+def sort_for_checked(pairs):
+    final = []
+    for pair in pairs:
+        sorted_pair = tuple(sorted(pair))
+        final.append(sorted_pair)
+    return tuple(sorted(final))
 
 def add_output_recursively_to_locked(gates, locked, available, output):
     if output in locked:
