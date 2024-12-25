@@ -228,3 +228,7 @@ if __name__ == '__main__':
 
     pairs = find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
     print(pairs)
+    outputs = []
+    for pair in pairs:
+        outputs.extend(list(pair))
+    print(','.join(sorted(outputs)))
