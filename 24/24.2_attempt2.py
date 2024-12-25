@@ -66,10 +66,34 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
         else:
             return
 
+    # base case - we don't have any other keys to check - this path was incorrect
+    if len(copied_available) == 0:
+        return
+
     # check each z until we find one we need to fix
     z_to_fix = None
-    z_values = sorted([(zkey, val) for zkey, val in get_all_z(copied_values) if zkey in available])
-    print(z_values)
+    z_values = [(zkey, val) for zkey, val in get_all_z(copied_values, reverse=False) if zkey in copied_available]
+    for zkey, zval in z_values:
+        expected_index = int(zkey[1:])
+        if zval == expected[expected_index]:
+            add_output_recursively_to_locked(copied_values, copied_gates, copied_locked, zkey)
+        else:
+            z_to_fix = zkey
+            break
+
+    # base case - we've already supposedly fixed this z
+    if z_to_fix in locked:
+        return
+
+    for remaining_output in copied_available:
+        if z_to_fix != remaining_output:
+            new_pair = sorted(tuple(z_to_fix, remaining_output))
+            pairs = find_remaining_pairs_to_swap(initial_values, initial_gates, expected, copied_locked, copied_available, num_pairs, copied_swap_pairs + [new_pair])
+            if pairs is not None and len(pairs) == num_pairs:
+                return pairs
+
+def add_output_recursively_to_locked(copied_values, copied_gates, copied_locked, output):
+    pass
 
 def apply_all_gates(values, gates):
     i = 0
