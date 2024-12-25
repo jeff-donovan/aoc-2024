@@ -54,7 +54,8 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
         copied_gates = swap_outputs(copied_gates, pair)
         for output in pair:
             copied_locked.add(output)
-            copied_available.remove(output)
+            if output in copied_available:
+                copied_available.remove(output)
     apply_all_gates(copied_values, copied_gates)
 
     z_bin = as_binary_string(get_all_z(copied_values))
@@ -87,7 +88,7 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
 
     for remaining_output in copied_available:
         if z_to_fix != remaining_output:
-            new_pair = sorted(tuple(z_to_fix, remaining_output))
+            new_pair = tuple(sorted((z_to_fix, remaining_output)))
             pairs = find_remaining_pairs_to_swap(initial_values, initial_gates, expected, copied_locked, copied_available, num_pairs, copied_swap_pairs + [new_pair])
             if pairs is not None and len(pairs) == num_pairs:
                 return pairs
@@ -225,4 +226,5 @@ if __name__ == '__main__':
     values, gates = parse_input(contents)
     expected, locked, available = setup(values, gates)
 
-    find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
+    pairs = find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
+    print(pairs)
