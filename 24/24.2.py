@@ -24,7 +24,7 @@ def apply_all_gates(values, gates):
     i = 0
     while len(gates) > 0:
         if i >= len(gates):
-            return
+            raise Exception('not this time!')
 
         command, x, y, z = gates[i]
         success = apply_gate(values, command, x, y, z)
@@ -95,6 +95,8 @@ def get_output_swap_combos(gates, num_swap_pairs):
             j_output = j[3]
             if i_output != j_output:
                 pairs.add(tuple(sorted([i_output, j_output])))
+    combos = list(itertools.combinations(pairs, num_swap_pairs))
+    print(len(combos))
     return itertools.combinations(pairs, num_swap_pairs)
 
 def is_valid_combo(combo):
@@ -120,15 +122,14 @@ def binary_addition(x_val, y_val):
     return bin(int(x_val, 2) + int(y_val, 2))[2:]
 
 def swap_outputs(gates, combo):
-    for pair in combo:
-        for i, (command, x, y, output) in enumerate(gates):
-            if output not in pair:
-                continue
-            if output == pair[0]:
-                swapped_gate = (command, x, y, pair[1])
-            else:
-                swapped_gate = (command, x, y, pair[0])
-            gates[i] = swapped_gate
+    for i, (command, x, y, output) in enumerate(gates):
+        if output not in combo:
+            continue
+        if output == combo[0]:
+            swapped_gate = (command, x, y, combo[1])
+        else:
+            swapped_gate = (command, x, y, combo[0])
+        gates[i] = swapped_gate
     return gates
 
 if __name__ == '__main__':
@@ -136,34 +137,49 @@ if __name__ == '__main__':
         contents = f.read()
 
     values, gates = parse_input(contents)
+    print('gates before: ', gates)
     for combo in [
+        # ('hmk', 'ndj')
+        # ('z17', 'kgb')
+        # ('qdr', 'jtv')
+        # ('z15', 'cdn'),
         # ('z16', 'vmr'),
-        # ('z16', 'vmr'),
+        # ('z00', 'bdk'),
+        ('z16', 'vmr'),
         # ('z20', 'fhp'),
         # ('z27', 'rmv'),
         # ('jgr', 'fcd'),
     ]:
         gates = swap_outputs(gates, combo)
-
+        print('gates after: ', gates)
     apply_all_gates(values, gates)
+        # potential_first_pair = []
+        # for combo in get_output_swap_combos(gates, 1):
+        #     break
+            # values_copy = copy.deepcopy(values)
+            # gates_copy = swap_outputs(copy.deepcopy(gates), combo)
+            # try:
+            #     apply_all_gates(values_copy, gates_copy)
+            # except:
+            #     print(combo)
 
-    # swapping z16 and vmr fixes these:
-    # values['z16'] = 0
-    # values['z17'] = 0
-    # values['z18'] = 0
-    # values['z19'] = 1
+        # swapping z16 and vmr fixes these:
+        # values['z16'] = 0
+        # values['z17'] = 0
+        # values['z18'] = 0
+        # values['z19'] = 1
 
-    # swapping z20 and fhp fixes these:
-    # values['z20'] = 1
-    # values['z21'] = 0
+        # swapping z20 and fhp fixes these:
+        # values['z20'] = 1
+        # values['z21'] = 0
 
-    # swapping z27 and rmv fixes these:
-    # values['z27'] = 0
-    # values['z28'] = 1
+        # swapping z27 and rmv fixes these:
+        # values['z27'] = 0
+        # values['z28'] = 1
 
-    # swapping jgr and fcd fixes these:
-    # values['z33'] = 0
-    # values['z34'] = 1
+        # swapping jgr and fcd fixes these:
+        # values['z33'] = 0
+        # values['z34'] = 1
 
     x_values = get_all_x(values, reverse=False)
     y_values = get_all_y(values, reverse=False)
