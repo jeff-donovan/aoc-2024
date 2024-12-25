@@ -138,7 +138,7 @@ if __name__ == '__main__':
 
     values, gates = parse_input(contents)
     print('gates before: ', gates)
-    for combo in [
+    for pair in [
         # ('hmk', 'ndj')
         # ('z17', 'kgb')
         # ('qdr', 'jtv')
@@ -150,7 +150,7 @@ if __name__ == '__main__':
         # ('z27', 'rmv'),
         # ('jgr', 'fcd'),
     ]:
-        gates = swap_outputs(gates, combo)
+        gates = swap_outputs(gates, pair)
         print('gates after: ', gates)
     apply_all_gates(values, gates)
         # potential_first_pair = []
