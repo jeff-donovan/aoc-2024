@@ -40,6 +40,36 @@ def setup(values, gates):
 
     return (expected_result, locked, available)
 
+def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked, available, num_pairs, swap_pairs=None):
+    if swap_pairs is None:
+        swap_pairs = []
+
+    copied_values = copy.deepcopy(initial_values)
+    copied_gates = copy.deepcopy(initial_gates)
+    copied_locked = copy.deepcopy(locked)
+    copied_available = copy.deepcopy(available)
+    copied_swap_pairs = copy.deepcopy(swap_pairs)
+
+    for pair in copied_swap_pairs:
+        copied_gates = swap_outputs(copied_gates, pair)
+        for output in pair:
+            copied_locked.add(output)
+            copied_available.remove(output)
+    apply_all_gates(copied_values, copied_gates)
+
+    z_bin = as_binary_string(get_all_z(copied_values))
+
+    # base case - we're done
+    if len(copied_swap_pairs) == num_pairs:
+        if expected == z_bin:
+            return copied_swap_pairs
+        else:
+            return
+
+    # check each z until we find one we need to fix
+    z_to_fix = None
+    z_values = sorted([(zkey, val) for zkey, val in get_all_z(copied_values) if zkey in available])
+    print(z_values)
 
 def apply_all_gates(values, gates):
     i = 0
@@ -158,5 +188,9 @@ if __name__ == '__main__':
     with open('24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
 
+    num_pairs = 2
+
     values, gates = parse_input(contents)
     expected, locked, available = setup(values, gates)
+
+    find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
