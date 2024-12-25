@@ -91,6 +91,7 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
             new_pair = tuple(sorted((z_to_fix, remaining_output)))
             pairs = find_remaining_pairs_to_swap(initial_values, initial_gates, expected, copied_locked, copied_available, num_pairs, copied_swap_pairs + [new_pair])
             if pairs is not None and len(pairs) == num_pairs:
+                # TODO: check result before returning
                 return pairs
 
 def add_output_recursively_to_locked(gates, locked, available, output):
@@ -232,3 +233,7 @@ if __name__ == '__main__':
     for pair in pairs:
         outputs.extend(list(pair))
     print(','.join(sorted(outputs)))
+
+    # TODO:
+    # - i don't actually check if the updated system works for all X/Y values
+    # - i say that because running it for the test produces two answers: z00,z01,z02,z05 and z00,z01,z04,z05
