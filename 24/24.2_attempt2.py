@@ -91,10 +91,14 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
 
     # check each z until we find one we need to fix
     z_to_fix = None
-    z_values = [(zkey, val) for zkey, val in get_all_z(copied_values, reverse=False) if zkey in copied_available]
+    z_values = [(zkey, val) for zkey, val in get_all_z(copied_values, reverse=False) if zkey in copied_available]  # TODO: do the available check below rather than here - we don't actually know if the swap we made fixed z00
     for zkey, zval in z_values:
         expected_index = int(zkey[1:])
-        if zval == expected[expected_index]:
+        # TODO: this isn't enough to add zXX to locked
+        #  - use the example
+        #  - notice that z01 and z02 are both 0s, but need to be swapped
+        #  - CHECK FOR ALL POSSIBLE X/Y values before "locking"
+        if str(zval) == expected[::-1][expected_index]:
             add_output_recursively_to_locked(copied_gates, copied_locked, copied_available, zkey)
         else:
             z_to_fix = zkey
@@ -172,18 +176,19 @@ def add_output_recursively_to_locked(gates, locked, available, output):
             add_output_recursively_to_locked(gates, locked, available, y)
 
 def apply_all_gates(values, gates):
+    copied_gates = copy.deepcopy(gates)
     i = 0
-    while len(gates) > 0:
-        if i >= len(gates):
+    while len(copied_gates) > 0:
+        if i >= len(copied_gates):
             raise Exception('not this time!')
 
-        command, x, y, z = gates[i]
+        command, x, y, z = copied_gates[i]
         success = apply_gate(values, command, x, y, z)
         if not success:
             i += 1
             continue
 
-        gates.pop(i)
+        copied_gates.pop(i)
         i = 0
 
 def apply_gate(values, command, x, y, z):
