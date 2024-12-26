@@ -105,8 +105,9 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
         checked.add(checked_key)
         return
 
-    for remaining_output in copied_available:
-        if z_to_fix != remaining_output:
+    possible_swaps = get_possible_output_swaps(copied_gates, z_to_fix)
+    for remaining_output in possible_swaps:
+        if remaining_output in copied_available:
             new_pair = tuple(sorted((z_to_fix, remaining_output)))
             pairs = find_remaining_pairs_to_swap(initial_values, initial_gates, expected, copied_locked, copied_available, num_pairs, checked, copied_swap_pairs + [new_pair])
             if pairs is not None and len(pairs) == num_pairs:
