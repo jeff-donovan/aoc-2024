@@ -285,23 +285,23 @@ def swap_outputs(gates, combo):
     return gates
 
 if __name__ == '__main__':
-    with open('24/day_24_input.txt', 'r') as f:
+    with open('24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
 
-    num_pairs = 4
-    system_function = binary_addition
+    num_pairs = 2
+    system_function = bitwise_and
 
     values, gates = parse_input(contents)
-    print(get_possible_output_swaps(gates, 'z17'))
-    # expected, locked, available = setup(values, gates, system_function)
+    print(get_possible_output_swaps(gates, 'z05'))
+    expected, locked, available = setup(values, gates, system_function)
 
-    # pairs = find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
-    # print(pairs)
-    # outputs = []
-    # for pair in pairs:
-    #     outputs.extend(list(pair))
-    # print(','.join(sorted(outputs)))
+    pairs = find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
+    print(pairs)
+    outputs = []
+    for pair in pairs:
+        outputs.extend(list(pair))
+    print(','.join(sorted(outputs)))
 
-    # # TODO:
-    # # - i don't actually check if the updated system works for all X/Y values
-    # # - i say that because running it for the test produces two answers: z00,z01,z02,z05 and z00,z01,z04,z05
+    # TODO:
+    # - i don't actually check if the updated system works for all X/Y values
+    # - i say that because running it for the test produces two answers: z00,z01,z02,z05 and z00,z01,z04,z05
