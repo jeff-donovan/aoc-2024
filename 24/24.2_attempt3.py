@@ -20,6 +20,26 @@ def parse_input(contents):
 
     return values, gates
 
+def is_z_valid_for_all_value_combos(value_combos, gates, system_function, z_key):
+    for values in value_combos:
+        try:
+            applied_values, _ = apply_all_gates(values, gates)
+        except:
+            return False
+        if not is_z_valid(applied_values, system_function, z_key):
+            return False
+    return True
+
+def is_z_valid(values, system_function, z_key):
+    expected = get_expected(values, system_function)
+    z_index = int(z_key[1:])
+    return expected[::-1][z_index] == str(values[z_key])
+
+def get_expected(values, system_function):
+    x_decimal = get_x_as_decimal(values)
+    y_decimal = get_y_as_decimal(values)
+    return system_function(x_decimal, y_decimal)
+
 def apply_all_gates(values, gates):
     copied_gates = copy.deepcopy(gates)
     copied_values = copy.deepcopy(values)
@@ -89,11 +109,33 @@ def get_all_values_combos(values):
 
     return result
 
+def get_y_as_decimal(values):
+    return int(get_y_as_binary_string(values), 2)
+
+def get_y_as_binary_string(values):
+    y_keys = get_all_y_keys(values)
+    y_values = [values[key] for key in y_keys]
+    return as_binary_string(y_values)
+
+def get_x_as_decimal(values):
+    return int(get_x_as_binary_string(values), 2)
+
+def get_x_as_binary_string(values):
+    x_keys = get_all_x_keys(values)
+    x_values = [values[key] for key in x_keys]
+    return as_binary_string(x_values)
+
+def as_binary_string(values_list):
+    return ''.join([str(val) for val in values_list])
+
 def get_all_x_keys(values):
     return sorted([key for key in values.keys() if key.startswith('x')])
 
 def get_all_y_keys(values):
     return sorted([key for key in values.keys() if key.startswith('y')])
+
+def bitwise_and(x_decimal, y_decimal):
+    return bin(x_decimal & y_decimal)[2:]
 
 if __name__ == '__main__':
     with open('C:/code/aoc-2024/24/day_24_test_part2.txt', 'r') as f:
