@@ -113,6 +113,45 @@ def find_remaining_pairs_to_swap(initial_values, initial_gates, expected, locked
                 # TODO: check result before returning
                 return pairs
 
+def get_possible_output_swaps(gates, output):
+    gate = next((gate for gate in gates if gate[-1] == output), None)
+    if gate is None:
+        return set([])
+
+    swaps = set([])
+    (command, x, y, z) = gate
+
+    number = None
+    if z.startswith('z'):
+        number = z[1:]
+    x_number = None
+    y_number = None
+    if number is not None:
+        x_number = 'x' + number
+        y_number = 'y' + number
+
+    for possible_swap_gate in gates:
+        # consider same x/y
+        (swap_command, swap_x, swap_y, swap_z) = possible_swap_gate
+        if (x == swap_x) or (x == swap_y):
+            if z != swap_z:
+                swaps.add(swap_z)
+
+        if (y == swap_x) or (y == swap_y):
+            if z != swap_z:
+                swaps.add(swap_z)
+
+        # consider x00/y00 inputs when output is z00
+        if (x_number == swap_x) or (x_number == swap_y):
+            if z != swap_z:
+                swaps.add(swap_z)
+
+        if (y_number == swap_x) or (y_number == swap_y):
+            if z != swap_z:
+                swaps.add(swap_z)
+
+    return swaps
+
 def sort_for_checked(pairs):
     final = []
     for pair in pairs:
@@ -252,15 +291,16 @@ if __name__ == '__main__':
     system_function = binary_addition
 
     values, gates = parse_input(contents)
-    expected, locked, available = setup(values, gates, system_function)
+    print(get_possible_output_swaps(gates, 'z17'))
+    # expected, locked, available = setup(values, gates, system_function)
 
-    pairs = find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
-    print(pairs)
-    outputs = []
-    for pair in pairs:
-        outputs.extend(list(pair))
-    print(','.join(sorted(outputs)))
+    # pairs = find_remaining_pairs_to_swap(values, gates, expected, locked, available, num_pairs)
+    # print(pairs)
+    # outputs = []
+    # for pair in pairs:
+    #     outputs.extend(list(pair))
+    # print(','.join(sorted(outputs)))
 
-    # TODO:
-    # - i don't actually check if the updated system works for all X/Y values
-    # - i say that because running it for the test produces two answers: z00,z01,z02,z05 and z00,z01,z04,z05
+    # # TODO:
+    # # - i don't actually check if the updated system works for all X/Y values
+    # # - i say that because running it for the test produces two answers: z00,z01,z02,z05 and z00,z01,z04,z05
