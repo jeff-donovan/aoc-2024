@@ -24,9 +24,9 @@ def is_z_valid_for_all_value_combos(value_combos, gates, system_function, z_key)
     for values in value_combos:
         try:
             applied_values, _ = apply_all_gates(values, gates)
+            if not is_z_valid(applied_values, system_function, z_key):
+                return False
         except:
-            return False
-        if not is_z_valid(applied_values, system_function, z_key):
             return False
     return True
 
@@ -134,6 +134,9 @@ def get_all_x_keys(values):
 def get_all_y_keys(values):
     return sorted([key for key in values.keys() if key.startswith('y')])
 
+def get_all_z_keys(gates):
+    return sorted([gate[-1] for gate in gates if gate[-1].startswith('z')])
+
 def bitwise_and(x_decimal, y_decimal):
     return bin(x_decimal & y_decimal)[2:]
 
@@ -141,7 +144,11 @@ if __name__ == '__main__':
     with open('C:/code/aoc-2024/24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
 
+    system_function = bitwise_and
+
     values, gates = parse_input(contents)
-    print(len(get_all_values_combos(values)))
-    for values_combo in get_all_values_combos(values):
-        apply_all_gates(values_combo, gates)
+    value_combos = get_all_values_combos(values)
+
+    z_keys = get_all_z_keys(gates)
+    for z_key in z_keys:
+        print(f'{z_key}: ', is_z_valid_for_all_value_combos(value_combos, gates, system_function, z_key))
