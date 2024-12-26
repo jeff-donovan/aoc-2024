@@ -285,7 +285,7 @@ def swap_outputs(gates, combo):
     return gates
 
 if __name__ == '__main__':
-    with open('24/day_24_test_part2.txt', 'r') as f:
+    with open('C:/code/aoc-2024/24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
 
     num_pairs = 2
