@@ -67,7 +67,7 @@ def get_all_outputs(gates):
     return sorted([gate[-1] for gate in gates])
 
 if __name__ == '__main__':
-    with open('C:/code/aoc-2024/24/day_24_input.txt', 'r') as f:
+    with open('C:/code/aoc-2024/24/day_24_edit_input.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
