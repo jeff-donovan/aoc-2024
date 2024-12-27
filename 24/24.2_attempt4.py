@@ -30,7 +30,7 @@ def get_all_z_keys(gates):
     return sorted([gate[-1] for gate in gates if gate[-1].startswith('z')])
 
 if __name__ == '__main__':
-    with open('C:/code/aoc-2024/24/day_24_input.txt', 'r') as f:
+    with open('C:/code/aoc-2024/24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
