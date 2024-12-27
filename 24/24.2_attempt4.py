@@ -35,4 +35,8 @@ if __name__ == '__main__':
 
     values, gates = parse_input(contents)
     for z_key in get_all_z_keys(gates):
-        print(z_key, get_xy_inputs(gates, z_key))
+        inputs = get_xy_inputs(gates, z_key)
+        z_index = int(z_key[1:])
+        for input in inputs:
+            if int(input[1:]) > z_index:
+                print(z_key)
