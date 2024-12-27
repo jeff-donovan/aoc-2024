@@ -13,5 +13,10 @@ class TestPart2(unittest.TestCase):
         expected = ['v', '<', '<', 'A', '>', '>', '^', 'A', '<', 'A', '>', 'A', 'v', 'A', '<', '^', 'A', 'A', '>', 'A', '<', 'v', 'A', 'A', 'A', '>', '^', 'A']
         self.assertIn(expected, part2.directional_to_directional(seq))
 
+    def test_directional_to_directional_using_group_by_A(self):
+        seq = ['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']
+        expected = ['v', '<', '<', 'A', '>', '>', '^', 'A', '<', 'A', '>', 'A', 'v', 'A', '<', '^', 'A', 'A', '>', 'A', '<', 'v', 'A', 'A', 'A', '>', '^', 'A']
+        self.assertIn(expected, part2.directional_to_directional_using_group_by_A(seq))
+
 if __name__ == '__main__':
     unittest.main()

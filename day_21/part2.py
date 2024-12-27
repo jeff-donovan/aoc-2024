@@ -1,3 +1,4 @@
+import copy
 import datetime
 
 
@@ -114,6 +115,26 @@ def find_all_sequences(code, depth):
         sequences = tidy_up(new_sequences)
 
     return sequences
+
+def directional_to_directional_using_group_by_A(seq):
+    directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in group_by_A(seq)]
+    combos = [[]]
+    for split in directional_to_directional_split:
+        new_combos = []
+        for path in split:
+            for combo in combos:
+                new_combo = copy.deepcopy(combo)
+                new_combo.extend(path)
+                new_combos.append(new_combo)
+        combos = new_combos
+
+    combo_lengths = {}
+    for combo in combos:
+        if len(combo) not in combo_lengths:
+            combo_lengths[len(combo)] = 0
+        combo_lengths[len(combo)] += 1
+    print(combo_lengths)
+    return combos
 
 def group_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
