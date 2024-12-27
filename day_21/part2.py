@@ -106,17 +106,24 @@ def calculate_min_path_length(paths):
 def find_all_sequences(code, depth):
     sequences = numerical_to_direction(code)
 
-    for _ in range(depth):
+    for current_depth in range(depth):
         new_sequences = []
         for seq in sequences:
-            new_paths = directional_to_directional_using_group_by_A(seq, depth)
+            new_paths = directional_to_directional_using_group_by_A(seq)
             new_sequences.extend(new_paths)
 
         sequences = tidy_up(new_sequences)
 
+        combo_lengths = {}
+        for combo in sequences:
+            if len(combo) not in combo_lengths:
+                combo_lengths[len(combo)] = 0
+            combo_lengths[len(combo)] += 1
+        print(f'depth {current_depth} - ', combo_lengths)
+
     return sequences
 
-def directional_to_directional_using_group_by_A(seq, depth):
+def directional_to_directional_using_group_by_A(seq):
     directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in group_by_A(seq)]
     combos = [[]]
     for split in directional_to_directional_split:
@@ -127,13 +134,6 @@ def directional_to_directional_using_group_by_A(seq, depth):
                 new_combo.extend(path)
                 new_combos.append(new_combo)
         combos = new_combos
-
-    combo_lengths = {}
-    for combo in combos:
-        if len(combo) not in combo_lengths:
-            combo_lengths[len(combo)] = 0
-        combo_lengths[len(combo)] += 1
-    print(f'depth {depth} - ', combo_lengths)
     return combos
 
 def group_by_A(seq):
@@ -193,5 +193,5 @@ if __name__ == '__main__':
     start = datetime.datetime.now()
     depth = 2
     # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
-    find_all_sequences('029A', 2)
+    find_all_sequences('029A', 3)
     print('took ', datetime.datetime.now() - start)
