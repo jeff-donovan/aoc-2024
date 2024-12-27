@@ -104,13 +104,13 @@ def find_shortest_paths(keypad, start_char, end_char, visited=None):
 def calculate_min_path_length(paths):
     return min([len(path) for path in paths])
 
-def find_all_sequences(code, depth):
+def find_all_sequences(cache, code, depth):
     sequences = numerical_to_direction(code)
 
     for current_depth in range(depth):
         new_sequences = []
         for seq in sequences:
-            new_paths = directional_to_directional_using_group_by_A(seq)
+            new_paths = directional_to_directional_using_group_by_A(cache, seq)
             new_sequences.extend(new_paths)
 
         sequences = tidy_up(new_sequences)
@@ -121,6 +121,8 @@ def find_all_sequences(code, depth):
                 combo_lengths[len(combo)] = 0
             combo_lengths[len(combo)] += 1
         print(f'depth {current_depth} - ', combo_lengths)
+
+    pprint.pprint(cache)
 
     return sequences
 
@@ -293,6 +295,6 @@ if __name__ == '__main__':
     depth = 2
     cache = {}
 
-    # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
-    print(find_shortest_sequences(cache, '029A', 1))
+    print(sum([calculate_complexity(code, find_all_sequences(cache, code, depth)) for code in codes]))
+    # print(find_shortest_sequences(cache, '029A', 1))
     print('took ', datetime.datetime.now() - start)
