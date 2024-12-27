@@ -1,3 +1,6 @@
+import pprint
+
+
 def parse_input(contents):
     values_content, gates_content = contents.split('\n\n')
 
@@ -53,3 +56,15 @@ if __name__ == '__main__':
 
     # sort z, number of inputs to check for a pattern
     print(sorted([(z_key, len(get_xy_inputs(gates, z_key))) for z_key in get_all_z_keys(gates)]))
+    print()
+
+    # check for num of each x/y pair
+    xy_pairs = {}
+    for (_, x, y, _) in gates:
+        if (x.startswith('x') or y.startswith('x')):
+            x_key = x if x.startswith('x') else y
+            y_key = y if y.startswith('y') else x
+            if (x_key, y_key) not in xy_pairs:
+                xy_pairs[(x_key, y_key)] = 0
+            xy_pairs[(x_key, y_key)] += 1
+    pprint.pprint(sorted(xy_pairs.items()))
