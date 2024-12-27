@@ -135,3 +135,12 @@ if __name__ == '__main__':
     for z_key in get_all_z_keys(gates):
         outputs_used = outputs_used | get_all_inputs_for_output(gates, z_key)
     print(sorted([output for output in outputs if output not in outputs_used]))
+    print()
+
+    # check if each z command is XOR
+    z_commands = []
+    for (command, x, y, z) in gates:
+        if z.startswith('z') and command != 'XOR':
+            z_commands.append((z, command))
+    pprint.pprint(sorted(z_commands))
+    print()
