@@ -50,6 +50,9 @@ def is_xy_xor_gate(gate, z_key):
 def get_all_z_keys(gates):
     return sorted([gate[-1] for gate in gates if gate[-1].startswith('z')])
 
+def get_all_outputs(gates):
+    return sorted([gate[-1] for gate in gates])
+
 if __name__ == '__main__':
     with open('C:/code/aoc-2024/24/day_24_input.txt', 'r') as f:
         contents = f.read()
@@ -76,6 +79,27 @@ if __name__ == '__main__':
     print(sorted([(z_key, len(get_xy_inputs(gates, z_key))) for z_key in get_all_z_keys(gates)]))
     print()
 
+    # sort outputs, number of inputs to check for a pattern
+    print(sorted([(output, len(get_xy_inputs(gates, output))) for output in get_all_outputs(gates)], key=lambda x: x[1]))
+    print()
+
+    pattern = []
+    for z_key in get_all_z_keys(gates):
+        z_num = len(get_xy_inputs(gates, z_key))
+        gate = next((gate for gate in gates if gate[-1] == z_key), None)
+        (command, x, y, z) = gate
+        x_num = len(get_xy_inputs(gates, x))
+        y_num = len(get_xy_inputs(gates, y))
+        if x_num > y_num:
+            pattern.append(((z_key, z_num), (x, x_num), (y, y_num)))
+        elif x_num == y_num:
+            x_tup, y_tup = sorted([(x, x_num), (y, y_num)])
+            pattern.append(((z_key, z_num), x_tup, y_tup))
+        else:  # y_num > x_num
+            pattern.append(((z_key, z_num), (y, y_num), (x, x_num)))
+    pprint.pprint(pattern)
+    print()
+
     # check for num of each x/y pair
     xy_pairs = {}
     for (_, x, y, _) in gates:
@@ -86,6 +110,7 @@ if __name__ == '__main__':
                 xy_pairs[(x_key, y_key)] = 0
             xy_pairs[(x_key, y_key)] += 1
     pprint.pprint(sorted(xy_pairs.items()))
+    print()
 
     for z_key in get_all_z_keys(gates):
         print(f'{z_key}: ', any([is_xy_xor_gate(gate, z_key) for gate in get_xy_gates(gates, z_key)]))
