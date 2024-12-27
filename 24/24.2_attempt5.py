@@ -114,19 +114,19 @@ def is_valid_combo(combo):
 
 def is_valid_addition(values, x_vals=None, y_vals=None, z_vals=None):
     if x_vals is None:
-        x_vals = get_all_x(values, False)
+        x_vals = get_all_x(values)
     if y_vals is None:
-        y_vals = get_all_y(values, False)
+        y_vals = get_all_y(values)
     if z_vals is None:
-        z_vals = get_all_z(values, False)
+        z_vals = get_all_z(values)
 
     return binary_addition(x_vals, y_vals) == as_binary_string(z_vals)
 
 def bitwise_and(x_values, y_values):
     return bin(as_decimal(x_values) & as_decimal(y_values))[2:]
 
-def binary_addition(x_values, y_values):
-    return bin(as_decimal(x_values) + as_decimal(y_values))[2:]
+def binary_addition(x_val, y_val):
+    return bin(int(x_val, 2) + int(y_val, 2))[2:]
 
 if __name__ == '__main__':
     with open('C:/code/aoc-2024/24/day_24_edit_input.txt', 'r') as f:
@@ -134,4 +134,25 @@ if __name__ == '__main__':
 
     values, gates = parse_input(contents)
     apply_all_gates(values, gates)
-    print(is_valid_addition(values))
+
+    x_values = get_all_x(values, reverse=False)
+    y_values = get_all_y(values, reverse=False)
+    z_values = get_all_z(values, reverse=False)
+
+    print('x: ', x_values)
+    print()
+    print('y: ', y_values)
+    print()
+    print('z: ', z_values)
+    print()
+
+    x_bin = as_binary_string(sorted(x_values, reverse=True))
+    y_bin = as_binary_string(sorted(y_values, reverse=True))
+    bin_sum = binary_addition(x_bin, y_bin)
+    z_bin = as_binary_string(sorted(z_values, reverse=True))
+
+    print(f'{x_bin} + {y_bin} = {bin_sum}')
+    print(f'z: ', z_bin)
+    print()
+
+    print(bin_sum == z_bin)
