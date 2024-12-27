@@ -16,6 +16,7 @@ class TestPart2(unittest.TestCase):
     def test_directional_to_directional_by_depth(self):
         initial_seq = ['>', '^', '^', 'A']
         second_level_sequences = part2.directional_to_directional(initial_seq)
+        print('num second_level_sequences: ', len(second_level_sequences))
         for i in range(len(second_level_sequences)):
             third_level_sequences = part2.directional_to_directional(second_level_sequences[i])
             print(f'{i} - {part2.calculate_min_path_length(third_level_sequences)}')
