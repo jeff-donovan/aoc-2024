@@ -16,6 +16,16 @@ def parse_input(contents):
 
     return values, gates
 
+def get_xy_inputs(gates, output):
+    gate = next((gate for gate in gates if gate[-1] == output), None)
+
+    # base case - we have found x/y
+    if gate is None:
+        return set([output])
+
+    (_, x, y, _) = gate
+    return get_xy_inputs(gates, x) | get_xy_inputs(gates, y)
+
 def get_all_z_keys(gates):
     return sorted([gate[-1] for gate in gates if gate[-1].startswith('z')])
 
@@ -25,4 +35,4 @@ if __name__ == '__main__':
 
     values, gates = parse_input(contents)
     for z_key in get_all_z_keys(gates):
-        print(z_key)
+        print(z_key, get_xy_inputs(gates, z_key))
