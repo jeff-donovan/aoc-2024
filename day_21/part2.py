@@ -123,19 +123,19 @@ def find_all_sequences(code, depth):
 
     return sequences
 
-def find_shortest_sequences(code, depth):
+def find_shortest_sequences(cache, code, depth):
     sequences = tidy_up(numerical_to_direction(code))
 
     for _ in range(depth):
-        new_sequences = [directional_to_directional_shortest(seq) for seq in sequences]
+        new_sequences = [directional_to_directional_shortest(cache, seq) for seq in sequences]
         sequences = tidy_up(new_sequences)
 
     return sequences
 
-def directional_to_directional_shortest(seq):
+def directional_to_directional_shortest(cache, seq):
     next_seq = []
     for a_seq in group_by_A(seq):
-        next_seq.extend(shortest_d_to_d(a_seq))
+        next_seq.extend(shortest_d_to_d(cache, a_seq))
     return next_seq
 
 def directional_to_directional_using_group_by_A(seq):
@@ -180,7 +180,11 @@ def tidy_up(sequences):
     min_length = calculate_min_path_length(sequences)
     return [seq for seq in sequences if len(seq) == min_length]
 
-def shortest_d_to_d(seq):
+def shortest_d_to_d(cache, seq):
+    cache_key = tuple(seq)
+    if cache_key in cache:
+        return cache[cache_key]
+
     next_sequences = tidy_up(directional_to_directional(seq))
 
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
@@ -194,7 +198,8 @@ def shortest_d_to_d(seq):
 
             seq_tree[max_level + 1] = tidy_up(new_sequences)
     winner_index = _get_winner_index(seq_lengths)
-    return next_sequences[winner_index]
+    cache[cache_key] = next_sequences[winner_index]
+    return cache[cache_key]
 
 def _get_winner_index(seq_lengths):
     max_level = max(seq_lengths[0].keys())
@@ -242,6 +247,8 @@ if __name__ == '__main__':
 
     start = datetime.datetime.now()
     depth = 2
+    cache = {}
+
     # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
-    find_shortest_sequences('029A', 1)
+    print(find_shortest_sequences(cache, '029A', 0))
     print('took ', datetime.datetime.now() - start)
