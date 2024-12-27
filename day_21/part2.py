@@ -140,7 +140,7 @@ def directional_to_directional_shortest(cache, seq):
     return next_seq
 
 def directional_to_directional_using_group_by_A(cache, seq):
-    TODO: figure out where to add to the cache - think we need to make sure that we re-use calculations (especially in the "winner" method) otherwise we'll go nuts
+    # TODO: figure out where to add to the cache - think we need to make sure that we re-use calculations (especially in the "winner" method) otherwise we'll go nuts
     directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in group_by_A(seq)]
     combos = [[]]
     for split in directional_to_directional_split:
