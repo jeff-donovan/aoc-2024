@@ -1,5 +1,6 @@
 import copy
 import datetime
+import itertools
 import pprint
 
 
@@ -101,6 +102,10 @@ def numerical_to_direction(code):
     return sequences
 
 def directional_to_directional(directional_seq):
+    split_sequences = group_by_A(directional_seq)
+    if len(split_sequences) > 1:
+        return [''.join(prod) for prod in itertools.product(*[directional_to_directional(seq) for seq in split_sequences])]
+
     sequences = ['']
     for i in range(len(directional_seq)):
         if i == 0:
