@@ -295,6 +295,6 @@ if __name__ == '__main__':
     depth = 2
     cache = {}
 
-    print(sum([calculate_complexity(code, find_all_sequences(cache, code, depth)) for code in codes]))
+    print(sum([calculate_complexity(code, find_shortest_sequences(cache, code, depth)) for code in codes]))
     # print(find_shortest_sequences(cache, '029A', 1))
     print('took ', datetime.datetime.now() - start)
