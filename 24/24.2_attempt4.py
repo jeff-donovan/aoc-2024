@@ -137,6 +137,17 @@ if __name__ == '__main__':
     print(sorted([output for output in outputs if output not in outputs_used]))
     print()
 
+    # different approach to outputs not used in z keys
+    outputs = set(get_all_outputs(gates))
+    z_variables = set([])
+    for (_, x, y, z) in gates:
+        if z.startswith('z'):
+            z_variables.add(x)
+            z_variables.add(y)
+            z_variables.add(z)
+    print(sorted([output for output in outputs if output not in z_variables]))
+    print()
+
     # check if each z command is XOR
     z_commands = []
     for (command, x, y, z) in gates:
