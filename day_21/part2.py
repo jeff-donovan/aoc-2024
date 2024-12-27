@@ -115,6 +115,15 @@ def find_all_sequences(code, depth):
 
     return sequences
 
+def group_by_A(seq):
+    a_indices = [i for i, char in enumerate(seq) if char == 'A']
+    new_sequences = []
+    start = 0
+    for a_index in a_indices:
+        new_sequences.append(seq[start : a_index + 1])
+        start = a_index + 1
+    return new_sequences
+
 def numerical_to_direction(code):
     sequences = [[]]
     for i in range(len(code)):
