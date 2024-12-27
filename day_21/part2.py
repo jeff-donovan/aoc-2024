@@ -165,6 +165,41 @@ def tidy_up(sequences):
     min_length = calculate_min_path_length(sequences)
     return [seq for seq in sequences if len(seq) == min_length]
 
+def shortest_d_to_d(seq):
+    next_sequences = tidy_up(directional_to_directional(seq))
+
+    seq_lengths = [{0: [sequence]} for sequence in next_sequences]
+    while _get_winner_index(seq_lengths) is None:
+        max_level = max(seq_lengths[0].keys())
+        for i, seq_tree in enumerate(seq_lengths):
+            new_sequences = []
+            for seq in seq_tree[max_level]:
+                new_paths = directional_to_directional(seq)
+                new_sequences.extend(new_paths)
+
+            seq_tree[max_level + 1] = tidy_up(new_sequences)
+    winner_index = _get_winner_index(seq_lengths)
+    return next_sequences[winner_index]
+
+def _get_winner_index(seq_lengths):
+    max_level = max(seq_lengths[0].keys())
+    shortest_path_length = None
+    sequences_with_shortest_path = []
+    for i, sequence_tree in enumerate(seq_lengths):
+        min_length = calculate_min_path_length(sequence_tree[max_level])
+        if shortest_path_length is None:
+            shortest_path_length = min_length
+
+        if min_length == shortest_path_length:
+            sequences_with_shortest_path.append(i)
+
+        if min_length < shortest_path_length:
+            shortest_path_length = min_length
+            sequences_with_shortest_path = [i]
+
+    if len(sequences_with_shortest_path) == 1:
+        return sequences_with_shortest_path[0]
+
 def directional_to_directional(directional_seq):
     sequences = [[]]
     for i in range(len(directional_seq)):
