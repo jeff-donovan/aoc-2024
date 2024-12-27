@@ -29,6 +29,24 @@ def get_xy_inputs(gates, output):
     (_, x, y, _) = gate
     return get_xy_inputs(gates, x) | get_xy_inputs(gates, y)
 
+def get_xy_gates(gates, output):
+    gate = next((gate for gate in gates if gate[-1] == output), None)
+
+    if gate is None:
+        raise Exception('oops! messed up recursion')
+
+    # base case - we have found x/y gate
+    (_, x, y, _) = gate
+    if x.startswith('x') or x.startswith('y'):
+        return set([gate])
+
+    return get_xy_gates(gates, x) | get_xy_gates(gates, y)
+
+def is_xy_xor_gate(gate, z_key):
+    number = z_key[1:]
+    (command, x, y, z) = gate
+    return command == 'XOR' and x.endswith(number) and y.endswith(number)
+
 def get_all_z_keys(gates):
     return sorted([gate[-1] for gate in gates if gate[-1].startswith('z')])
 
@@ -68,3 +86,6 @@ if __name__ == '__main__':
                 xy_pairs[(x_key, y_key)] = 0
             xy_pairs[(x_key, y_key)] += 1
     pprint.pprint(sorted(xy_pairs.items()))
+
+    for z_key in get_all_z_keys(gates):
+        print(f'{z_key}: ', any([is_xy_xor_gate(gate, z_key) for gate in get_xy_gates(gates, z_key)]))
