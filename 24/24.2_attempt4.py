@@ -50,3 +50,6 @@ if __name__ == '__main__':
                 print(output)
             if x[1:] != y[1:]:
                 print(output)
+
+    # sort z, number of inputs to check for a pattern
+    print(sorted([(z_key, len(get_xy_inputs(gates, z_key))) for z_key in get_all_z_keys(gates)]))
