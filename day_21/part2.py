@@ -109,7 +109,7 @@ def find_all_sequences(code, depth):
     for _ in range(depth):
         new_sequences = []
         for seq in sequences:
-            new_paths = directional_to_directional(seq)
+            new_paths = directional_to_directional_using_group_by_A(seq)
             new_sequences.extend(new_paths)
 
         sequences = tidy_up(new_sequences)
@@ -185,7 +185,7 @@ def calculate_complexity(code, sequences):
     return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
 
 if __name__ == '__main__':
-    with open('21/day_21_input.txt', 'r') as f:
+    with open('day_21/day_21_test.txt', 'r') as f:
         contents = f.read()
 
     codes = make_codes(contents)
