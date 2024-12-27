@@ -140,15 +140,19 @@ def get_all_z_keys(gates):
 def bitwise_and(x_decimal, y_decimal):
     return bin(x_decimal & y_decimal)[2:]
 
+def binary_addition(x_decimal, y_decimal):
+    return bin(x_decimal + y_decimal)[2:]
+
 if __name__ == '__main__':
-    with open('C:/code/aoc-2024/24/day_24_test_part2.txt', 'r') as f:
+    with open('C:/code/aoc-2024/24/day_24_input.txt', 'r') as f:
         contents = f.read()
 
-    system_function = bitwise_and
+    system_function = binary_addition
 
     values, gates = parse_input(contents)
-    value_combos = get_all_values_combos(values)
+    print(len(get_all_values_combos(values)))
+    # value_combos = get_all_values_combos(values)
 
-    z_keys = get_all_z_keys(gates)
-    for z_key in z_keys:
-        print(f'{z_key}: ', is_z_valid_for_all_value_combos(value_combos, gates, system_function, z_key))
+    # z_keys = get_all_z_keys(gates)
+    # for z_key in z_keys:
+    #     print(f'{z_key}: ', is_z_valid_for_all_value_combos(value_combos, gates, system_function, z_key))
