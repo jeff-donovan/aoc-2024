@@ -123,6 +123,21 @@ def find_all_sequences(code, depth):
 
     return sequences
 
+def find_shortest_sequences(code, depth):
+    sequences = tidy_up(numerical_to_direction(code))
+
+    for _ in range(depth):
+        new_sequences = [directional_to_directional_shortest(seq) for seq in sequences]
+        sequences = tidy_up(new_sequences)
+
+    return sequences
+
+def directional_to_directional_shortest(seq):
+    next_seq = []
+    for a_seq in group_by_A(seq):
+        next_seq.extend(shortest_d_to_d(a_seq))
+    return next_seq
+
 def directional_to_directional_using_group_by_A(seq):
     directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in group_by_A(seq)]
     combos = [[]]
@@ -228,5 +243,5 @@ if __name__ == '__main__':
     start = datetime.datetime.now()
     depth = 2
     # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
-    find_all_sequences('029A', 3)
+    find_shortest_sequences('029A', 1)
     print('took ', datetime.datetime.now() - start)
