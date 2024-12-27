@@ -84,6 +84,23 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
+def find_shortest_paths(keypad, start_char, end_char, visited=None):
+    if visited is None:
+        visited = []
+
+    if start_char in visited:
+        return []
+
+    if start_char == end_char:
+        return [['A']]
+
+    paths = []
+    for direction, next_start_char in keypad[start_char].items():
+        next_paths = [[direction] + path for path in find_shortest_paths(keypad, next_start_char, end_char, visited + [start_char])]
+        paths += next_paths
+
+    return [path for path in paths if len(path) == calculate_min_path_length(paths)]
+
 def group_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
     new_sequences = []
