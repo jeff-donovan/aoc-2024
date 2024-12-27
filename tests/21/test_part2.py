@@ -40,5 +40,11 @@ class TestPart2(unittest.TestCase):
         expected = ['v', 'A', '<', '^', 'A', 'A', '>', 'A']
         self.assertEqual(expected, part2.shortest_d_to_d({}, seq))
 
+    def test_shortest_d_to_d_with_tricky_sequence(self):
+        seq = ['v', 'v', 'v', 'A']
+        # expected = ['v', 'A', '<', '^', 'A', 'A', '>', 'A']
+        result = part2.shortest_d_to_d({}, seq)
+        print(result)
+
 if __name__ == '__main__':
     unittest.main()
