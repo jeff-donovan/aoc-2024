@@ -14,6 +14,11 @@ class TestPart2Attempt2(unittest.TestCase):
         expected = 'v<<A>>^A<A>AvA<^AA>A<vAAA>^A'
         self.assertIn(expected, part2_attempt2.directional_to_directional(seq))
 
+    def test_numerical_to_directional_returns_list_of_strings(self):
+        seq = '029A'
+        expected = '<A^A>^^AvvvA'
+        self.assertIn(expected, part2_attempt2.numerical_to_direction(seq))
+
     def test_find_shortest_paths_returns_list_of_strings(self):
         for start in part2_attempt2.DIRECTIONAL_KEYPAD.keys():
             for end in part2_attempt2.DIRECTIONAL_KEYPAD.keys():

@@ -84,6 +84,22 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
+def numerical_to_direction(code):
+    sequences = ['']
+    for i in range(len(code)):
+        if i == 0:
+            start = 'A'
+        else:
+            start = code[i - 1]
+        end = code[i]
+        paths = find_shortest_paths(NUMERICAL_KEYPAD, start, end)
+        new_sequences = []
+        for path in paths:
+            for seq in sequences:
+                new_sequences.append(seq + path)
+        sequences = new_sequences
+    return sequences
+
 def directional_to_directional(directional_seq):
     sequences = ['']
     for i in range(len(directional_seq)):
