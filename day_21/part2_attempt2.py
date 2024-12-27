@@ -122,7 +122,7 @@ def _directional_to_directional(directional_seq):
             for seq in sequences:
                 new_sequences.append(seq + path)
         sequences = new_sequences
-    return sequences
+    return tidy_up(sequences)
 
 def find_shortest_paths(keypad, start_char, end_char, visited=None):
     if visited is None:
