@@ -128,10 +128,13 @@ def find_all_sequences(cache, code, depth):
 
 def find_shortest_sequences(cache, code, depth):
     sequences = tidy_up(numerical_to_direction(code))
+    # sequences = [sequences[0]]
 
     for _ in range(depth):
         new_sequences = [directional_to_directional_shortest(cache, seq) for seq in sequences]
-        sequences = tidy_up(new_sequences)
+        if len(new_sequences) > 1:
+            new_sequences = tidy_up(new_sequences)
+        sequences = new_sequences
 
     return sequences
 
@@ -295,7 +298,7 @@ if __name__ == '__main__':
     codes = make_codes(contents)
 
     start = datetime.datetime.now()
-    depth = 15
+    depth = 14
     cache = {}
 
     print(sum([calculate_complexity(code, find_shortest_sequences(cache, code, depth)) for code in codes]))
