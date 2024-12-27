@@ -1,6 +1,3 @@
-import itertools
-
-
 def parse_input(contents):
     values_content, gates_content = contents.split('\n\n')
 
@@ -86,36 +83,6 @@ def get_all_y(values, reverse=True):
 
 def get_all_z(values, reverse=True):
     return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0], reverse=reverse)
-
-def get_output_swap_combos(gates, num_swap_pairs):
-    # first - get all pairs
-    pairs = set([])
-    for i in gates:
-        for j in gates:
-            i_output = i[3]
-            j_output = j[3]
-            if i_output != j_output:
-                pairs.add(tuple(sorted([i_output, j_output])))
-    return itertools.combinations(pairs, num_swap_pairs)
-
-def is_valid_combo(combo):
-    outputs = set([])
-    for pair in combo:
-        if pair[0] in outputs or pair[1] in outputs:
-            return False
-        outputs.add(pair[0])
-        outputs.add(pair[1])
-    return True
-
-def is_valid_addition(values, x_vals=None, y_vals=None, z_vals=None):
-    if x_vals is None:
-        x_vals = get_all_x(values)
-    if y_vals is None:
-        y_vals = get_all_y(values)
-    if z_vals is None:
-        z_vals = get_all_z(values)
-
-    return binary_addition(x_vals, y_vals) == as_binary_string(z_vals)
 
 def bitwise_and(x_values, y_values):
     return bin(as_decimal(x_values) & as_decimal(y_values))[2:]
