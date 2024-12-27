@@ -118,13 +118,13 @@ def find_shortest_sequences(cache, code, depth):
 
 def directional_to_directional_shortest(cache, seq):
     next_seq = []
-    for a_seq in group_by_A(seq):
+    for a_seq in split_by_A(seq):
         next_seq.extend(shortest_d_to_d(cache, a_seq))
     return next_seq
 
-def directional_to_directional_using_group_by_A(cache, seq):
+def directional_to_directional_using_split_by_A(cache, seq):
     # TODO: figure out where to add to the cache - think we need to make sure that we re-use calculations (especially in the "winner" method) otherwise we'll go nuts
-    directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in group_by_A(seq)]
+    directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in split_by_A(seq)]
     combos = [[]]
     for split in directional_to_directional_split:
         new_combos = []
@@ -136,7 +136,7 @@ def directional_to_directional_using_group_by_A(cache, seq):
         combos = new_combos
     return combos
 
-def group_by_A(seq):
+def split_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
     new_sequences = []
     start = 0
@@ -171,7 +171,7 @@ def shortest_d_to_d(cache, seq):
     if cache_key in cache:
         return cache[cache_key]
 
-    next_sequences = tidy_up(directional_to_directional_using_group_by_A(cache, seq))
+    next_sequences = tidy_up(directional_to_directional_using_split_by_A(cache, seq))
 
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
     depth = 0
@@ -188,7 +188,7 @@ def shortest_d_to_d(cache, seq):
             # print(f'{i} @ {max_level} = {calculate_min_path_length(seq_tree[max_level])}')
             new_sequences = []
             for seq in seq_tree[max_level]:
-                new_paths = directional_to_directional_using_group_by_A(cache, seq)
+                new_paths = directional_to_directional_using_split_by_A(cache, seq)
                 new_sequences.extend(new_paths)
 
             seq_tree[max_level + 1] = tidy_up(new_sequences)
