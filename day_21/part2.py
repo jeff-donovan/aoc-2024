@@ -191,7 +191,8 @@ def shortest_d_to_d(cache, seq):
     next_sequences = tidy_up(directional_to_directional_using_group_by_A(cache, seq))
 
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
-    while _get_winner_index(seq_lengths) is None:
+    depth = 0
+    while _get_winner_index(seq_lengths) is None and depth < 2:
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
         print('max_level: ', max_level)
         _remove_losers(seq_lengths, max_level)
@@ -206,7 +207,12 @@ def shortest_d_to_d(cache, seq):
                 new_sequences.extend(new_paths)
 
             seq_tree[max_level + 1] = tidy_up(new_sequences)
+        depth += 1
     winner_index = _get_winner_index(seq_lengths)
+    if winner_index is None:
+        max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
+        _remove_losers(seq_lengths, max_level)
+        winner_index = next((i for i, seq_tree in enumerate(seq_lengths) if len(seq_tree.keys()) > 0))
     cache[cache_key] = next_sequences[winner_index]
     return cache[cache_key]
 
