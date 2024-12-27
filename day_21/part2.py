@@ -298,9 +298,9 @@ if __name__ == '__main__':
     codes = make_codes(contents)
 
     start = datetime.datetime.now()
-    depth = 14
     cache = {}
 
-    print(sum([calculate_complexity(code, find_shortest_sequences(cache, code, depth)) for code in codes]))
-    # print(find_shortest_sequences(cache, '029A', 1))
+    for depth in range(13):
+        print(f'{depth}: ', sum([calculate_complexity(code, find_shortest_sequences(cache, code, depth)) for code in codes]))
+        # print(find_shortest_sequences(cache, '029A', 1))
     print('took ', datetime.datetime.now() - start)
