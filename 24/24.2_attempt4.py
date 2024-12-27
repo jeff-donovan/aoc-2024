@@ -19,6 +19,19 @@ def parse_input(contents):
 
     return values, gates
 
+def get_all_inputs_for_output(gates, output):
+    gate = next((gate for gate in gates if gate[-1] == output), None)
+
+    if gate is None:
+        raise Exception('oops! messed up recursion')
+
+    # base case - we have found x/y gate
+    (_, x, y, _) = gate
+    if x.startswith('x') or x.startswith('y'):
+        return set([x, y, output])
+
+    return set([x, y]) | get_all_inputs_for_output(gates, x) | get_all_inputs_for_output(gates, y)
+
 def get_xy_inputs(gates, output):
     gate = next((gate for gate in gates if gate[-1] == output), None)
 
@@ -114,3 +127,11 @@ if __name__ == '__main__':
 
     for z_key in get_all_z_keys(gates):
         print(f'{z_key}: ', any([is_xy_xor_gate(gate, z_key) for gate in get_xy_gates(gates, z_key)]))
+    print()
+
+    # grab all outputs not used in z keys
+    outputs = set(get_all_outputs(gates))
+    outputs_used = set([])
+    for z_key in get_all_z_keys(gates):
+        outputs_used = outputs_used | get_all_inputs_for_output(gates, z_key)
+    print(sorted([output for output in outputs if output not in outputs_used]))
