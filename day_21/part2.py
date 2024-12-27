@@ -192,8 +192,13 @@ def shortest_d_to_d(cache, seq):
 
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
     while _get_winner_index(seq_lengths) is None:
-        max_level = max(seq_lengths[0].keys())
-        for i, seq_tree in enumerate(seq_lengths):
+        max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
+        _remove_losers(seq_lengths, max_level)
+        # _tidy_up_winners(seq_lengths, max_level)  # TODO: might not need this
+        for seq_tree in seq_lengths:
+            if max_level not in seq_tree:
+                continue
+
             new_sequences = []
             for seq in seq_tree[max_level]:
                 new_paths = directional_to_directional_using_group_by_A(cache, seq)
@@ -204,11 +209,40 @@ def shortest_d_to_d(cache, seq):
     cache[cache_key] = next_sequences[winner_index]
     return cache[cache_key]
 
+def _remove_losers(seq_lengths, max_level):
+    shortest_path_length = None
+    for sequence_tree in seq_lengths:
+        if max_level not in sequence_tree:
+            continue
+
+        min_length = calculate_min_path_length(sequence_tree[max_level])
+        if shortest_path_length is None or min_length < shortest_path_length:
+            shortest_path_length = min_length
+
+    for i, sequence_tree in enumerate(seq_lengths):
+        if max_level not in sequence_tree:
+            seq_lengths[i] = {}
+
+        min_length = calculate_min_path_length(sequence_tree[max_level])
+        if min_length > shortest_path_length:
+            seq_lengths[i] = {}
+
+def _tidy_up_winners(seq_lengths, max_level):
+    shortest_path_length = None
+    for sequence_tree in seq_lengths:
+        if max_level not in sequence_tree:
+            continue
+
+        sequence_tree[max_level] = tidy_up(sequence_tree[max_level])
+
 def _get_winner_index(seq_lengths):
     max_level = max(seq_lengths[0].keys())
     shortest_path_length = None
     sequences_with_shortest_path = []
     for i, sequence_tree in enumerate(seq_lengths):
+        if max_level not in sequence_tree:
+            continue
+
         min_length = calculate_min_path_length(sequence_tree[max_level])
         if shortest_path_length is None:
             shortest_path_length = min_length
