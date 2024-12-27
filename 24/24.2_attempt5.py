@@ -111,50 +111,59 @@ def get_all_values_combos(values):
 
     return result
 
-def get_z_as_decimal(values):
-    return int(get_z_as_binary_string(values), 2)
+def as_decimal(values):
+    return int(as_binary_string(values), 2)
 
-def get_z_as_binary_string(values):
-    z_keys = get_all_z_keys(values)
-    z_values = [values[key] for key in z_keys]
-    return as_binary_string(z_values)
+def as_binary_string(values):
+    return ''.join([str(val) for _, val in values])
 
-def get_y_as_decimal(values):
-    return int(get_y_as_binary_string(values), 2)
+def get_all_x(values, reverse=True):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('x')], key=lambda x: x[0], reverse=reverse)
 
-def get_y_as_binary_string(values):
-    y_keys = get_all_y_keys(values)
-    y_values = [values[key] for key in y_keys]
-    return as_binary_string(y_values)
+def get_all_y(values, reverse=True):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('y')], key=lambda y: y[0], reverse=reverse)
 
-def get_x_as_decimal(values):
-    return int(get_x_as_binary_string(values), 2)
+def get_all_z(values, reverse=True):
+    return sorted([(key, val) for key, val in values.items() if key.startswith('z')], key=lambda z: z[0], reverse=reverse)
 
-def get_x_as_binary_string(values):
-    x_keys = get_all_x_keys(values)
-    x_values = [values[key] for key in x_keys]
-    return as_binary_string(x_values)
+def get_output_swap_combos(gates, num_swap_pairs):
+    # first - get all pairs
+    pairs = set([])
+    for i in gates:
+        for j in gates:
+            i_output = i[3]
+            j_output = j[3]
+            if i_output != j_output:
+                pairs.add(tuple(sorted([i_output, j_output])))
+    return itertools.combinations(pairs, num_swap_pairs)
 
-def as_binary_string(values_list):
-    return ''.join([str(val) for val in values_list])
+def is_valid_combo(combo):
+    outputs = set([])
+    for pair in combo:
+        if pair[0] in outputs or pair[1] in outputs:
+            return False
+        outputs.add(pair[0])
+        outputs.add(pair[1])
+    return True
 
-def get_all_x_keys(values):
-    return sorted([key for key in values.keys() if key.startswith('x')])
+def is_valid_addition(values, x_vals=None, y_vals=None, z_vals=None):
+    if x_vals is None:
+        x_vals = get_all_x(values)
+    if y_vals is None:
+        y_vals = get_all_y(values)
+    if z_vals is None:
+        z_vals = get_all_z(values)
 
-def get_all_y_keys(values):
-    return sorted([key for key in values.keys() if key.startswith('y')])
+    return binary_addition(as_binary_string(x_vals), as_binary_string(y_vals)) == as_binary_string(z_vals)
 
-def get_all_z_keys(values):
-    return sorted([key for key in values.keys() if key.startswith('z')])
+def bitwise_and(x_values, y_values):
+    return bin(as_decimal(x_values) & as_decimal(y_values))[2:]
 
-def bitwise_and(x_decimal, y_decimal):
-    return bin(x_decimal & y_decimal)[2:]
-
-def binary_addition(x_decimal, y_decimal):
-    return bin(x_decimal + y_decimal)[2:]
+def binary_addition(x_values, y_values):
+    return bin(as_decimal(x_values) + as_decimal(y_values))[2:]
 
 if __name__ == '__main__':
-    with open('C:/code/aoc-2024/24/day_24_edit_input.txt', 'r') as f:
+    with open('C:/code/aoc-2024/24/day_24_test_part2.txt', 'r') as f:
         contents = f.read()
 
     values, gates = parse_input(contents)
@@ -165,5 +174,5 @@ if __name__ == '__main__':
     y_dec = get_y_as_decimal(values)
     z_bin = get_z_as_binary_string(values)
 
-    print('x + y = ', binary_addition(x_dec, y_dec))
+    print('x + y = ', bitwise_and(x_dec, y_dec))
     print('z = ', z_bin)
