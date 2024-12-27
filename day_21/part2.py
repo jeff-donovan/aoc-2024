@@ -295,7 +295,7 @@ if __name__ == '__main__':
     codes = make_codes(contents)
 
     start = datetime.datetime.now()
-    depth = 2
+    depth = 15
     cache = {}
 
     print(sum([calculate_complexity(code, find_shortest_sequences(cache, code, depth)) for code in codes]))
