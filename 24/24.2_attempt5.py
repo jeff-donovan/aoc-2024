@@ -114,13 +114,13 @@ def is_valid_combo(combo):
 
 def is_valid_addition(values, x_vals=None, y_vals=None, z_vals=None):
     if x_vals is None:
-        x_vals = get_all_x(values)
+        x_vals = get_all_x(values, False)
     if y_vals is None:
-        y_vals = get_all_y(values)
+        y_vals = get_all_y(values, False)
     if z_vals is None:
-        z_vals = get_all_z(values)
+        z_vals = get_all_z(values, False)
 
-    return binary_addition(as_binary_string(x_vals), as_binary_string(y_vals)) == as_binary_string(z_vals)
+    return binary_addition(x_vals, y_vals) == as_binary_string(z_vals)
 
 def bitwise_and(x_values, y_values):
     return bin(as_decimal(x_values) & as_decimal(y_values))[2:]
