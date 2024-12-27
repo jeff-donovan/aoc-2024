@@ -85,7 +85,7 @@ def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
 def directional_to_directional(directional_seq):
-    sequences = [[]]
+    sequences = ['']
     for i in range(len(directional_seq)):
         if i == 0:
             start = 'A'
