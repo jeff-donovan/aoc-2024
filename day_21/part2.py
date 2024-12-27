@@ -120,9 +120,9 @@ def find_all_sequences(cache, code, depth):
             if len(combo) not in combo_lengths:
                 combo_lengths[len(combo)] = 0
             combo_lengths[len(combo)] += 1
-        print(f'depth {current_depth} - ', combo_lengths)
+        # print(f'depth {current_depth} - ', combo_lengths)
 
-    pprint.pprint(cache)
+    # pprint.pprint(cache)
 
     return sequences
 
@@ -185,7 +185,7 @@ def tidy_up(sequences):
     return [seq for seq in sequences if len(seq) == min_length]
 
 def shortest_d_to_d(cache, seq):
-    pprint.pprint(cache)
+    # pprint.pprint(cache)
     cache_key = tuple(seq)
     if cache_key in cache:
         return cache[cache_key]
@@ -198,13 +198,13 @@ def shortest_d_to_d(cache, seq):
         if depth >= 1:
             break
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
-        print('max_level: ', max_level)
+        # print('max_level: ', max_level)
         _remove_losers(seq_lengths, max_level)
         # _tidy_up_winners(seq_lengths, max_level)  # TODO: might not need this
         for i, seq_tree in enumerate(seq_lengths):
             if max_level not in seq_tree:
                 continue
-            print(f'{i} @ {max_level} = {calculate_min_path_length(seq_tree[max_level])}')
+            # print(f'{i} @ {max_level} = {calculate_min_path_length(seq_tree[max_level])}')
             new_sequences = []
             for seq in seq_tree[max_level]:
                 new_paths = directional_to_directional_using_group_by_A(cache, seq)
@@ -214,7 +214,7 @@ def shortest_d_to_d(cache, seq):
         depth += 1
     winner_index = _get_winner_index(seq_lengths)
     if winner_index is None:
-        print('hi jeff! winner is NONE')
+        # print('hi jeff! winner is NONE')
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
         _remove_losers(seq_lengths, max_level)
         winner_index = next((i for i, seq_tree in enumerate(seq_lengths) if len(seq_tree.keys()) > 0))
