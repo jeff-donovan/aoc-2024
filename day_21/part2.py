@@ -109,14 +109,14 @@ def find_all_sequences(code, depth):
     for _ in range(depth):
         new_sequences = []
         for seq in sequences:
-            new_paths = directional_to_directional_using_group_by_A(seq)
+            new_paths = directional_to_directional_using_group_by_A(seq, depth)
             new_sequences.extend(new_paths)
 
         sequences = tidy_up(new_sequences)
 
     return sequences
 
-def directional_to_directional_using_group_by_A(seq):
+def directional_to_directional_using_group_by_A(seq, depth):
     directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in group_by_A(seq)]
     combos = [[]]
     for split in directional_to_directional_split:
@@ -133,7 +133,7 @@ def directional_to_directional_using_group_by_A(seq):
         if len(combo) not in combo_lengths:
             combo_lengths[len(combo)] = 0
         combo_lengths[len(combo)] += 1
-    print(combo_lengths)
+    print(f'depth {depth} - ', combo_lengths)
     return combos
 
 def group_by_A(seq):
@@ -192,5 +192,6 @@ if __name__ == '__main__':
 
     start = datetime.datetime.now()
     depth = 2
-    print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
+    # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
+    find_all_sequences('029A', 2)
     print('took ', datetime.datetime.now() - start)
