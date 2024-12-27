@@ -194,7 +194,9 @@ def shortest_d_to_d(cache, seq):
 
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
     depth = 0
-    while _get_winner_index(seq_lengths) is None and depth < 2:
+    while _get_winner_index(seq_lengths) is None:
+        if depth >= 1:
+            break
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
         print('max_level: ', max_level)
         _remove_losers(seq_lengths, max_level)
@@ -212,6 +214,7 @@ def shortest_d_to_d(cache, seq):
         depth += 1
     winner_index = _get_winner_index(seq_lengths)
     if winner_index is None:
+        print('hi jeff! winner is NONE')
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
         _remove_losers(seq_lengths, max_level)
         winner_index = next((i for i, seq_tree in enumerate(seq_lengths) if len(seq_tree.keys()) > 0))
@@ -245,7 +248,7 @@ def _tidy_up_winners(seq_lengths, max_level):
         sequence_tree[max_level] = tidy_up(sequence_tree[max_level])
 
 def _get_winner_index(seq_lengths):
-    max_level = max(seq_lengths[0].keys())
+    max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
     shortest_path_length = None
     sequences_with_shortest_path = []
     for i, sequence_tree in enumerate(seq_lengths):
