@@ -1,5 +1,6 @@
 import copy
 import datetime
+import pprint
 
 
 NUMERICAL_KEYPAD = {
@@ -181,6 +182,7 @@ def tidy_up(sequences):
     return [seq for seq in sequences if len(seq) == min_length]
 
 def shortest_d_to_d(cache, seq):
+    pprint.pprint(cache)
     cache_key = tuple(seq)
     if cache_key in cache:
         return cache[cache_key]
@@ -250,5 +252,5 @@ if __name__ == '__main__':
     cache = {}
 
     # print(sum([calculate_complexity(code, find_all_sequences(code, depth)) for code in codes]))
-    print(find_shortest_sequences(cache, '029A', 0))
+    print(find_shortest_sequences(cache, '029A', 1))
     print('took ', datetime.datetime.now() - start)
