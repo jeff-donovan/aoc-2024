@@ -139,7 +139,8 @@ def directional_to_directional_shortest(cache, seq):
         next_seq.extend(shortest_d_to_d(cache, a_seq))
     return next_seq
 
-def directional_to_directional_using_group_by_A(seq):
+def directional_to_directional_using_group_by_A(cache, seq):
+    TODO: figure out where to add to the cache - think we need to make sure that we re-use calculations (especially in the "winner" method) otherwise we'll go nuts
     directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in group_by_A(seq)]
     combos = [[]]
     for split in directional_to_directional_split:
@@ -187,7 +188,7 @@ def shortest_d_to_d(cache, seq):
     if cache_key in cache:
         return cache[cache_key]
 
-    next_sequences = tidy_up(directional_to_directional(seq))
+    next_sequences = tidy_up(directional_to_directional_using_group_by_A(cache, seq))
 
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
     while _get_winner_index(seq_lengths) is None:
@@ -195,7 +196,7 @@ def shortest_d_to_d(cache, seq):
         for i, seq_tree in enumerate(seq_lengths):
             new_sequences = []
             for seq in seq_tree[max_level]:
-                new_paths = directional_to_directional(seq)
+                new_paths = directional_to_directional_using_group_by_A(cache, seq)
                 new_sequences.extend(new_paths)
 
             seq_tree[max_level + 1] = tidy_up(new_sequences)
