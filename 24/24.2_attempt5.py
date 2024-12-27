@@ -1,5 +1,6 @@
 import copy
 import itertools
+import pprint
 
 
 def parse_input(contents):
@@ -41,25 +42,26 @@ def get_expected(values, system_function):
     return system_function(x_decimal, y_decimal)
 
 def apply_all_gates(values, gates):
-    copied_gates = copy.deepcopy(gates)
-    copied_values = copy.deepcopy(values)
     i = 0
-    while len(copied_gates) > 0:
-        if i >= len(copied_gates):
+    while len(gates) > 0:
+        if i >= len(gates):
             raise Exception('not this time!')
 
-        command, x, y, z = copied_gates[i]
-        success = apply_gate(copied_values, command, x, y, z)
+        command, x, y, z = gates[i]
+        success = apply_gate(values, command, x, y, z)
         if not success:
             i += 1
             continue
+        else:
+            print('success')
 
-        copied_gates.pop(i)
+        gates.pop(i)
         i = 0
 
-    return copied_values, copied_gates
+    return values, values
 
 def apply_gate(values, command, x, y, z):
+    print('inside apply_gate')
     if z in values:
         return True
 
@@ -109,6 +111,14 @@ def get_all_values_combos(values):
 
     return result
 
+def get_z_as_decimal(values):
+    return int(get_z_as_binary_string(values), 2)
+
+def get_z_as_binary_string(values):
+    z_keys = get_all_z_keys(values)
+    z_values = [values[key] for key in z_keys]
+    return as_binary_string(z_values)
+
 def get_y_as_decimal(values):
     return int(get_y_as_binary_string(values), 2)
 
@@ -134,8 +144,8 @@ def get_all_x_keys(values):
 def get_all_y_keys(values):
     return sorted([key for key in values.keys() if key.startswith('y')])
 
-def get_all_z_keys(gates):
-    return sorted([gate[-1] for gate in gates if gate[-1].startswith('z')])
+def get_all_z_keys(values):
+    return sorted([key for key in values.keys() if key.startswith('z')])
 
 def bitwise_and(x_decimal, y_decimal):
     return bin(x_decimal & y_decimal)[2:]
@@ -144,15 +154,16 @@ def binary_addition(x_decimal, y_decimal):
     return bin(x_decimal + y_decimal)[2:]
 
 if __name__ == '__main__':
-    with open('C:/code/aoc-2024/24/day_24_input.txt', 'r') as f:
+    with open('C:/code/aoc-2024/24/day_24_edit_input.txt', 'r') as f:
         contents = f.read()
 
-    system_function = binary_addition
-
     values, gates = parse_input(contents)
-    print(len(get_all_values_combos(values)))
-    # value_combos = get_all_values_combos(values)
+    apply_all_gates(values, gates)
+    pprint.pprint(values)
 
-    # z_keys = get_all_z_keys(gates)
-    # for z_key in z_keys:
-    #     print(f'{z_key}: ', is_z_valid_for_all_value_combos(value_combos, gates, system_function, z_key))
+    x_dec = get_x_as_decimal(values)
+    y_dec = get_y_as_decimal(values)
+    z_bin = get_z_as_binary_string(values)
+
+    print('x + y = ', binary_addition(x_dec, y_dec))
+    print('z = ', z_bin)
