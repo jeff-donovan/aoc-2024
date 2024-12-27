@@ -1,6 +1,4 @@
-import copy
 import itertools
-import pprint
 
 
 def parse_input(contents):
@@ -32,8 +30,6 @@ def apply_all_gates(values, gates):
         if not success:
             i += 1
             continue
-        else:
-            print('success')
 
         gates.pop(i)
         i = 0
@@ -41,7 +37,6 @@ def apply_all_gates(values, gates):
     return values, values
 
 def apply_gate(values, command, x, y, z):
-    print('inside apply_gate')
     if z in values:
         return True
 
