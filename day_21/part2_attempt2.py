@@ -106,6 +106,9 @@ def directional_to_directional(directional_seq):
     if len(split_sequences) > 1:
         return [''.join(prod) for prod in itertools.product(*[directional_to_directional(seq) for seq in split_sequences])]
 
+    return _directional_to_directional(directional_seq)
+
+def _directional_to_directional(directional_seq):
     sequences = ['']
     for i in range(len(directional_seq)):
         if i == 0:
