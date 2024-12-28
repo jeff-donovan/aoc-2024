@@ -189,8 +189,12 @@ def _get_winner_index(seq_lengths):
         return sequences_with_shortest_path[0]
 
 def directional_to_directional_using_split_by_A(cache, seq):
+    cache_key = tuple(seq)
+    if cache_key in cache:
+        return [cache[cache_key]]
+
     # TODO: figure out where to add to the cache - think we need to make sure that we re-use calculations (especially in the "winner" method) otherwise we'll go nuts
-    directional_to_directional_split = [directional_to_directional(a_seq) for a_seq in split_by_A(seq)]
+    directional_to_directional_split = [directional_to_directional(cache, a_seq) for a_seq in split_by_A(seq)]
     combos = [[]]
     for split in directional_to_directional_split:
         new_combos = []
@@ -218,7 +222,11 @@ def numerical_to_direction(code):
         sequences = new_sequences
     return sequences
 
-def directional_to_directional(directional_seq):
+def directional_to_directional(cache, directional_seq):
+    cache_key = tuple(directional_seq)
+    if cache_key in cache:
+        return [cache[cache_key]]
+
     sequences = [[]]
     for i in range(len(directional_seq)):
         if i == 0:
