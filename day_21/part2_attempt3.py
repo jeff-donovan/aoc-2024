@@ -297,8 +297,3 @@ if __name__ == '__main__':
         print()
 
     pprint.pprint(cache)
-
-# PLAN:
-#  - use recursion to continue finding "shortest path" of smaller sequences until either:
-#    - seq in cache: we've previously calculated the shortest path
-#    - there is a single A left
