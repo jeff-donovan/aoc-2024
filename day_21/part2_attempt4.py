@@ -144,12 +144,12 @@ def calculate_min_path_length(paths):
     return min([len(path) for path in paths])
 
 if __name__ == '__main__':
-    with open('day_21/day_21_test.txt', 'r') as f:
+    with open('day_21/day_21_input.txt', 'r') as f:
         contents = f.read()
 
     codes = make_codes(contents)
 
-    depth = 3
+    depth = 2
     cache = {}
     start = datetime.datetime.now()
     complexities = []
