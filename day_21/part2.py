@@ -138,12 +138,14 @@ def directional_to_directional_using_split_by_A(cache, seq):
 
 def split_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
-    new_sequences = []
-    start = 0
-    for a_index in a_indices:
-        new_sequences.append(seq[start : a_index + 1])
-        start = a_index + 1
-    return new_sequences
+    num_a_indices = len(a_indices)
+    if num_a_indices == 1:
+        return [seq]
+
+    split_index = a_indices[num_a_indices // 2 - 1]
+    first_half = seq[0:split_index + 1]
+    second_half = seq[split_index + 1:len(seq)]
+    return [first_half, second_half]
 
 def numerical_to_direction(code):
     sequences = [[]]
