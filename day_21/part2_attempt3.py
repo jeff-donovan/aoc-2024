@@ -86,7 +86,7 @@ def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
 def find_shortest_sequence_length(cache, code, depth):
-    sequences = tidy_up(numerical_to_direction(code))
+    sequences = tidy_up(numerical_to_direction(cache, code))
 
     string_depth = math.ceil(depth / 2)
     for _ in range(string_depth):
@@ -120,7 +120,7 @@ def group_by_A(seq):
     return new_sequences
 
 def find_shortest_sequences(cache, code, depth):
-    sequences = tidy_up(numerical_to_direction(code))
+    sequences = tidy_up(numerical_to_direction(cache, code))
     # sequences = [sequences[0]]
 
     for _ in range(depth):
@@ -237,7 +237,7 @@ def directional_to_directional_using_split_by_A(cache, seq):
         combos = new_combos
     return combos
 
-def numerical_to_direction(code):
+def numerical_to_direction(cache, code):
     sequences = ['']
     for i in range(len(code)):
         if i == 0:
@@ -245,7 +245,7 @@ def numerical_to_direction(code):
         else:
             start = code[i - 1]
         end = code[i]
-        paths = find_shortest_paths(NUMERICAL_KEYPAD, start, end)
+        paths = find_shortest_paths(cache, NUMERICAL_KEYPAD, start, end)
         new_sequences = []
         for path in paths:
             for seq in sequences:
@@ -265,7 +265,7 @@ def directional_to_directional(cache, directional_seq):
         else:
             start = directional_seq[i - 1]
         end = directional_seq[i]
-        paths = find_shortest_paths(DIRECTIONAL_KEYPAD, start, end)
+        paths = find_shortest_paths(cache, DIRECTIONAL_KEYPAD, start, end)
         new_sequences = []
         for path in paths:
             for seq in sequences:
@@ -284,7 +284,13 @@ def split_by_A(seq):
     second_half = seq[split_index + 1:len(seq)]
     return [first_half, second_half]
 
-def find_shortest_paths(keypad, start_char, end_char, visited=None):
+def find_shortest_paths(cache, keypad, start_char, end_char):
+    cache_key = ('find_shortest_paths', start_char, end_char)
+    if cache_key not in cache:
+        cache[cache_key] = _find_shortest_paths(keypad, start_char, end_char)
+    return cache[cache_key]
+
+def _find_shortest_paths(keypad, start_char, end_char, visited=None):
     if visited is None:
         visited = []
 
@@ -296,7 +302,7 @@ def find_shortest_paths(keypad, start_char, end_char, visited=None):
 
     paths = []
     for direction, next_start_char in keypad[start_char].items():
-        next_paths = [direction + path for path in find_shortest_paths(keypad, next_start_char, end_char, visited + [start_char])]
+        next_paths = [direction + path for path in _find_shortest_paths(keypad, next_start_char, end_char, visited + [start_char])]
         paths += next_paths
 
     return [path for path in paths if len(path) == calculate_min_path_length(paths)]
@@ -323,7 +329,7 @@ if __name__ == '__main__':
     # codes = ['029A']
 
     cache = {}
-    depth = 25
+    depth = 2
     # for depth in range(26):
     #     start = datetime.datetime.now()
     #     # code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]
