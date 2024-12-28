@@ -144,6 +144,10 @@ def calculate_complexity(code, sequences):
 def calculate_min_path_length(paths):
     return min([len(path) for path in paths])
 
+def tidy_up(sequences):
+    min_length = calculate_min_path_length(sequences)
+    return [seq for seq in sequences if len(seq) == min_length]
+
 if __name__ == '__main__':
     with open('day_21/day_21_input.txt', 'r') as f:
         contents = f.read()
@@ -161,12 +165,12 @@ if __name__ == '__main__':
                 start_char = 'A'
             else:
                 start_char = code[i - 1]
-            sequences = numerical_to_direction(cache, char, start_char)
+            sequences = tidy_up(numerical_to_direction(cache, char, start_char))
             for _ in range(depth):
                 new_sequences = []
                 for seq in sequences:
                     new_sequences.extend(directional_to_directional(cache, seq))
-                sequences = new_sequences
+                sequences = tidy_up(new_sequences)
             code_char_lengths.append(calculate_min_path_length(sequences))
         complexities.append(sum(code_char_lengths) * int(code[:len(code) - 1]))
     print(sum(complexities))
