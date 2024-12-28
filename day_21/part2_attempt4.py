@@ -99,7 +99,13 @@ def numerical_to_direction(cache, code, start=None):
         sequences = new_sequences
     return sequences
 
-def directional_to_directional(cache, directional_seq):
+def directional_to_directional(cache, seq):
+    cache_key = ('directional_to_directional', seq)
+    if cache_key not in cache:
+        cache[cache_key] = _directional_to_directional(cache, seq)
+    return cache[cache_key]
+
+def _directional_to_directional(cache, directional_seq):
     sequences = ['']
     for i in range(len(directional_seq)):
         if i == 0:
@@ -154,7 +160,7 @@ if __name__ == '__main__':
 
     codes = make_codes(contents)
 
-    depth = 4
+    depth = 2
     cache = {}
     start = datetime.datetime.now()
     complexities = []
