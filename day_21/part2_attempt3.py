@@ -1,5 +1,6 @@
 import copy
 import datetime
+import math
 import pprint
 
 
@@ -88,14 +89,20 @@ def find_shortest_sequence_length(cache, code, depth):
     sequences = tidy_up(numerical_to_direction(code))
     # sequences = [sequences[0]]
 
-    for _ in range(depth // 2):
+    string_depth = math.ceil(depth / 2)
+    # string_depth = depth // 2
+    for _ in range(string_depth):
         new_sequences = [directional_to_directional_shortest(cache, seq) for seq in sequences]
         if len(new_sequences) > 1:
             new_sequences = tidy_up(new_sequences)
         sequences = new_sequences
 
-    remaining_depth = depth - (depth // 2)
-    sequences_grouped_by_A = [group_by_A(seq) for seq in sequences]
+    remaining_depth = depth - string_depth
+    print('remaining_depth: ', remaining_depth)
+    if remaining_depth > 0:
+        sequences_grouped_by_A = [group_by_A(seq) for seq in sequences]
+    else:
+        sequences_grouped_by_A = [[] for seq in sequences]
     print('sequences_grouped_by_A: ', sequences_grouped_by_A)
     for _ in range(remaining_depth):
         for i, seq_group in enumerate(sequences_grouped_by_A):
