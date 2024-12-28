@@ -318,8 +318,8 @@ if __name__ == '__main__':
     with open('day_21/day_21_input.txt', 'r') as f:
         contents = f.read()
 
-    # codes = make_codes(contents)
-    codes = ['029A']
+    codes = make_codes(contents)
+    # codes = ['029A']
 
     cache = {}
     for depth in range(3):
