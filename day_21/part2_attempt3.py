@@ -108,7 +108,7 @@ def directional_to_directional_shortest(cache, seq):
         return cache[cache_key]
 
     left, right = parts
-    cache[cache_key] = shortest_d_to_d(cache, left) + shortest_d_to_d(cache, right)
+    cache[cache_key] = directional_to_directional_shortest(cache, left) + directional_to_directional_shortest(cache, right)
     return cache[cache_key]
 
 def shortest_d_to_d(cache, seq):
