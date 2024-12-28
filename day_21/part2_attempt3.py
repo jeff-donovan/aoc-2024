@@ -157,7 +157,7 @@ def shortest_d_to_d(cache, seq):
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
     depth = 0
     while _get_winner_index(seq_lengths) is None:
-        if depth >= 1:
+        if depth >= 2:
             break
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
         _remove_losers(seq_lengths, max_level)
@@ -192,6 +192,7 @@ def _remove_losers(seq_lengths, max_level):
     for i, sequence_tree in enumerate(seq_lengths):
         if max_level not in sequence_tree:
             seq_lengths[i] = {}
+            continue
 
         min_length = calculate_min_path_length(sequence_tree[max_level])
         if min_length > shortest_path_length:
@@ -322,12 +323,20 @@ if __name__ == '__main__':
     # codes = ['029A']
 
     cache = {}
-    for depth in range(3):
-        start = datetime.datetime.now()
-        # code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]
-        # print(code_num_sequences)
-        print(f'{depth}: ', sum([calculate_complexity_with_length(code, find_shortest_sequence_length(cache, code, depth)) for code in codes]))
-        print('took ', datetime.datetime.now() - start)
-        print()
+    depth = 25
+    # for depth in range(26):
+    #     start = datetime.datetime.now()
+    #     # code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]
+    #     # print(code_num_sequences)
+    #     print(f'{depth}: ', sum([calculate_complexity_with_length(code, find_shortest_sequence_length(cache, code, depth)) for code in codes]))
+    #     print('took ', datetime.datetime.now() - start)
+    #     print()
+
+    start = datetime.datetime.now()
+    # code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]
+    # print(code_num_sequences)
+    print(f'{depth}: ', sum([calculate_complexity_with_length(code, find_shortest_sequence_length(cache, code, depth)) for code in codes]))
+    print('took ', datetime.datetime.now() - start)
+    print()
 
     # pprint.pprint(cache)
