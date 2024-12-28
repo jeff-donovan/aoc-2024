@@ -180,7 +180,7 @@ if __name__ == '__main__':
 
     codes = make_codes(contents)
 
-    depth = 2
+    depth = 4
     cache = {}
     start = datetime.datetime.now()
     complexities = []
