@@ -1,5 +1,6 @@
 import copy
 import datetime
+import pprint
 
 
 NUMERICAL_KEYPAD = {
@@ -287,11 +288,15 @@ if __name__ == '__main__':
     codes = make_codes(contents)
 
     cache = {}
-    for depth in range(16):
+    for depth in range(4):
         start = datetime.datetime.now()
+        code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]
+        print(code_num_sequences)
         print(f'{depth}: ', sum([calculate_complexity(code, find_shortest_sequences(cache, code, depth)) for code in codes]))
         print('took ', datetime.datetime.now() - start)
         print()
+
+    pprint.pprint(cache)
 
 # PLAN:
 #  - use recursion to continue finding "shortest path" of smaller sequences until either:
