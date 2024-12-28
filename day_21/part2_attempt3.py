@@ -195,19 +195,18 @@ def directional_to_directional_using_split_by_A(cache, seq):
 
     # TODO: figure out where to add to the cache - think we need to make sure that we re-use calculations (especially in the "winner" method) otherwise we'll go nuts
     directional_to_directional_split = [directional_to_directional(cache, a_seq) for a_seq in split_by_A(seq)]
-    combos = [[]]
+    combos = ['']
     for split in directional_to_directional_split:
         new_combos = []
         for path in split:
             for combo in combos:
-                new_combo = copy.deepcopy(combo)
-                new_combo.extend(path)
+                new_combo = combo + path
                 new_combos.append(new_combo)
         combos = new_combos
     return combos
 
 def numerical_to_direction(code):
-    sequences = [[]]
+    sequences = ['']
     for i in range(len(code)):
         if i == 0:
             start = 'A'
@@ -227,7 +226,7 @@ def directional_to_directional(cache, directional_seq):
     if cache_key in cache:
         return [cache[cache_key]]
 
-    sequences = [[]]
+    sequences = ['']
     for i in range(len(directional_seq)):
         if i == 0:
             start = 'A'
@@ -240,7 +239,7 @@ def directional_to_directional(cache, directional_seq):
             for seq in sequences:
                 new_sequences.append(seq + path)
         sequences = new_sequences
-    return sequences
+    return tidy_up(sequences)
 
 def split_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
@@ -261,11 +260,11 @@ def find_shortest_paths(keypad, start_char, end_char, visited=None):
         return []
 
     if start_char == end_char:
-        return [['A']]
+        return ['A']
 
     paths = []
     for direction, next_start_char in keypad[start_char].items():
-        next_paths = [[direction] + path for path in find_shortest_paths(keypad, next_start_char, end_char, visited + [start_char])]
+        next_paths = [direction + path for path in find_shortest_paths(keypad, next_start_char, end_char, visited + [start_char])]
         paths += next_paths
 
     return [path for path in paths if len(path) == calculate_min_path_length(paths)]
