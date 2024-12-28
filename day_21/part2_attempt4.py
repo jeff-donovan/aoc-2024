@@ -1,4 +1,5 @@
 import datetime
+import itertools
 
 
 NUMERICAL_KEYPAD = {
@@ -101,8 +102,16 @@ def numerical_to_direction(cache, code, start=None):
 
 def directional_to_directional(cache, seq):
     cache_key = ('directional_to_directional', seq)
-    if cache_key not in cache:
+    if cache_key in cache:
+        return cache[cache_key]
+
+    parts = split_by_A(seq)
+    if len(parts) == 1:
         cache[cache_key] = _directional_to_directional(cache, seq)
+        return cache[cache_key]
+
+    left, right = parts
+    cache[cache_key] = [''.join(prod) for prod in itertools.product(*[directional_to_directional(cache, left), directional_to_directional(cache, right)])]
     return cache[cache_key]
 
 def _directional_to_directional(cache, directional_seq):
@@ -120,6 +129,17 @@ def _directional_to_directional(cache, directional_seq):
                 new_sequences.append(seq + path)
         sequences = new_sequences
     return sequences
+
+def split_by_A(seq):
+    a_indices = [i for i, char in enumerate(seq) if char == 'A']
+    num_a_indices = len(a_indices)
+    if num_a_indices == 1:
+        return [seq]
+
+    split_index = a_indices[num_a_indices // 2 - 1]
+    first_half = seq[0:split_index + 1]
+    second_half = seq[split_index + 1:len(seq)]
+    return [first_half, second_half]
 
 def find_shortest_paths(cache, keypad, start_char, end_char):
     cache_key = start_char + end_char
