@@ -82,13 +82,14 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
-def numerical_to_direction(cache, code):
+def numerical_to_direction(cache, code, start=None):
     sequences = ['']
     for i in range(len(code)):
-        if i == 0:
-            start = 'A'
-        else:
-            start = code[i - 1]
+        if start is None:
+            if i == 0:
+                start = 'A'
+            else:
+                start = code[i - 1]
         end = code[i]
         paths = find_shortest_paths(cache, NUMERICAL_KEYPAD, start, end)
         new_sequences = []
@@ -154,13 +155,20 @@ if __name__ == '__main__':
     start = datetime.datetime.now()
     complexities = []
     for code in codes:
-        sequences = numerical_to_direction(cache, code)
-        for _ in range(depth):
-            new_sequences = []
-            for seq in sequences:
-                new_sequences.extend(directional_to_directional(cache, seq))
-            sequences = new_sequences
-        complexities.append(calculate_complexity(code, sequences))
+        code_char_lengths = []
+        for i, char in enumerate(code):
+            if i == 0:
+                start_char = 'A'
+            else:
+                start_char = code[i - 1]
+            sequences = numerical_to_direction(cache, char, start_char)
+            for _ in range(depth):
+                new_sequences = []
+                for seq in sequences:
+                    new_sequences.extend(directional_to_directional(cache, seq))
+                sequences = new_sequences
+            code_char_lengths.append(calculate_min_path_length(sequences))
+        complexities.append(sum(code_char_lengths) * int(code[:len(code) - 1]))
     print(sum(complexities))
     print('took ', datetime.datetime.now() - start)
     print()
