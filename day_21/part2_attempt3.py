@@ -279,12 +279,12 @@ if __name__ == '__main__':
 
     codes = make_codes(contents)
 
-    start = datetime.datetime.now()
     cache = {}
-    for depth in range(17):
+    for depth in range(16):
+        start = datetime.datetime.now()
         print(f'{depth}: ', sum([calculate_complexity(code, find_shortest_sequences(cache, code, depth)) for code in codes]))
-        # print(find_shortest_sequences(cache, '029A', 1))
-    print('took ', datetime.datetime.now() - start)
+        print('took ', datetime.datetime.now() - start)
+        print()
 
 # PLAN:
 #  - use recursion to continue finding "shortest path" of smaller sequences until either:
