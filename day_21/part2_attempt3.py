@@ -87,10 +87,8 @@ def make_codes(contents):
 
 def find_shortest_sequence_length(cache, code, depth):
     sequences = tidy_up(numerical_to_direction(code))
-    # sequences = [sequences[0]]
 
     string_depth = math.ceil(depth / 2)
-    # string_depth = depth // 2
     for _ in range(string_depth):
         new_sequences = [directional_to_directional_shortest(cache, seq) for seq in sequences]
         if len(new_sequences) > 1:
@@ -98,27 +96,15 @@ def find_shortest_sequence_length(cache, code, depth):
         sequences = new_sequences
 
     remaining_depth = depth - string_depth
-    print('remaining_depth: ', remaining_depth)
-    if remaining_depth > 0:
-        sequences_grouped_by_A = [group_by_A(seq) for seq in sequences]
-    else:
-        sequences_grouped_by_A = [[] for seq in sequences]
-    print('sequences_grouped_by_A: ', sequences_grouped_by_A)
+    sequences_grouped_by_A = [group_by_A(seq) for seq in sequences]
     for _ in range(remaining_depth):
         for i, seq_group in enumerate(sequences_grouped_by_A):
             new_seq_group = [directional_to_directional_shortest(cache, seq) for seq in seq_group]
-            print('new_seq_group: ', new_seq_group)
-            if len(new_seq_group) > 1:
-                new_seq_group = tidy_up(new_seq_group)
             sequences_grouped_by_A[i] = new_seq_group
 
     min_length = None
     for seq, seq_group in zip(sequences, sequences_grouped_by_A):
-        print('seq: ', seq)
-        print('seq_group: ', seq_group)
-        print()
-
-        length = len(seq) + sum(calculate_min_path_length(a_group) for a_group in seq_group)
+        length = sum(len(a_seq) for a_seq in seq_group)
         if min_length is None or length < min_length:
             min_length = length
 
@@ -162,7 +148,6 @@ def directional_to_directional_shortest(cache, seq):
     return cache[cache_key]
 
 def shortest_d_to_d(cache, seq):
-    # pprint.pprint(cache)
     cache_key = tuple(seq)
     if cache_key in cache:
         return cache[cache_key]
@@ -175,13 +160,10 @@ def shortest_d_to_d(cache, seq):
         if depth >= 1:
             break
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
-        # print('max_level: ', max_level)
         _remove_losers(seq_lengths, max_level)
-        # _tidy_up_winners(seq_lengths, max_level)  # TODO: might not need this
         for i, seq_tree in enumerate(seq_lengths):
             if max_level not in seq_tree:
                 continue
-            # print(f'{i} @ {max_level} = {calculate_min_path_length(seq_tree[max_level])}')
             new_sequences = []
             for seq in seq_tree[max_level]:
                 new_paths = directional_to_directional_using_split_by_A(cache, seq)
@@ -191,7 +173,6 @@ def shortest_d_to_d(cache, seq):
         depth += 1
     winner_index = _get_winner_index(seq_lengths)
     if winner_index is None:
-        # print('hi jeff! winner is NONE')
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
         _remove_losers(seq_lengths, max_level)
         winner_index = next((i for i, seq_tree in enumerate(seq_lengths) if len(seq_tree.keys()) > 0))
