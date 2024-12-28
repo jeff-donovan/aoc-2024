@@ -84,6 +84,48 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
+def find_shortest_sequence_length(cache, code, depth):
+    sequences = tidy_up(numerical_to_direction(code))
+    # sequences = [sequences[0]]
+
+    for _ in range(depth // 2):
+        new_sequences = [directional_to_directional_shortest(cache, seq) for seq in sequences]
+        if len(new_sequences) > 1:
+            new_sequences = tidy_up(new_sequences)
+        sequences = new_sequences
+
+    remaining_depth = depth - (depth // 2)
+    sequences_grouped_by_A = [group_by_A(seq) for seq in sequences]
+    print('sequences_grouped_by_A: ', sequences_grouped_by_A)
+    for _ in range(remaining_depth):
+        for i, seq_group in enumerate(sequences_grouped_by_A):
+            new_seq_group = [directional_to_directional_shortest(cache, seq) for seq in seq_group]
+            print('new_seq_group: ', new_seq_group)
+            if len(new_seq_group) > 1:
+                new_seq_group = tidy_up(new_seq_group)
+            sequences_grouped_by_A[i] = new_seq_group
+
+    min_length = None
+    for seq, seq_group in zip(sequences, sequences_grouped_by_A):
+        print('seq: ', seq)
+        print('seq_group: ', seq_group)
+        print()
+
+        length = len(seq) + sum(calculate_min_path_length(a_group) for a_group in seq_group)
+        if min_length is None or length < min_length:
+            min_length = length
+
+    return min_length
+
+def group_by_A(seq):
+    a_indices = [i for i, char in enumerate(seq) if char == 'A']
+    new_sequences = []
+    start = 0
+    for a_index in a_indices:
+        new_sequences.append(seq[start : a_index + 1])
+        start = a_index + 1
+    return new_sequences
+
 def find_shortest_sequences(cache, code, depth):
     sequences = tidy_up(numerical_to_direction(code))
     # sequences = [sequences[0]]
@@ -275,6 +317,9 @@ def tidy_up(sequences):
     min_length = calculate_min_path_length(sequences)
     return [seq for seq in sequences if len(seq) == min_length]
 
+def calculate_complexity_with_length(code, sequence_length):
+    return sequence_length * int(code[:len(code) - 1])
+
 def calculate_complexity(code, sequences):
     return calculate_min_path_length(sequences) * int(code[:len(code) - 1])
 
@@ -285,15 +330,16 @@ if __name__ == '__main__':
     with open('day_21/day_21_input.txt', 'r') as f:
         contents = f.read()
 
-    codes = make_codes(contents)
+    # codes = make_codes(contents)
+    codes = ['029A']
 
     cache = {}
-    for depth in range(4):
+    for depth in range(3):
         start = datetime.datetime.now()
-        code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]
-        print(code_num_sequences)
-        print(f'{depth}: ', sum([calculate_complexity(code, find_shortest_sequences(cache, code, depth)) for code in codes]))
+        # code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]
+        # print(code_num_sequences)
+        print(f'{depth}: ', sum([calculate_complexity_with_length(code, find_shortest_sequence_length(cache, code, depth)) for code in codes]))
         print('took ', datetime.datetime.now() - start)
         print()
 
-    pprint.pprint(cache)
+    # pprint.pprint(cache)

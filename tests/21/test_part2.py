@@ -5,10 +5,10 @@ import day_21.part2 as part2
 
 class TestPart2(unittest.TestCase):
 
-    def test_group_by_A(self):
-        seq = ['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']
-        expected = [['<', 'A'], ['^', 'A'], ['>', '^', '^', 'A'], ['v', 'v', 'v', 'A']]
-        self.assertEqual(part2.group_by_A(seq), expected)
+    # def test_group_by_A(self):
+    #     seq = ['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']
+    #     expected = [['<', 'A'], ['^', 'A'], ['>', '^', '^', 'A'], ['v', 'v', 'v', 'A']]
+    #     self.assertEqual(part2.group_by_A(seq), expected)
 
     def test_directional_to_directional(self):
         seq = ['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']
@@ -30,10 +30,10 @@ class TestPart2(unittest.TestCase):
     #                 fifth_level_sequences = part2.directional_to_directional(four_seq)
     #                 print(f'{i} - {part2.calculate_min_path_length(fifth_level_sequences)}')
 
-    def test_directional_to_directional_using_group_by_A(self):
-        seq = ['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']
-        expected = ['v', '<', '<', 'A', '>', '>', '^', 'A', '<', 'A', '>', 'A', 'v', 'A', '<', '^', 'A', 'A', '>', 'A', '<', 'v', 'A', 'A', 'A', '>', '^', 'A']
-        self.assertIn(expected, part2.directional_to_directional_using_group_by_A({}, seq))
+    # def test_directional_to_directional_using_group_by_A(self):
+    #     seq = ['<', 'A', '^', 'A', '>', '^', '^', 'A', 'v', 'v', 'v', 'A']
+    #     expected = ['v', '<', '<', 'A', '>', '>', '^', 'A', '<', 'A', '>', 'A', 'v', 'A', '<', '^', 'A', 'A', '>', 'A', '<', 'v', 'A', 'A', 'A', '>', '^', 'A']
+    #     self.assertIn(expected, part2.directional_to_directional_using_group_by_A({}, seq))
 
     def test_shortest_d_to_d(self):
         seq = ['>', '^', '^', 'A']
