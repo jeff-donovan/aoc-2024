@@ -16,7 +16,10 @@ class TestPart2Attempt4(unittest.TestCase):
             ('<A^A>^^AvvvA', 2, len('<vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A')),
         ]:
             self.assertEqual(expected, part2_attempt4._calculate_shortest_path_length({}, seq, depth))
-        # print(part2_attempt4._calculate_shortest_path_length({}, '<A^A>^^AvvvA', 1))
+
+    def test_directional_to_directional_with_winner(self):
+        print('hi jeff')
+        print(part2_attempt4._directional_to_directional_with_winner({}, 'vvvA'))
 
 if __name__ == '__main__':
     unittest.main()

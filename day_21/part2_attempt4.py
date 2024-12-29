@@ -124,14 +124,27 @@ def _directional_to_directional_with_winner(cache, seq):
     return sequences[0]
 
 def _calculate_shortest_path_length(cache, seq, depth):
-    sequences = [seq]
-    for _ in range(depth):
-        print(f'_calculate_shortest_path_length | {depth} | {seq}')
-        new_sequences = []
-        for s in sequences:
-            new_sequences.extend(_directional_to_directional(cache, s))  # TODO: consider using directional_to_directional() instead (but could cause cycle?)
-        sequences = tidy_up(new_sequences)
-    return calculate_min_path_length(sequences)
+    sequences = group_by_A(seq)
+    min_path_lengths = []
+    for a_seq in group_by_A(seq):
+        sequences = [a_seq]
+        for _ in range(depth):
+            print(f'_calculate_shortest_path_length | {depth} | {seq}')
+            new_sequences = []
+            for s in sequences:
+                new_sequences.extend(_directional_to_directional(cache, s))  # TODO: consider using directional_to_directional() instead (but could cause cycle?)
+            sequences = tidy_up(new_sequences)
+        min_path_lengths.append(calculate_min_path_length(sequences))
+    return sum(min_path_lengths)
+
+def group_by_A(seq):
+    a_indices = [i for i, char in enumerate(seq) if char == 'A']
+    new_sequences = []
+    start = 0
+    for a_index in a_indices:
+        new_sequences.append(seq[start : a_index + 1])
+        start = a_index + 1
+    return new_sequences
 
 def _directional_to_directional(cache, directional_seq):
     sequences = ['']
