@@ -157,7 +157,7 @@ def shortest_d_to_d(cache, seq):
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
     depth = 0
     while _get_winner_index(seq_lengths) is None:
-        if depth >= 2:
+        if depth >= 1:
             break
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
         _remove_losers(seq_lengths, max_level)
