@@ -98,7 +98,7 @@ def numerical_to_direction(cache, code, start=None):
             for seq in sequences:
                 new_sequences.append(seq + path)
         sequences = new_sequences
-    return [sequences[0]]
+    return sequences
 
 def directional_to_directional(cache, seq):
     cache_key = ('directional_to_directional', seq)
@@ -107,12 +107,31 @@ def directional_to_directional(cache, seq):
 
     parts = split_by_A(seq)
     if len(parts) == 1:
-        cache[cache_key] = _directional_to_directional(cache, seq)
+        cache[cache_key] = _directional_to_directional_with_winner(cache, seq)
         return cache[cache_key]
 
     left, right = parts
     cache[cache_key] = [''.join(prod) for prod in itertools.product(*[directional_to_directional(cache, left), directional_to_directional(cache, right)])]
     return cache[cache_key]
+
+def _directional_to_directional_with_winner(cache, seq):
+    sequences = tidy_up(_directional_to_directional(cache, seq))
+    depth = 0
+    while len(sequences) > 1:
+        min_lengths = [_calculate_shortest_path_length(cache, s, depth) for s in sequences]
+        sequences = [s for s, l in zip(sequences, min_lengths) if l == min(min_lengths)]
+        depth += 1
+    return sequences[0]
+
+def _calculate_shortest_path_length(cache, seq, depth):
+    sequences = [seq]
+    for _ in range(depth):
+        print(f'_calculate_shortest_path_length | {depth} | {seq}')
+        new_sequences = []
+        for s in sequences:
+            new_sequences.extend(_directional_to_directional(cache, s))  # TODO: consider using directional_to_directional() instead (but could cause cycle?)
+        sequences = tidy_up(new_sequences)
+    return calculate_min_path_length(sequences)
 
 def _directional_to_directional(cache, directional_seq):
     sequences = ['']
@@ -128,12 +147,12 @@ def _directional_to_directional(cache, directional_seq):
             for seq in sequences:
                 new_sequences.append(seq + path)
         sequences = new_sequences
-    return [sequences[0]]
+    return sequences
 
 def split_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
     num_a_indices = len(a_indices)
-    if num_a_indices == 1:
+    if num_a_indices < 2:
         return [seq]
 
     split_index = a_indices[num_a_indices // 2 - 1]
@@ -170,9 +189,9 @@ def calculate_complexity(code, sequences):
 def calculate_min_path_length(paths):
     return min([len(path) for path in paths])
 
-# def tidy_up(sequences):
-#     min_length = calculate_min_path_length(sequences)
-#     return [seq for seq in sequences if len(seq) == min_length]
+def tidy_up(sequences):
+    min_length = calculate_min_path_length(sequences)
+    return [seq for seq in sequences if len(seq) == min_length]
 
 if __name__ == '__main__':
     with open('day_21/day_21_input.txt', 'r') as f:
@@ -180,7 +199,7 @@ if __name__ == '__main__':
 
     codes = make_codes(contents)
 
-    depth = 13
+    depth = 2
     cache = {}
     start = datetime.datetime.now()
     complexities = []
