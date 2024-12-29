@@ -157,7 +157,7 @@ def shortest_d_to_d(cache, seq):
     seq_lengths = [{0: [sequence]} for sequence in next_sequences]
     depth = 0
     while _get_winner_index(seq_lengths) is None:
-        if depth >= 1:
+        if depth >= 2:
             break
         max_level = max([max(seq_tree.keys()) for seq_tree in seq_lengths if len(seq_tree.keys()) > 0])
         _remove_losers(seq_lengths, max_level)
@@ -329,7 +329,7 @@ if __name__ == '__main__':
     # codes = ['029A']
 
     cache = {}
-    depth = 2
+    depth = 6
     # for depth in range(26):
     #     start = datetime.datetime.now()
     #     # code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]
