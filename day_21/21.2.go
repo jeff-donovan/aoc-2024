@@ -126,7 +126,7 @@ func makeCodes(f *os.File) ([]string, error) {
 	return codes, nil
 }
 
-func numericalToDirection(cache *Cache, code string) []string {
+func numericalToDirectional(cache *Cache, code string) []string {
 	sequences := []string{""}
 	for i, end := range code {
 		var start rune
@@ -215,6 +215,6 @@ func main() {
 
 	cache := NewCache()
 	for _, code := range codes {
-		fmt.Println(numericalToDirection(cache, code))
+		fmt.Println(numericalToDirectional(cache, code))
 	}
 }
