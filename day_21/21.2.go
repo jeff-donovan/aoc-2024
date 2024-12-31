@@ -195,6 +195,9 @@ func directionalToDirectionalWithWinner(cache *Cache, seq string) []string {
 	sequences := tidyUp(_directionalToDirectional(cache, seq))
 	depth := 0
 	for len(sequences) > 1 {
+		if depth >= 3 {
+			break
+		}
 		var minLengths []int
 		for _, s := range sequences {
 			minLengths = append(minLengths, calculateShortestPathLength(cache, s, depth))
@@ -218,6 +221,7 @@ func calculateShortestPathLength(cache *Cache, seq string, depth int) int {
 	for _, aSeq := range groupByA(seq) {
 		sequences := []string{aSeq}
 		for i := 0; i < depth; i++ {
+			fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
 			var newSequences []string
 			for _, s := range sequences {
 				newSequences = append(newSequences, _directionalToDirectional(cache, s)...)
@@ -364,27 +368,27 @@ func main() {
 
 	cache := NewCache()
 
-	// depth := 2
+	depth := 2
 
-	// var complexities []int
+	var complexities []int
 	for _, code := range codes {
 		sequences := numericalToDirectional(cache, code)
 		fmt.Println(sequences)
-		// for i := 0; i < depth; i++ {
-		// 	var newSequences []string
-		// 	for _, seq := range sequences {
-		// 		newSequences = append(newSequences, directionalToDirectional(cache, seq)...)
-		// 	}
-		// 	sequences = newSequences
-		// }
-		// complexities = append(complexities, calculateComplexity(code, sequences))
+		for i := 0; i < depth; i++ {
+			var newSequences []string
+			for _, seq := range sequences {
+				newSequences = append(newSequences, directionalToDirectional(cache, seq)...)
+			}
+			sequences = newSequences
+		}
+		complexities = append(complexities, calculateComplexity(code, sequences))
 	}
 
-	fmt.Println(directionalToDirectional(cache, "<A^A>^^AvvvA"))
+	// fmt.Println(directionalToDirectional(cache, "<A^A>^^AvvvA"))
 
-	// total := 0
-	// for _, c := range complexities {
-	// 	total += c
-	// }
-	// fmt.Println(total)
+	total := 0
+	for _, c := range complexities {
+		total += c
+	}
+	fmt.Println(total)
 }

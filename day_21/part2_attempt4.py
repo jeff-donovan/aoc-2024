@@ -128,8 +128,8 @@ def _calculate_shortest_path_length(cache, seq, depth):
     min_path_lengths = []
     for a_seq in group_by_A(seq):
         sequences = [a_seq]
-        for _ in range(depth):
-            print(f'_calculate_shortest_path_length | {depth} | {seq}')
+        for d in range(depth):
+            print(f'_calculate_shortest_path_length | {d} | {seq}')
             new_sequences = []
             for s in sequences:
                 new_sequences.extend(_directional_to_directional(cache, s))  # TODO: consider using directional_to_directional() instead (but could cause cycle?)
