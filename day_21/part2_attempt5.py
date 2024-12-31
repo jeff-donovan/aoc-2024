@@ -153,4 +153,16 @@ if __name__ == '__main__':
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
     pprint.pprint(group_by_A_paths)
     print()
+
+    # IDEA
+    #  - ASSUME PREVIOUS "WINNER" APPROACH WAS WRONG!
+    #    - AKA - DONT ASSUME WE KNOW WHICH PATH TO CHOOSE AT EVERY STEP!
+    #  - precompute group_by_A paths
+    #  - calculate the length of "ALL" paths
+    #    - "ALL" in quotes because it feels like that's not actually feasible
+    #    - first attempt i'll assume that the shortest path length MUST be a shortest path length at each level
+    #      - BIG ASSUMPTION - probably not valid (like my winner logic)
+    #  - not sure how i'll do this, probably with recursion although Python will likely bubble up a "max recursive depth reached" error
+    #  - does Python have an infinity value?
+    #    - ANSWER: yes, `float('inf')` - weird
     print('took ', datetime.datetime.now() - start)
