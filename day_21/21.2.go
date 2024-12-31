@@ -131,9 +131,10 @@ func makeCodes(f *os.File) ([]string, error) {
 }
 
 func findShortestSequenceLength(cache *Cache, code string, depth int) int {
-	sequences := tidyUp(numericalToDirectional(cache, code))
+	sequences := numericalToDirectional(cache, code)
 
 	stringDepth := int(math.Ceil(float64(depth) / float64(2)))
+	fmt.Println("stringDepth: ", stringDepth)
 	for i := 0; i < stringDepth; i++ {
 		fmt.Printf("%s - depth %d\n", code, i)
 		var newSequences []string
@@ -146,6 +147,7 @@ func findShortestSequenceLength(cache *Cache, code string, depth int) int {
 	var minLengths []int
 
 	remainingDepth := depth - stringDepth
+	fmt.Println("remainingDepth: ", remainingDepth)
 	for _, seq := range sequences {
 		minLength := 0
 		for _, aSeq := range groupByA(seq) {
@@ -176,7 +178,7 @@ func numericalToDirectional(cache *Cache, code string) []string {
 		}
 
 		var newSequences []string
-		for _, path := range findShortestPaths(cache, NUMERICAL_KEYPAD, start, end) {
+		for _, path := range _findShortestPaths(NUMERICAL_KEYPAD, start, end, "") {
 			for _, s := range sequences {
 				newSequences = append(newSequences, s+path)
 			}
@@ -188,7 +190,7 @@ func numericalToDirectional(cache *Cache, code string) []string {
 
 func directionalToDirectional(cache *Cache, seq string) []string {
 	var value []string
-	cacheKey := "directional_to_directional" + seq
+	cacheKey := seq
 	value, found := cache.Get(cacheKey)
 	if found {
 		return value
@@ -196,7 +198,7 @@ func directionalToDirectional(cache *Cache, seq string) []string {
 
 	parts := splitByA(seq)
 	if len(parts) == 1 {
-		value = directionalToDirectionalWithWinner(cache, seq) // NOTE: there is a big assumption here that directionalToDirectionalWithWinner produces a single element slice
+		value = _directionalToDirectional(cache, seq) // NOTE: there is a big assumption here that directionalToDirectionalWithWinner produces a single element slice
 		cache.Set(cacheKey, value)
 		return value
 	}
@@ -228,60 +230,60 @@ func cartesianProduct(iterables ...[]string) [][]string {
 	return result
 }
 
-func directionalToDirectionalWithWinner(cache *Cache, seq string) []string {
-	sequences := tidyUp(_directionalToDirectional(cache, seq))
-	depth := 0
-	for len(sequences) > 1 {
-		// if depth >= 3 {
-		// 	break
-		// }
-		var minLengths []int
-		for _, s := range sequences {
-			minLengths = append(minLengths, calculateShortestPathLength(cache, s, depth))
-		}
+// func directionalToDirectionalWithWinner(cache *Cache, seq string) []string {
+// 	sequences := tidyUp(_directionalToDirectional(cache, seq))
+// 	depth := 0
+// 	for len(sequences) > 1 {
+// 		// if depth >= 3 {
+// 		// 	break
+// 		// }
+// 		var minLengths []int
+// 		for _, s := range sequences {
+// 			minLengths = append(minLengths, calculateShortestPathLength(cache, s, depth))
+// 		}
 
-		var newSequences []string
-		for i, s := range sequences {
-			if minLengths[i] == slices.Min(minLengths) {
-				newSequences = append(newSequences, s)
-			}
-		}
+// 		var newSequences []string
+// 		for i, s := range sequences {
+// 			if minLengths[i] == slices.Min(minLengths) {
+// 				newSequences = append(newSequences, s)
+// 			}
+// 		}
 
-		sequences = newSequences
-		depth++
-	}
-	return sequences
-}
+// 		sequences = newSequences
+// 		depth++
+// 	}
+// 	return sequences
+// }
 
-func calculateShortestPathLength(cache *Cache, seq string, depth int) int {
-	var minPathLengths []int
-	for _, aSeq := range groupByA(seq) {
-		sequences := []string{aSeq}
-		for i := 0; i < depth; i++ {
-			// fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
-			var newSequences []string
-			for _, s := range sequences {
-				// consider using splitByA here instead
-				var cartProduct [][]string
-				for _, a := range groupByA(s) {
-					cartProduct = append(cartProduct, _directionalToDirectional(cache, a))
-					for _, prod := range cartesianProduct(cartProduct...) {
-						newSequences = append(newSequences, strings.Join(prod, ""))
-					}
-				}
-				// newSequences = append(newSequences, _directionalToDirectional(cache, s)...)
-			}
-			sequences = tidyUp(newSequences)
-		}
-		minPathLengths = append(minPathLengths, calculateMinPathLength(sequences))
-	}
+// func calculateShortestPathLength(cache *Cache, seq string, depth int) int {
+// 	var minPathLengths []int
+// 	for _, aSeq := range groupByA(seq) {
+// 		sequences := []string{aSeq}
+// 		for i := 0; i < depth; i++ {
+// 			// fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
+// 			var newSequences []string
+// 			for _, s := range sequences {
+// 				// consider using splitByA here instead
+// 				var cartProduct [][]string
+// 				for _, a := range groupByA(s) {
+// 					cartProduct = append(cartProduct, _directionalToDirectional(cache, a))
+// 					for _, prod := range cartesianProduct(cartProduct...) {
+// 						newSequences = append(newSequences, strings.Join(prod, ""))
+// 					}
+// 				}
+// 				// newSequences = append(newSequences, _directionalToDirectional(cache, s)...)
+// 			}
+// 			sequences = tidyUp(newSequences)
+// 		}
+// 		minPathLengths = append(minPathLengths, calculateMinPathLength(sequences))
+// 	}
 
-	sum := 0
-	for _, length := range minPathLengths {
-		sum += length
-	}
-	return sum
-}
+// 	sum := 0
+// 	for _, length := range minPathLengths {
+// 		sum += length
+// 	}
+// 	return sum
+// }
 
 func _directionalToDirectional(cache *Cache, seq string) []string {
 	sequences := []string{""}
@@ -294,7 +296,7 @@ func _directionalToDirectional(cache *Cache, seq string) []string {
 		}
 
 		var newSequences []string
-		for _, path := range findShortestPaths(cache, DIRECTIONAL_KEYPAD, start, end) {
+		for _, path := range _findShortestPaths(DIRECTIONAL_KEYPAD, start, end, "") {
 			for _, s := range sequences {
 				newSequences = append(newSequences, s+path)
 			}
@@ -340,16 +342,16 @@ func groupByA(seq string) []string {
 	return sequences
 }
 
-func findShortestPaths(cache *Cache, keypad Keypad, start rune, end rune) []string {
-	var value []string
-	cacheKey := string(start) + string(end)
-	value, found := cache.Get(cacheKey)
-	if !found {
-		value = _findShortestPaths(keypad, start, end, "")
-		cache.Set(cacheKey, value)
-	}
-	return value
-}
+// func findShortestPaths(cache *Cache, keypad Keypad, start rune, end rune) []string {
+// 	var value []string
+// 	cacheKey := string(start) + string(end)
+// 	value, found := cache.Get(cacheKey)
+// 	if !found {
+// 		value = _findShortestPaths(keypad, start, end, "")
+// 		cache.Set(cacheKey, value)
+// 	}
+// 	return value
+// }
 
 func _findShortestPaths(keypad Keypad, start rune, end rune, visited string) []string {
 	for _, char := range visited {
@@ -415,23 +417,26 @@ func main() {
 	if err != nil {
 		fmt.Println("Error reading file:", err)
 	}
+	fmt.Println(codes)
 
 	cache := NewCache()
 
-	depth := 25
+	depth := 2
 
 	start := time.Now()
-	var complexities []int
-	for _, code := range codes {
-		complexities = append(complexities, calculateComplexityWithLength(code, findShortestSequenceLength(cache, code, depth)))
-	}
+	// var complexities []int
+	// for _, code := range codes {
+	// 	complexities = append(complexities, calculateComplexityWithLength(code, findShortestSequenceLength(cache, code, depth)))
+	// }
 
-	// fmt.Println(directionalToDirectional(cache, "<A^A>^^AvvvA"))
+	// // fmt.Println(directionalToDirectional(cache, "<A^A>^^AvvvA"))
 
-	total := 0
-	for _, c := range complexities {
-		total += c
-	}
-	fmt.Println(total)
+	// total := 0
+	// for _, c := range complexities {
+	// 	total += c
+	// }
+	// fmt.Println(total)
+
+	fmt.Println(findShortestSequenceLength(cache, "029A", depth))
 	fmt.Println("took: ", time.Since(start))
 }
