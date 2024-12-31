@@ -195,9 +195,9 @@ func directionalToDirectionalWithWinner(cache *Cache, seq string) []string {
 	sequences := tidyUp(_directionalToDirectional(cache, seq))
 	depth := 0
 	for len(sequences) > 1 {
-		if depth >= 3 {
-			break
-		}
+		// if depth >= 3 {
+		// 	break
+		// }
 		var minLengths []int
 		for _, s := range sequences {
 			minLengths = append(minLengths, calculateShortestPathLength(cache, s, depth))
@@ -221,10 +221,18 @@ func calculateShortestPathLength(cache *Cache, seq string, depth int) int {
 	for _, aSeq := range groupByA(seq) {
 		sequences := []string{aSeq}
 		for i := 0; i < depth; i++ {
-			// fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
+			fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
 			var newSequences []string
 			for _, s := range sequences {
-				newSequences = append(newSequences, _directionalToDirectional(cache, s)...)
+				// consider using splitByA here instead
+				var cartProduct [][]string
+				for _, a := range groupByA(s) {
+					cartProduct = append(cartProduct, _directionalToDirectional(cache, a))
+					for _, prod := range cartesianProduct(cartProduct...) {
+						newSequences = append(newSequences, strings.Join(prod, ""))
+					}
+				}
+				// newSequences = append(newSequences, _directionalToDirectional(cache, s)...)
 			}
 			sequences = tidyUp(newSequences)
 		}
@@ -368,7 +376,7 @@ func main() {
 
 	cache := NewCache()
 
-	depth := 10
+	depth := 2
 
 	var complexities []int
 	for _, code := range codes {
