@@ -83,15 +83,15 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
-def pre_compute_group_by_A_paths(numericalPaths, directionalPaths):
+def pre_compute_group_by_A_paths(numerical_paths, directional_paths):
     group_by_A_sequences = set([])
-    for sequences in numericalPaths.values():
+    for sequences in numerical_paths.values():
         group_by_A_sequences = group_by_A_sequences.union(set(sequences))
-    for sequences in directionalPaths.values():
+    for sequences in directional_paths.values():
         group_by_A_sequences = group_by_A_sequences.union(set(sequences))
-    return {seq: _directional_to_directional(directionalPaths, seq) for seq in group_by_A_sequences}
+    return {seq: _directional_to_directional(directional_paths, seq) for seq in group_by_A_sequences}
 
-def _directional_to_directional(directionalPaths, directional_seq):
+def _directional_to_directional(directional_paths, directional_seq):
     sequences = ['']
     for i in range(len(directional_seq)):
         if i == 0:
@@ -99,7 +99,7 @@ def _directional_to_directional(directionalPaths, directional_seq):
         else:
             start = directional_seq[i - 1]
         end = directional_seq[i]
-        paths = directionalPaths[(start, end)]  # leverage pre-computed paths
+        paths = directional_paths[(start, end)]  # leverage pre-computed paths
         new_sequences = []
         for path in paths:
             for seq in sequences:
@@ -144,13 +144,13 @@ if __name__ == '__main__':
 
     start = datetime.datetime.now()
     codes = make_codes(contents)
-    numericalPaths = pre_compute_keypad_paths(NUMERICAL_KEYPAD)
-    pprint.pprint(numericalPaths)
+    numerical_paths = pre_compute_keypad_paths(NUMERICAL_KEYPAD)
+    pprint.pprint(numerical_paths)
     print()
-    directionalPaths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
-    pprint.pprint(directionalPaths)
+    directional_paths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
+    pprint.pprint(directional_paths)
     print()
-    groupByAPaths = pre_compute_group_by_A_paths(numericalPaths, directionalPaths)
-    pprint.pprint(groupByAPaths)
+    group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
+    pprint.pprint(group_by_A_paths)
     print()
     print('took ', datetime.datetime.now() - start)
