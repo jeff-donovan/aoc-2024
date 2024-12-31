@@ -84,18 +84,18 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
-def find_shortest_path_length_for_code(numerical_paths, directional_paths, code, max_depth):
+def find_shortest_path_length_for_code(numerical_paths, directional_paths, group_by_A_paths, code, max_depth):
     depth_0 = numerical_to_direction(numerical_paths, code)
-    return min([find_shortest_path_length_recursive(directional_paths, seq, 0, max_depth) for seq in depth_0])
+    return min([find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq, 0, max_depth) for seq in depth_0])
 
-def find_shortest_path_length_recursive(directional_paths, seq, current_depth, max_depth):
+def find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq, current_depth, max_depth):
     if current_depth == max_depth:
         return len(seq)
 
     total = 0
     for s in group_by_A(seq):
-        next_sequences = directional_to_directional(directional_paths, s)
-        total += min(find_shortest_path_length_recursive(directional_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
+        next_sequences = directional_to_directional(directional_paths, group_by_A_paths, s)
+        total += min(find_shortest_path_length_recursive(directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
 
     return total
 
@@ -114,9 +114,12 @@ def pre_compute_group_by_A_paths(numerical_paths, directional_paths):
         group_by_A_sequences = group_by_A_sequences.union(set(sequences))
     for sequences in directional_paths.values():
         group_by_A_sequences = group_by_A_sequences.union(set(sequences))
-    return {seq: directional_to_directional(directional_paths, seq) for seq in group_by_A_sequences}
+    return {seq: directional_to_directional(directional_paths, {}, seq) for seq in group_by_A_sequences}
 
-def directional_to_directional(directional_paths, directional_seq):
+def directional_to_directional(directional_paths, group_by_A_paths, directional_seq):
+    if directional_seq in group_by_A_paths:
+        return group_by_A_paths[directional_seq]
+
     sequences = ['']
     for i in range(len(directional_seq)):
         if i == 0:
@@ -192,9 +195,9 @@ if __name__ == '__main__':
     directional_paths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
 
-    depth = 6
+    depth = 2
 
-    print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, directional_paths, code, depth)) for code in codes]))
+    print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, directional_paths, group_by_A_paths, code, depth)) for code in codes]))
 
     # IDEA
     #  - ASSUME PREVIOUS "WINNER" APPROACH WAS WRONG!
