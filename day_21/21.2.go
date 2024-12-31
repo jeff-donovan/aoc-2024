@@ -368,7 +368,7 @@ func main() {
 
 	cache := NewCache()
 
-	depth := 2
+	depth := 10
 
 	var complexities []int
 	for _, code := range codes {
