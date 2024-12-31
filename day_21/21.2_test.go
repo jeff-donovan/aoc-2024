@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -41,4 +42,11 @@ func TestCartesianProduct(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestNumericalToDirectional(t *testing.T) {
+	cache := NewCache()
+	fmt.Println(numericalToDirectional(cache, "980A"))
+	fmt.Println(directionalToDirectional(cache, "^^^A<AvvvA>A"))
+	fmt.Println(directionalToDirectional(cache, "<AAA>Av<<A>>^Av<AAA>^AvA^A"))
 }
