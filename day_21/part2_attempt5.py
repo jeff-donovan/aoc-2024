@@ -84,6 +84,10 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
+def find_shortest_path_length_for_code(numerical_paths, directional_paths, code, max_depth):
+    depth_0 = numerical_to_direction(numerical_paths, code)
+    return min([find_shortest_path_length_recursive(directional_paths, seq, 0, max_depth) for seq in depth_0])
+
 def find_shortest_path_length_recursive(directional_paths, seq, current_depth, max_depth):
     if current_depth == max_depth:
         return len(seq)
@@ -178,37 +182,12 @@ if __name__ == '__main__':
     start = datetime.datetime.now()
     codes = make_codes(contents)
     numerical_paths = pre_compute_keypad_paths(NUMERICAL_KEYPAD)
-    pprint.pprint(numerical_paths)
-    print()
     directional_paths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
-    pprint.pprint(directional_paths)
-    print()
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
-    pprint.pprint(group_by_A_paths)
-    print()
 
     depth = 2
-    # at depth 0 - ['<A^A^^>AvvvA', '<A^A^>^AvvvA', '<A^A>^^AvvvA']
-    depth_0 = numerical_to_direction(numerical_paths, "029A")
-    pprint.pprint(depth_0)
-    print()
 
-    # hard-code to first path in depth 0, but wont actually work
-    depth_1 = [''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, seq) for seq in group_by_A(depth_0[0])])]
-    pprint.pprint(depth_1)
-    print()
-
-    # hard-code to first path in depth 1, but wont actually work
-    depth_2 = [''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, seq) for seq in group_by_A(depth_1[0])])]
-    pprint.pprint(depth_2)
-    print()
-
-    # answer: 70 - incorrect because we assumed first path at each depth was good enough
-    print(calculate_min_path_length(depth_2))
-    print()
-
-    # try recursion
-    min_length = min([find_shortest_path_length_recursive(directional_paths, seq, 0, depth) for seq in depth_0])
+    min_length = find_shortest_path_length_for_code(numerical_paths, directional_paths, "029A", depth)
     print(min_length)
     print()
 
