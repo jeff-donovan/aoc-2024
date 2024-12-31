@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 type Keypad map[rune]map[rune]rune
@@ -376,8 +377,9 @@ func main() {
 
 	cache := NewCache()
 
-	depth := 2
+	depth := 15
 
+	start := time.Now()
 	var complexities []int
 	for _, code := range codes {
 		sequences := numericalToDirectional(cache, code)
@@ -399,4 +401,5 @@ func main() {
 		total += c
 	}
 	fmt.Println(total)
+	fmt.Println("took: ", time.Since(start))
 }
