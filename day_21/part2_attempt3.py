@@ -329,7 +329,7 @@ if __name__ == '__main__':
     # codes = ['029A']
 
     cache = {}
-    depth = 6
+    depth = 2
     # for depth in range(26):
     #     start = datetime.datetime.now()
     #     # code_num_sequences = [(code, len(find_shortest_sequences(cache, code, depth))) for code in codes]

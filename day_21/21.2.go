@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"slices"
+	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -138,11 +140,153 @@ func numericalToDirectional(cache *Cache, code string) []string {
 
 		var newSequences []string
 		for _, path := range findShortestPaths(cache, NUMERICAL_KEYPAD, start, end) {
-			for _, seq := range sequences {
-				newSequences = append(newSequences, seq+path)
+			for _, s := range sequences {
+				newSequences = append(newSequences, s+path)
 			}
 		}
 		sequences = newSequences
+	}
+	return sequences
+}
+
+func directionalToDirectional(cache *Cache, seq string) []string {
+	var value []string
+	cacheKey := "directional_to_directional" + seq
+	value, found := cache.Get(cacheKey)
+	if found {
+		return value
+	}
+
+	parts := splitByA(seq)
+	if len(parts) == 1 {
+		value = directionalToDirectionalWithWinner(cache, seq) // NOTE: there is a big assumption here that directionalToDirectionalWithWinner produces a single element slice
+		cache.Set(cacheKey, value)
+		return value
+	}
+
+	var sequences []string
+	for _, prod := range cartesianProduct([][]string{directionalToDirectional(cache, parts[0]), directionalToDirectional(cache, parts[1])}...) {
+		sequences = append(sequences, strings.Join(prod, ""))
+	}
+	cache.Set(cacheKey, sequences)
+	return sequences
+}
+
+// Stole from Python's itertools.product - https://docs.python.org/3/library/itertools.html#itertools.product
+func cartesianProduct(iterables ...[]string) [][]string {
+	result := [][]string{{}}
+
+	for _, pool := range iterables {
+		var newResult [][]string
+		for _, x := range result {
+			for _, y := range pool {
+				xCopy := make([]string, len(x))
+				copy(xCopy, x)
+				newResult = append(newResult, append(xCopy, y))
+			}
+		}
+		result = newResult
+	}
+
+	return result
+}
+
+func directionalToDirectionalWithWinner(cache *Cache, seq string) []string {
+	sequences := tidyUp(_directionalToDirectional(cache, seq))
+	depth := 0
+	for len(sequences) > 1 {
+		var minLengths []int
+		for _, s := range sequences {
+			minLengths = append(minLengths, calculateShortestPathLength(cache, s, depth))
+		}
+
+		var newSequences []string
+		for i, s := range sequences {
+			if minLengths[i] == slices.Min(minLengths) {
+				newSequences = append(newSequences, s)
+			}
+		}
+
+		sequences = newSequences
+		depth++
+	}
+	return sequences
+}
+
+func calculateShortestPathLength(cache *Cache, seq string, depth int) int {
+	var minPathLengths []int
+	for _, aSeq := range groupByA(seq) {
+		sequences := []string{aSeq}
+		for i := 0; i < depth; i++ {
+			var newSequences []string
+			for _, s := range sequences {
+				newSequences = append(newSequences, _directionalToDirectional(cache, s)...)
+			}
+			sequences = tidyUp(newSequences)
+		}
+		minPathLengths = append(minPathLengths, calculateMinPathLength(sequences))
+	}
+
+	sum := 0
+	for _, length := range minPathLengths {
+		sum += length
+	}
+	return sum
+}
+
+func _directionalToDirectional(cache *Cache, seq string) []string {
+	sequences := []string{""}
+	for i, end := range seq {
+		var start rune
+		if i == 0 {
+			start = 'A'
+		} else {
+			start = rune(seq[i-1])
+		}
+
+		var newSequences []string
+		for _, path := range findShortestPaths(cache, NUMERICAL_KEYPAD, start, end) {
+			for _, s := range sequences {
+				newSequences = append(newSequences, s+path)
+			}
+		}
+		sequences = newSequences
+	}
+	return sequences
+}
+
+func splitByA(seq string) []string {
+	var aIndices []int
+	for i, char := range seq {
+		if char == 'A' {
+			aIndices = append(aIndices, i)
+		}
+	}
+
+	numAIndices := len(aIndices)
+	if numAIndices < 2 {
+		return []string{seq}
+	}
+
+	splitIndex := aIndices[numAIndices/2-1]
+	firstHalf := seq[:splitIndex+1]
+	secondHalf := seq[splitIndex+1:]
+	return []string{firstHalf, secondHalf}
+}
+
+func groupByA(seq string) []string {
+	var aIndices []int
+	for i, char := range seq {
+		if char == 'A' {
+			aIndices = append(aIndices, i)
+		}
+	}
+
+	var sequences []string
+	start := 0
+	for _, aIndex := range aIndices {
+		sequences = append(sequences, seq[start:aIndex+1])
+		start = aIndex + 1
 	}
 	return sequences
 }
@@ -194,6 +338,11 @@ func tidyUp(paths []string) []string {
 	return result
 }
 
+func calculateComplexity(code string, sequences []string) int {
+	codeNum, _ := strconv.Atoi(code[:len(code)-1])
+	return codeNum * calculateMinPathLength(sequences)
+}
+
 func calculateMinPathLength(paths []string) int {
 	return len(slices.MinFunc(paths, func(a, b string) int {
 		return len(a) - len(b)
@@ -214,7 +363,28 @@ func main() {
 	}
 
 	cache := NewCache()
+
+	// depth := 2
+
+	// var complexities []int
 	for _, code := range codes {
-		fmt.Println(numericalToDirectional(cache, code))
+		sequences := numericalToDirectional(cache, code)
+		fmt.Println(sequences)
+		// for i := 0; i < depth; i++ {
+		// 	var newSequences []string
+		// 	for _, seq := range sequences {
+		// 		newSequences = append(newSequences, directionalToDirectional(cache, seq)...)
+		// 	}
+		// 	sequences = newSequences
+		// }
+		// complexities = append(complexities, calculateComplexity(code, sequences))
 	}
+
+	fmt.Println(directionalToDirectional(cache, "<A^A>^^AvvvA"))
+
+	// total := 0
+	// for _, c := range complexities {
+	// 	total += c
+	// }
+	// fmt.Println(total)
 }
