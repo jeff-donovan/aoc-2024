@@ -175,8 +175,11 @@ def _find_shortest_paths(keypad, start_char, end_char, visited=None):
 def calculate_min_path_length(paths):
     return min([len(path) for path in paths])
 
+def calculate_complexity(code, min_path_length):
+    return min_path_length * int(code[:len(code) - 1])
+
 if __name__ == '__main__':
-    with open('day_21/day_21_input.txt', 'r') as f:
+    with open('day_21/day_21_test.txt', 'r') as f:
         contents = f.read()
 
     start = datetime.datetime.now()
@@ -187,9 +190,7 @@ if __name__ == '__main__':
 
     depth = 2
 
-    min_length = find_shortest_path_length_for_code(numerical_paths, directional_paths, "029A", depth)
-    print(min_length)
-    print()
+    print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, directional_paths, code, depth)) for code in codes]))
 
     # IDEA
     #  - ASSUME PREVIOUS "WINNER" APPROACH WAS WRONG!
