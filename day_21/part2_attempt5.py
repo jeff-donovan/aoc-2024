@@ -84,6 +84,13 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
+def find_shortest_path_length_recursive(directional_paths, seq, current_depth, max_depth):
+    if current_depth == max_depth:
+        return len(seq)
+
+    next_sequences = [''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, s) for s in group_by_A(seq)])]
+    return min([find_shortest_path_length_recursive(directional_paths, s, current_depth + 1, max_depth) for s in next_sequences])
+
 def group_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
     new_sequences = []
@@ -198,6 +205,12 @@ if __name__ == '__main__':
 
     # answer: 70 - incorrect because we assumed first path at each depth was good enough
     print(calculate_min_path_length(depth_2))
+    print()
+
+    # try recursion
+    min_length = min([find_shortest_path_length_recursive(directional_paths, seq, 0, depth) for seq in depth_0])
+    print(min_length)
+    print()
 
     # IDEA
     #  - ASSUME PREVIOUS "WINNER" APPROACH WAS WRONG!
