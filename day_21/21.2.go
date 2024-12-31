@@ -245,7 +245,7 @@ func _directionalToDirectional(cache *Cache, seq string) []string {
 		}
 
 		var newSequences []string
-		for _, path := range findShortestPaths(cache, NUMERICAL_KEYPAD, start, end) {
+		for _, path := range findShortestPaths(cache, DIRECTIONAL_KEYPAD, start, end) {
 			for _, s := range sequences {
 				newSequences = append(newSequences, s+path)
 			}
