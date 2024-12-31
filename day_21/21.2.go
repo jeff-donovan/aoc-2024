@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"slices"
 	"strconv"
@@ -129,6 +130,41 @@ func makeCodes(f *os.File) ([]string, error) {
 	return codes, nil
 }
 
+func findShortestSequenceLength(cache *Cache, code string, depth int) int {
+	sequences := tidyUp(numericalToDirectional(cache, code))
+
+	stringDepth := int(math.Ceil(float64(depth) / float64(2)))
+	for i := 0; i < stringDepth; i++ {
+		fmt.Printf("%s - depth %d\n", code, i)
+		var newSequences []string
+		for _, seq := range sequences {
+			newSequences = append(newSequences, directionalToDirectional(cache, seq)...)
+		}
+		sequences = newSequences
+	}
+
+	var minLengths []int
+
+	remainingDepth := depth - stringDepth
+	for _, seq := range sequences {
+		minLength := 0
+		for _, aSeq := range groupByA(seq) {
+			aSequences := []string{aSeq}
+			for i := 0; i < remainingDepth; i++ {
+				var newASequences []string
+				for _, nextLevelASequenceLOL := range aSequences {
+					newASequences = append(newASequences, directionalToDirectional(cache, nextLevelASequenceLOL)...)
+				}
+				aSequences = newASequences
+			}
+			minLength += calculateMinPathLength(aSequences)
+		}
+		minLengths = append(minLengths, minLength)
+	}
+
+	return int(slices.Min(minLengths))
+}
+
 func numericalToDirectional(cache *Cache, code string) []string {
 	sequences := []string{""}
 	for i, end := range code {
@@ -222,7 +258,7 @@ func calculateShortestPathLength(cache *Cache, seq string, depth int) int {
 	for _, aSeq := range groupByA(seq) {
 		sequences := []string{aSeq}
 		for i := 0; i < depth; i++ {
-			fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
+			// fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
 			var newSequences []string
 			for _, s := range sequences {
 				// consider using splitByA here instead
@@ -351,6 +387,11 @@ func tidyUp(paths []string) []string {
 	return result
 }
 
+func calculateComplexityWithLength(code string, length int) int {
+	codeNum, _ := strconv.Atoi(code[:len(code)-1])
+	return codeNum * length
+}
+
 func calculateComplexity(code string, sequences []string) int {
 	codeNum, _ := strconv.Atoi(code[:len(code)-1])
 	return codeNum * calculateMinPathLength(sequences)
@@ -377,21 +418,12 @@ func main() {
 
 	cache := NewCache()
 
-	depth := 15
+	depth := 2
 
 	start := time.Now()
 	var complexities []int
 	for _, code := range codes {
-		sequences := numericalToDirectional(cache, code)
-		for i := 0; i < depth; i++ {
-			fmt.Printf("%s - depth %d\n", code, i)
-			var newSequences []string
-			for _, seq := range sequences {
-				newSequences = append(newSequences, directionalToDirectional(cache, seq)...)
-			}
-			sequences = newSequences
-		}
-		complexities = append(complexities, calculateComplexity(code, sequences))
+		complexities = append(complexities, calculateComplexityWithLength(code, findShortestSequenceLength(cache, code, depth)))
 	}
 
 	// fmt.Println(directionalToDirectional(cache, "<A^A>^^AvvvA"))
