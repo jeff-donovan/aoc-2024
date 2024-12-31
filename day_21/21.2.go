@@ -131,7 +131,7 @@ func makeCodes(f *os.File) ([]string, error) {
 }
 
 func findShortestSequenceLength(cache *Cache, code string, depth int) int {
-	sequences := numericalToDirectional(cache, code)
+	sequences := numericalToDirectional(code)
 
 	stringDepth := int(math.Ceil(float64(depth) / float64(2)))
 	fmt.Println("stringDepth: ", stringDepth)
@@ -167,7 +167,7 @@ func findShortestSequenceLength(cache *Cache, code string, depth int) int {
 	return int(slices.Min(minLengths))
 }
 
-func numericalToDirectional(cache *Cache, code string) []string {
+func numericalToDirectional(code string) []string {
 	sequences := []string{""}
 	for i, end := range code {
 		var start rune
@@ -198,7 +198,7 @@ func directionalToDirectional(cache *Cache, seq string) []string {
 
 	parts := splitByA(seq)
 	if len(parts) == 1 {
-		value = _directionalToDirectional(cache, seq) // NOTE: there is a big assumption here that directionalToDirectionalWithWinner produces a single element slice
+		value = _directionalToDirectional(seq) // NOTE: there is a big assumption here that directionalToDirectionalWithWinner produces a single element slice
 		cache.Set(cacheKey, value)
 		return value
 	}
@@ -285,7 +285,7 @@ func cartesianProduct(iterables ...[]string) [][]string {
 // 	return sum
 // }
 
-func _directionalToDirectional(cache *Cache, seq string) []string {
+func _directionalToDirectional(seq string) []string {
 	sequences := []string{""}
 	for i, end := range seq {
 		var start rune
@@ -424,19 +424,19 @@ func main() {
 	depth := 2
 
 	start := time.Now()
-	// var complexities []int
-	// for _, code := range codes {
-	// 	complexities = append(complexities, calculateComplexityWithLength(code, findShortestSequenceLength(cache, code, depth)))
-	// }
+	var complexities []int
+	for _, code := range codes {
+		complexities = append(complexities, calculateComplexityWithLength(code, findShortestSequenceLength(cache, code, depth)))
+	}
 
-	// // fmt.Println(directionalToDirectional(cache, "<A^A>^^AvvvA"))
+	// fmt.Println(directionalToDirectional(cache, "<A^A>^^AvvvA"))
 
-	// total := 0
-	// for _, c := range complexities {
-	// 	total += c
-	// }
-	// fmt.Println(total)
+	total := 0
+	for _, c := range complexities {
+		total += c
+	}
+	fmt.Println(total)
 
-	fmt.Println(findShortestSequenceLength(cache, "029A", depth))
+	// fmt.Println(findShortestSequenceLength(cache, "029A", depth))
 	fmt.Println("took: ", time.Since(start))
 }
