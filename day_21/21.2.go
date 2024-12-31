@@ -373,8 +373,8 @@ func main() {
 	var complexities []int
 	for _, code := range codes {
 		sequences := numericalToDirectional(cache, code)
-		fmt.Println(sequences)
 		for i := 0; i < depth; i++ {
+			fmt.Printf("%s - depth %d\n", code, i)
 			var newSequences []string
 			for _, seq := range sequences {
 				newSequences = append(newSequences, directionalToDirectional(cache, seq)...)
