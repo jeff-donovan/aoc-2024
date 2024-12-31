@@ -1,4 +1,5 @@
 import datetime
+import itertools
 import pprint
 
 
@@ -83,15 +84,24 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
+def group_by_A(seq):
+    a_indices = [i for i, char in enumerate(seq) if char == 'A']
+    new_sequences = []
+    start = 0
+    for a_index in a_indices:
+        new_sequences.append(seq[start : a_index + 1])
+        start = a_index + 1
+    return new_sequences
+
 def pre_compute_group_by_A_paths(numerical_paths, directional_paths):
     group_by_A_sequences = set([])
     for sequences in numerical_paths.values():
         group_by_A_sequences = group_by_A_sequences.union(set(sequences))
     for sequences in directional_paths.values():
         group_by_A_sequences = group_by_A_sequences.union(set(sequences))
-    return {seq: _directional_to_directional(directional_paths, seq) for seq in group_by_A_sequences}
+    return {seq: directional_to_directional(directional_paths, seq) for seq in group_by_A_sequences}
 
-def _directional_to_directional(directional_paths, directional_seq):
+def directional_to_directional(directional_paths, directional_seq):
     sequences = ['']
     for i in range(len(directional_seq)):
         if i == 0:
@@ -100,6 +110,22 @@ def _directional_to_directional(directional_paths, directional_seq):
             start = directional_seq[i - 1]
         end = directional_seq[i]
         paths = directional_paths[(start, end)]  # leverage pre-computed paths
+        new_sequences = []
+        for path in paths:
+            for seq in sequences:
+                new_sequences.append(seq + path)
+        sequences = new_sequences
+    return tidy_up(sequences)  # TODO: maybe we shouldn't tidy
+
+def numerical_to_direction(numerical_paths, code):
+    sequences = ['']
+    for i in range(len(code)):
+        if i == 0:
+            start = 'A'
+        else:
+            start = code[i - 1]
+        end = code[i]
+        paths = numerical_paths[(start, end)]
         new_sequences = []
         for path in paths:
             for seq in sequences:
@@ -154,6 +180,25 @@ if __name__ == '__main__':
     pprint.pprint(group_by_A_paths)
     print()
 
+    depth = 2
+    # at depth 0 - ['<A^A^^>AvvvA', '<A^A^>^AvvvA', '<A^A>^^AvvvA']
+    depth_0 = numerical_to_direction(numerical_paths, "029A")
+    pprint.pprint(depth_0)
+    print()
+
+    # hard-code to first path in depth 0, but wont actually work
+    depth_1 = [''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, seq) for seq in group_by_A(depth_0[0])])]
+    pprint.pprint(depth_1)
+    print()
+
+    # hard-code to first path in depth 1, but wont actually work
+    depth_2 = [''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, seq) for seq in group_by_A(depth_1[0])])]
+    pprint.pprint(depth_2)
+    print()
+
+    # answer: 70 - incorrect because we assumed first path at each depth was good enough
+    print(calculate_min_path_length(depth_2))
+
     # IDEA
     #  - ASSUME PREVIOUS "WINNER" APPROACH WAS WRONG!
     #    - AKA - DONT ASSUME WE KNOW WHICH PATH TO CHOOSE AT EVERY STEP!
@@ -165,4 +210,5 @@ if __name__ == '__main__':
     #  - not sure how i'll do this, probably with recursion although Python will likely bubble up a "max recursive depth reached" error
     #  - does Python have an infinity value?
     #    - ANSWER: yes, `float('inf')` - weird
+    #  - remember to call group_by_A() at each level like in the Go approach
     print('took ', datetime.datetime.now() - start)
