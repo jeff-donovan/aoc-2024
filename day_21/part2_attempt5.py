@@ -83,6 +83,34 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
+def pre_compute_group_by_A_paths(numericalPaths, directionalPaths):
+    group_by_A_sequences = set([])
+    for sequences in numericalPaths.values():
+        group_by_A_sequences = group_by_A_sequences.union(set(sequences))
+    for sequences in directionalPaths.values():
+        group_by_A_sequences = group_by_A_sequences.union(set(sequences))
+    return {seq: _directional_to_directional(directionalPaths, seq) for seq in group_by_A_sequences}
+
+def _directional_to_directional(directionalPaths, directional_seq):
+    sequences = ['']
+    for i in range(len(directional_seq)):
+        if i == 0:
+            start = 'A'
+        else:
+            start = directional_seq[i - 1]
+        end = directional_seq[i]
+        paths = directionalPaths[(start, end)]  # leverage pre-computed paths
+        new_sequences = []
+        for path in paths:
+            for seq in sequences:
+                new_sequences.append(seq + path)
+        sequences = new_sequences
+    return tidy_up(sequences)  # TODO: maybe we shouldn't tidy
+
+def tidy_up(sequences):
+    min_length = calculate_min_path_length(sequences)
+    return [seq for seq in sequences if len(seq) == min_length]
+
 def pre_compute_keypad_paths(keypad):
     paths = {}
     for start in keypad.keys():
@@ -121,5 +149,8 @@ if __name__ == '__main__':
     print()
     directionalPaths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
     pprint.pprint(directionalPaths)
+    print()
+    groupByAPaths = pre_compute_group_by_A_paths(numericalPaths, directionalPaths)
+    pprint.pprint(groupByAPaths)
     print()
     print('took ', datetime.datetime.now() - start)
