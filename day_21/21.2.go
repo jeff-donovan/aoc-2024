@@ -421,7 +421,7 @@ func main() {
 
 	cache := NewCache()
 
-	depth := 2
+	depth := 3
 
 	start := time.Now()
 	var complexities []int
