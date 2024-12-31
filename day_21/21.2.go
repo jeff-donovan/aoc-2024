@@ -221,7 +221,7 @@ func calculateShortestPathLength(cache *Cache, seq string, depth int) int {
 	for _, aSeq := range groupByA(seq) {
 		sequences := []string{aSeq}
 		for i := 0; i < depth; i++ {
-			fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
+			// fmt.Printf("calculateShortestPathLength | %s | %d | %d\n", aSeq, i, len(sequences))
 			var newSequences []string
 			for _, s := range sequences {
 				newSequences = append(newSequences, _directionalToDirectional(cache, s)...)
@@ -354,7 +354,7 @@ func calculateMinPathLength(paths []string) int {
 }
 
 func main() {
-	f, err := os.Open("C:/code/aoc-2024/day_21/day_21_test.txt")
+	f, err := os.Open("C:/code/aoc-2024/day_21/day_21_input.txt")
 	if err != nil {
 		fmt.Println("Error opening file", err)
 		return
