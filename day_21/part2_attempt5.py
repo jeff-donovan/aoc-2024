@@ -1,3 +1,4 @@
+import collections
 import datetime
 import itertools
 import pprint
@@ -86,21 +87,22 @@ def make_codes(contents):
 
 def find_shortest_path_length_for_code(numerical_paths, directional_paths, group_by_A_paths, code, max_depth):
     depth_0 = numerical_to_direction(numerical_paths, code)
-    cache = {d: float('inf') for d in range(max_depth + 1)}
-    return min([find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, seq, 0, max_depth) for seq in depth_0])
 
-def find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, seq, current_depth, max_depth):
-    if current_depth == max_depth:
-        return len(seq)
+    queue = collections.deque([(seq, 0) for seq in depth_0])
+    min_length = float('inf')
 
-    if len(seq) > cache[current_depth]:
-        return float('inf')
+    while len(queue) > 0:
+        seq, depth = queue.popleft()
 
-    if len(seq) < cache[current_depth]:
-        cache[current_depth] = len(seq)
+        if depth == max_depth:
+            min_length = min(min_length, len(seq))
+            continue
 
-    next_sequences = (''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, group_by_A_paths, s) for s in group_by_A(seq)]))
-    return min(find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
+        next_sequences = (''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, group_by_A_paths, s) for s in group_by_A(seq)]))
+        for ns in next_sequences:
+            queue.append((ns, depth + 1))
+
+    return min_length
 
 def group_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
@@ -198,7 +200,7 @@ if __name__ == '__main__':
     directional_paths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
 
-    depth = 3
+    depth = 2
 
     print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, directional_paths, group_by_A_paths, code, depth)) for code in codes]))
 
