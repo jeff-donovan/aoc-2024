@@ -92,12 +92,8 @@ def find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq
     if current_depth == max_depth:
         return len(seq)
 
-    total = 0
-    for s in group_by_A(seq):
-        next_sequences = directional_to_directional(directional_paths, group_by_A_paths, s)
-        total += min(find_shortest_path_length_recursive(directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
-
-    return total
+    next_sequences = (''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, group_by_A_paths, s) for s in group_by_A(seq)]))
+    return min(find_shortest_path_length_recursive(directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
 
 def group_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
