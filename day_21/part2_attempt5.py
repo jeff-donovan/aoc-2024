@@ -204,7 +204,7 @@ if __name__ == '__main__':
     directional_paths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
 
-    depth = 2
+    depth = 3
 
     print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, directional_paths, group_by_A_paths, code, depth)) for code in codes]))
 
