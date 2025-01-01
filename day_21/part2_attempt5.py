@@ -86,22 +86,16 @@ def make_codes(contents):
 
 def find_shortest_path_length_for_code(numerical_paths, directional_paths, group_by_A_paths, code, max_depth):
     depth_0 = numerical_to_direction(numerical_paths, code)
-    cache = {d: None for d in range(max_depth)}
-    result = min([find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, seq, 0, max_depth) for seq in depth_0])
-    pprint.pprint(cache)
-    return result
+    return min([find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq, 0, max_depth) for seq in depth_0])
 
-def find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, seq, current_depth, max_depth):
+def find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq, current_depth, max_depth):
     if current_depth == max_depth:
         return len(seq)
 
     total = 0
     for s in group_by_A(seq):
         next_sequences = directional_to_directional(directional_paths, group_by_A_paths, s)
-        total += min(find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
-
-    if cache[current_depth] is None or total < cache[current_depth]:
-        cache[current_depth] = total
+        total += min(find_shortest_path_length_recursive(directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
 
     return total
 
@@ -192,7 +186,7 @@ def calculate_complexity(code, min_path_length):
     return min_path_length * int(code[:len(code) - 1])
 
 if __name__ == '__main__':
-    with open('C:/code/aoc-2024/day_21/day_21_input.txt', 'r') as f:
+    with open('day_21/day_21_input.txt', 'r') as f:
         contents = f.read()
 
     start = datetime.datetime.now()
