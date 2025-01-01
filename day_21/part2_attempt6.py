@@ -108,6 +108,14 @@ def group_by_A(seq):
         start = a_index + 1
     return new_sequences
 
+def pre_compute_group_by_A_winners(directional_paths, group_by_A_paths):
+    max_depth = 1
+    winners = {}
+    for a_seq, depth_0 in group_by_A_paths.items():
+        shortest_path_lengths = [find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq, 0, max_depth) for seq in depth_0]
+        winners[a_seq] = next(seq for i, seq in enumerate(depth_0) if shortest_path_lengths[i] == min(shortest_path_lengths))
+    return winners
+
 def pre_compute_group_by_A_paths(numerical_paths, directional_paths):
     group_by_A_sequences = set([])
     for sequences in numerical_paths.values():
@@ -194,6 +202,8 @@ if __name__ == '__main__':
     numerical_paths = pre_compute_keypad_paths(NUMERICAL_KEYPAD)
     directional_paths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
+    group_by_A_winners = pre_compute_group_by_A_winners(directional_paths, group_by_A_paths)
+    pprint.pprint(group_by_A_winners)
 
     depth = 3
 
