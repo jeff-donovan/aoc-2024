@@ -86,14 +86,21 @@ def make_codes(contents):
 
 def find_shortest_path_length_for_code(numerical_paths, directional_paths, group_by_A_paths, code, max_depth):
     depth_0 = numerical_to_direction(numerical_paths, code)
-    return min([find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq, 0, max_depth) for seq in depth_0])
+    cache = {d: float('inf') for d in range(max_depth + 1)}
+    return min([find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, seq, 0, max_depth) for seq in depth_0])
 
-def find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq, current_depth, max_depth):
+def find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, seq, current_depth, max_depth):
     if current_depth == max_depth:
         return len(seq)
 
+    if len(seq) > cache[current_depth]:
+        return float('inf')
+
+    if len(seq) < cache[current_depth]:
+        cache[current_depth] = len(seq)
+
     next_sequences = (''.join(prod) for prod in itertools.product(*[directional_to_directional(directional_paths, group_by_A_paths, s) for s in group_by_A(seq)]))
-    return min(find_shortest_path_length_recursive(directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
+    return min(find_shortest_path_length_recursive(cache, directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
 
 def group_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
@@ -191,7 +198,7 @@ if __name__ == '__main__':
     directional_paths = pre_compute_keypad_paths(DIRECTIONAL_KEYPAD)
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
 
-    depth = 2
+    depth = 3
 
     print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, directional_paths, group_by_A_paths, code, depth)) for code in codes]))
 
