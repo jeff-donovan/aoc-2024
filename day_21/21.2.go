@@ -389,7 +389,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Error reading file:", err)
 	}
-	fmt.Println(codes)
+	// fmt.Println(codes)
 
 	start := time.Now()
 
@@ -398,7 +398,7 @@ func main() {
 	groupByAPaths := preComputeGroupByAPaths(numericalPaths, directionalPaths)
 	cache := preComputeGroupByAWinners(directionalPaths, groupByAPaths)
 
-	depth := 2
+	depth := 15
 
 	var complexities []int
 	for _, code := range codes {
