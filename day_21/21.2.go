@@ -395,7 +395,7 @@ func main() {
 	groupByAPaths := preComputeGroupByAPaths(numericalPaths, directionalPaths)
 	cache := preComputeGroupByAWinners(directionalPaths, groupByAPaths)
 
-	depth := 15
+	depth := 25
 
 	var complexities []int
 	for _, code := range codes {
