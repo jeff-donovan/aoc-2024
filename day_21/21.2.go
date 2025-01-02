@@ -135,35 +135,33 @@ func makeCodes(f *os.File) ([]string, error) {
 }
 
 func findShortestPathLengthForCode(cache *Cache, numericalPaths map[StartEnd][]string, code string, maxDepth int) int {
-	depth0 := numericalToDirectional(numericalPaths, code)
-	var pathLengths []int
-	for _, seq := range depth0 {
-		pathLengths = append(pathLengths, pathLength(cache, seq, maxDepth))
-	}
-	return slices.Min(pathLengths)
-}
-
-func pathLength(cache *Cache, seq string, maxDepth int) int {
-	if maxDepth == 0 {
-		return len(seq)
-	}
+	sequences := numericalToDirectional(numericalPaths, code)
 
 	stringDepth := int(math.Ceil(float64(maxDepth) / float64(2)))
-	parts := splitByA(seq)
 	for i := 0; i < stringDepth; i++ {
-		for pIndex, s := range parts {
-			parts[pIndex] = nextString(cache, s)
+		var newSequences []string
+		for _, seq := range sequences {
+			newSequences = append(newSequences, nextString(cache, seq))
 		}
+		sequences = newSequences
 	}
 
+	var minLengths []int
+
 	remainingDepth := maxDepth - stringDepth
-	total := 0
-	for _, p := range parts {
-		for _, s := range splitByA(p) {
-			total += pathLength(cache, s, remainingDepth)
+	for _, seq := range sequences {
+		minLength := 0
+		for _, aSeq := range groupByA(seq) {
+			a := aSeq
+			for i := 0; i < remainingDepth; i++ {
+				a = nextString(cache, a)
+			}
+			minLength += len(a)
 		}
+		minLengths = append(minLengths, minLength)
 	}
-	return total
+
+	return slices.Min(minLengths)
 }
 
 func nextString(cache *Cache, seq string) string {
@@ -389,7 +387,6 @@ func main() {
 	if err != nil {
 		fmt.Println("Error reading file:", err)
 	}
-	// fmt.Println(codes)
 
 	start := time.Now()
 
