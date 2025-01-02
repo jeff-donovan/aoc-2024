@@ -152,12 +152,22 @@ def parse_contents(contents):
 
 def is_valid(initial_A):
     return (
-        (0 == (initial_A // 8) % 8) and
-        (3 == ((initial_A // 8) // 8) % 8) and
-        (5 == (((initial_A // 8) // 8) // 8) % 8) and
-        (4 == ((((initial_A // 8) // 8) // 8) // 8) % 8) and
-        (3 == (((((initial_A // 8) // 8) // 8) // 8) // 8) % 8) and
-        (0 == ((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) % 8)
+        (2 == (((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (4 == ((((((initial_A // 8) // 8) % 8) ^ 5) ^ (((initial_A // 8) // 8) // (2 ** ((((initial_A // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (1 == (((((((initial_A // 8) // 8) // 8) % 8) ^ 5) ^ ((((initial_A // 8) // 8) // 8) // (2 ** (((((initial_A // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (5 == ((((((((initial_A // 8) // 8) // 8) // 8) % 8) ^ 5) ^ (((((initial_A // 8) // 8) // 8) // 8) // (2 ** ((((((initial_A // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (7 == (((((((((initial_A // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ ((((((initial_A // 8) // 8) // 8) // 8) // 8) // (2 ** (((((((initial_A // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (5 == ((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ (((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** ((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (4 == (((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ ((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** (((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (5 == ((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ (((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** ((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (0 == (((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ ((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** (((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (3 == ((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ (((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** ((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (1 == (((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ ((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** (((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (6 == ((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ (((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** ((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (5 == (((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ ((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** (((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (5 == ((((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ (((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** ((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (3 == (((((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ ((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** (((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8) and
+        (0 == ((((((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5) ^ (((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // (2 ** ((((((((((((((((((initial_A // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) // 8) % 8) ^ 5)))) ^ 6) % 8)
     )
 
 if __name__ == '__main__':
@@ -181,35 +191,36 @@ if __name__ == '__main__':
     # print('SOLUTION APPROACH 1 TOOK: ', datetime.datetime.now() - start)
     # print()
 
-    # start = datetime.datetime.now()
-    # initial_A = 0
-    # while not is_valid(initial_A):
-    #     initial_A += 1
-
-    # print(initial_A)
-    # print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
-
     start = datetime.datetime.now()
-    # register_a = 2563700000  # what i left off at last time
-    register_a = 0
-    num_outputs = 0
-    while register_a < 1001:
-        # if register_a % 100 == 0:
-        #     print('register a: ', register_a)
-        program = Day17(register_a, inputs)
-        try:
-            program.run()
-            if program.is_copy():
-                print('SOLUTION IS: ', register_a)
-                break
-            register_a += 1
-        except:
-            register_a += 1
+    # initial_A = 29641936
+    initial_A = 281474976710655
+    while not is_valid(initial_A):
+        initial_A += 1
 
-        # if len(program.outputs) >= num_outputs:
-        #     num_outputs = len(program.outputs)
-        #     print(f'{num_outputs} OUTPUTS | {register_a}')
-        num_outputs = len(program.outputs)
-        print(f'{num_outputs} OUTPUTS | {register_a - 1}')  # remember - we've already incremented register_a
-    print('SOLUTION APPROACH 3 TOOK: ', datetime.datetime.now() - start)
-    print()
+    print(initial_A)
+    print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
+
+    # start = datetime.datetime.now()
+    # # register_a = 2563700000  # what i left off at last time
+    # register_a = 0
+    # num_outputs = 0
+    # while register_a < 1001:
+    #     # if register_a % 100 == 0:
+    #     #     print('register a: ', register_a)
+    #     program = Day17(register_a, inputs)
+    #     try:
+    #         program.run()
+    #         if program.is_copy():
+    #             print('SOLUTION IS: ', register_a)
+    #             break
+    #         register_a += 1
+    #     except:
+    #         register_a += 1
+
+    #     # if len(program.outputs) >= num_outputs:
+    #     #     num_outputs = len(program.outputs)
+    #     #     print(f'{num_outputs} OUTPUTS | {register_a}')
+    #     num_outputs = len(program.outputs)
+    #     print(f'{num_outputs} OUTPUTS | {register_a - 1}')  # remember - we've already incremented register_a
+    # print('SOLUTION APPROACH 3 TOOK: ', datetime.datetime.now() - start)
+    # print()
