@@ -359,7 +359,7 @@ func preComputeGroupByAPaths(numericalPaths map[StartEnd][]string, directionalPa
 }
 
 func preComputeGroupByAWinners(directionalPaths map[StartEnd][]string, groupByAPaths map[string][]string) *Cache {
-	maxDepth := 1 // TODO: change to see if we get a diff shortest path length
+	maxDepth := 6 // TODO: change to see if we get a diff shortest path length
 	winners := NewCache()
 	for aSeq, depth0 := range groupByAPaths {
 		var shortestPathLengths []int
@@ -395,7 +395,7 @@ func main() {
 	groupByAPaths := preComputeGroupByAPaths(numericalPaths, directionalPaths)
 	cache := preComputeGroupByAWinners(directionalPaths, groupByAPaths)
 
-	depth := 25
+	depth := 20
 
 	var complexities []int
 	for _, code := range codes {
