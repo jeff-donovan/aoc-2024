@@ -86,7 +86,12 @@ def make_codes(contents):
 
 def find_shortest_path_length_for_code(numerical_paths, group_by_A_winners, code, max_depth):
     depth_0 = numerical_to_direction(numerical_paths, code)
-    return min([find_shortest_path_length_recursive_with_winners(group_by_A_winners, seq, 0, max_depth) for seq in depth_0])
+    return min(path_length(group_by_A_winners, seq, max_depth) for seq in depth_0)
+
+def path_length(group_by_A_winners, seq, max_depth):
+    for _ in range(max_depth):
+        seq = next_string(group_by_A_winners, seq)
+    return len(seq)
 
 def find_shortest_path_length_recursive_with_winners(group_by_A_winners, seq, current_depth, max_depth):
     if current_depth == max_depth:
@@ -109,6 +114,24 @@ def find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq
         total += min(find_shortest_path_length_recursive(directional_paths, group_by_A_paths, ns, current_depth + 1, max_depth) for ns in next_sequences)
 
     return total
+
+def next_string(group_by_A_winners, seq):  # TODO: add cache next commit
+    if seq in group_by_A_winners:
+        return group_by_A_winners[seq]
+
+    left, right = split_by_A(seq)
+    return next_string(group_by_A_winners, left) + next_string(group_by_A_winners, right)
+
+def split_by_A(seq):
+    a_indices = [i for i, char in enumerate(seq) if char == 'A']
+    num_a_indices = len(a_indices)
+    if num_a_indices < 2:
+        return [seq]
+
+    split_index = a_indices[num_a_indices // 2 - 1]
+    first_half = seq[0:split_index + 1]
+    second_half = seq[split_index + 1:len(seq)]
+    return [first_half, second_half]
 
 def group_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
@@ -215,7 +238,7 @@ if __name__ == '__main__':
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
     group_by_A_winners = pre_compute_group_by_A_winners(directional_paths, group_by_A_paths)
 
-    depth = 13
+    depth = 10
 
     print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, group_by_A_winners, code, depth)) for code in codes]))
 
