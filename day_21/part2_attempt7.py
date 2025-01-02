@@ -102,17 +102,6 @@ def path_length(cache, seq, max_depth):
     remaining_depth = max_depth - string_depth
     return sum(path_length(cache, s, remaining_depth) for p in parts for s in split_by_A(p))
 
-def find_shortest_path_length_recursive_with_winners(group_by_A_winners, seq, current_depth, max_depth):
-    if current_depth == max_depth:
-        return len(seq)
-
-    total = 0
-    for s in group_by_A(seq):
-        next_sequence = group_by_A_winners[s]
-        total += find_shortest_path_length_recursive_with_winners(group_by_A_winners, next_sequence, current_depth + 1, max_depth)
-
-    return total
-
 def find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq, current_depth, max_depth):
     if current_depth == max_depth:
         return len(seq)
@@ -253,16 +242,4 @@ if __name__ == '__main__':
 
     print(sum([calculate_complexity(code, find_shortest_path_length_for_code(cache, numerical_paths, code, depth)) for code in codes]))
 
-    # IDEA
-    #  - ASSUME PREVIOUS "WINNER" APPROACH WAS WRONG!
-    #    - AKA - DONT ASSUME WE KNOW WHICH PATH TO CHOOSE AT EVERY STEP!
-    #  - precompute group_by_A paths
-    #  - calculate the length of "ALL" paths
-    #    - "ALL" in quotes because it feels like that's not actually feasible
-    #    - first attempt i'll assume that the shortest path length MUST be a shortest path length at each level
-    #      - BIG ASSUMPTION - probably not valid (like my winner logic)
-    #  - not sure how i'll do this, probably with recursion although Python will likely bubble up a "max recursive depth reached" error
-    #  - does Python have an infinity value?
-    #    - ANSWER: yes, `float('inf')` - weird
-    #  - remember to call group_by_A() at each level like in the Go approach
     print('took ', datetime.datetime.now() - start)
