@@ -90,7 +90,7 @@ def find_shortest_path_length_for_code(numerical_paths, group_by_A_winners, code
     return min([path_length(group_by_A_winners, seq, max_depth) for seq in depth_0])
 
 def path_length(group_by_A_winners, seq, max_depth):
-    string_depth = max_depth // 2
+    string_depth = math.ceil(max_depth / 2)
     for _ in range(string_depth):
         seq = ''.join(group_by_A_winners[s] for s in group_by_A(seq))
 
@@ -224,7 +224,7 @@ if __name__ == '__main__':
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
     group_by_A_winners = pre_compute_group_by_A_winners(directional_paths, group_by_A_paths)
 
-    depth = 2
+    depth = 12
 
     print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, group_by_A_winners, code, depth)) for code in codes]))
 
