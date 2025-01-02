@@ -193,7 +193,7 @@ if __name__ == '__main__':
     # register_a = 2563700000  # what i left off at last time
     register_a = 0
     num_outputs = 0
-    while True:
+    while register_a < 1001:
         # if register_a % 100 == 0:
         #     print('register a: ', register_a)
         program = Day17(register_a, inputs)
@@ -206,8 +206,10 @@ if __name__ == '__main__':
         except:
             register_a += 1
 
-        if len(program.outputs) >= num_outputs:
-            num_outputs = len(program.outputs)
-            print(f'{num_outputs} OUTPUTS | {register_a}')
+        # if len(program.outputs) >= num_outputs:
+        #     num_outputs = len(program.outputs)
+        #     print(f'{num_outputs} OUTPUTS | {register_a}')
+        num_outputs = len(program.outputs)
+        print(f'{num_outputs} OUTPUTS | {register_a - 1}')  # remember - we've already incremented register_a
     print('SOLUTION APPROACH 3 TOOK: ', datetime.datetime.now() - start)
     print()
