@@ -1,3 +1,4 @@
+import copy
 import datetime
 import itertools
 import pprint
@@ -84,13 +85,13 @@ DIRECTIONAL_KEYPAD = {
 def make_codes(contents):
     return [line for line in contents.split('\n') if line]
 
-def find_shortest_path_length_for_code(numerical_paths, group_by_A_winners, code, max_depth):
+def find_shortest_path_length_for_code(cache, numerical_paths, code, max_depth):
     depth_0 = numerical_to_direction(numerical_paths, code)
-    return min(path_length(group_by_A_winners, seq, max_depth) for seq in depth_0)
+    return min(path_length(cache, seq, max_depth) for seq in depth_0)
 
-def path_length(group_by_A_winners, seq, max_depth):
+def path_length(cache, seq, max_depth):
     for _ in range(max_depth):
-        seq = next_string(group_by_A_winners, seq)
+        seq = next_string(cache, seq)
     return len(seq)
 
 def find_shortest_path_length_recursive_with_winners(group_by_A_winners, seq, current_depth, max_depth):
@@ -115,12 +116,13 @@ def find_shortest_path_length_recursive(directional_paths, group_by_A_paths, seq
 
     return total
 
-def next_string(group_by_A_winners, seq):  # TODO: add cache next commit
-    if seq in group_by_A_winners:
-        return group_by_A_winners[seq]
+def next_string(cache, seq):
+    if seq in cache:
+        return cache[seq]
 
     left, right = split_by_A(seq)
-    return next_string(group_by_A_winners, left) + next_string(group_by_A_winners, right)
+    cache[seq] = next_string(cache, left) + next_string(cache, right)
+    return cache[seq]
 
 def split_by_A(seq):
     a_indices = [i for i, char in enumerate(seq) if char == 'A']
@@ -239,8 +241,9 @@ if __name__ == '__main__':
     group_by_A_winners = pre_compute_group_by_A_winners(directional_paths, group_by_A_paths)
 
     depth = 10
+    cache = copy.deepcopy(group_by_A_winners)
 
-    print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, group_by_A_winners, code, depth)) for code in codes]))
+    print(sum([calculate_complexity(code, find_shortest_path_length_for_code(cache, numerical_paths, code, depth)) for code in codes]))
 
     # IDEA
     #  - ASSUME PREVIOUS "WINNER" APPROACH WAS WRONG!
