@@ -1,5 +1,6 @@
 import datetime
 import itertools
+import math
 import pprint
 
 
@@ -86,7 +87,15 @@ def make_codes(contents):
 
 def find_shortest_path_length_for_code(numerical_paths, group_by_A_winners, code, max_depth):
     depth_0 = numerical_to_direction(numerical_paths, code)
-    return min([find_shortest_path_length_recursive_with_winners(group_by_A_winners, seq, 0, max_depth) for seq in depth_0])
+    return min([path_length(group_by_A_winners, seq, max_depth) for seq in depth_0])
+
+def path_length(group_by_A_winners, seq, max_depth):
+    string_depth = max_depth // 2
+    for _ in range(string_depth):
+        seq = ''.join(group_by_A_winners[s] for s in group_by_A(seq))
+
+    remaining_depth = max_depth - string_depth
+    return sum(find_shortest_path_length_recursive_with_winners(group_by_A_winners, s, 0, remaining_depth) for s in group_by_A(seq))
 
 def find_shortest_path_length_recursive_with_winners(group_by_A_winners, seq, current_depth, max_depth):
     if current_depth == max_depth:
@@ -215,7 +224,7 @@ if __name__ == '__main__':
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
     group_by_A_winners = pre_compute_group_by_A_winners(directional_paths, group_by_A_paths)
 
-    depth = 13
+    depth = 2
 
     print(sum([calculate_complexity(code, find_shortest_path_length_for_code(numerical_paths, group_by_A_winners, code, depth)) for code in codes]))
 
