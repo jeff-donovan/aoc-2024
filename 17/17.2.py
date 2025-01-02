@@ -191,7 +191,7 @@ if __name__ == '__main__':
 
     start = datetime.datetime.now()
     # register_a = 2563700000  # what i left off at last time
-    register_a = 372803995000
+    register_a = 0
     num_outputs = 0
     while True:
         # if register_a % 100 == 0:
@@ -206,7 +206,7 @@ if __name__ == '__main__':
         except:
             register_a += 1
 
-        if len(program.outputs) > num_outputs:
+        if len(program.outputs) >= num_outputs:
             num_outputs = len(program.outputs)
             print(f'{num_outputs} OUTPUTS | {register_a}')
     print('SOLUTION APPROACH 3 TOOK: ', datetime.datetime.now() - start)
