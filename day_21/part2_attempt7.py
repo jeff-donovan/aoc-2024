@@ -240,7 +240,7 @@ if __name__ == '__main__':
     group_by_A_paths = pre_compute_group_by_A_paths(numerical_paths, directional_paths)
     group_by_A_winners = pre_compute_group_by_A_winners(directional_paths, group_by_A_paths)
 
-    depth = 10
+    depth = 12
     cache = copy.deepcopy(group_by_A_winners)
 
     print(sum([calculate_complexity(code, find_shortest_path_length_for_code(cache, numerical_paths, code, depth)) for code in codes]))
