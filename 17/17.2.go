@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"math/big"
 	"time"
 )
 
@@ -62,14 +63,16 @@ func main() {
 		},
 	}
 
-	initialA := int(math.Pow(8, 17))
+	// initialA := new(big.Int).Exp(big.NewInt(8), big.NewInt(18), nil)
+	initialA := new(big.Int)
+	initialA.SetString("1047014855769602392064", 10)
 
 	for len(constraints) > 0 {
 		check := constraints[0]
-		constraints = constraints[1:]
-		for !check(initialA) {
-			initialA++
+		for !check(int(initialA.Int64())) {
+			initialA.Add(initialA, big.NewInt(1))
 		}
+		fmt.Println(initialA.String())
 		fmt.Println(initialA)
 	}
 
