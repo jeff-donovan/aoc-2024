@@ -1,6 +1,7 @@
 import copy
 import datetime
 import itertools
+import math
 import pprint
 
 
@@ -90,9 +91,16 @@ def find_shortest_path_length_for_code(cache, numerical_paths, code, max_depth):
     return min(path_length(cache, seq, max_depth) for seq in depth_0)
 
 def path_length(cache, seq, max_depth):
-    for _ in range(max_depth):
-        seq = next_string(cache, seq)
-    return len(seq)
+    if max_depth == 0:
+        return len(seq)
+
+    string_depth = math.ceil(max_depth / 2)
+    parts = split_by_A(seq)
+    for _ in range(string_depth):
+        parts = (next_string(cache, s) for s in parts)
+
+    remaining_depth = max_depth - string_depth
+    return sum(path_length(cache, s, remaining_depth) for p in parts for s in split_by_A(p))
 
 def find_shortest_path_length_recursive_with_winners(group_by_A_winners, seq, current_depth, max_depth):
     if current_depth == max_depth:
