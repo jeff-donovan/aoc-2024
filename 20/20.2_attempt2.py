@@ -109,7 +109,7 @@ def calculate_distances(route):
     return []
 
 def calculate_cheat_code_score(scores, cheat):
-    return scores[cheat['start']] - scores[cheat['end']] - cheat['distance']
+    return scores[cheat['end']] - scores[cheat['start']] - cheat['distance']
 
 if __name__ == '__main__':
     with open('20/day_20_test.txt', 'r') as f:
