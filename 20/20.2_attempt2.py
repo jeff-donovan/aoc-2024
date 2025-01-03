@@ -62,6 +62,10 @@ def has_not_been_visited(scores, i, j):
 def is_start_or_end(map, i, j):
     return is_start(map, i, j) or is_end(map, i, j)
 
+def get_route(map):
+    # empty tiles, start, or end
+    return []
+
 def is_start(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == 'S'
 
@@ -94,6 +98,12 @@ def print_map_with_scores(map, scores):
                     row.append('  ' + score_string)
         print(''.join(row))
 
+def calculate_distances(route):
+    return []
+
+def calculate_cheat_code_score(scores, cheat):
+    return scores[cheat['start']] - scores[cheat['end']] - cheat['distance']
+
 if __name__ == '__main__':
     with open('20/day_20_test.txt', 'r') as f:
         contents = f.read()
@@ -103,3 +113,16 @@ if __name__ == '__main__':
     print()
     set_scores(map_object)
     print_map_with_scores(map_object['map'], map_object['scores'])
+
+    # constants to be updated for test vs. input
+    max_distance = 20
+    min_picoseconds = 50
+
+    route = get_route()
+    distances = calculate_distances(route)  # {'start': (i, j), 'end': (i, j), 'distance': 0}
+
+    cheats = [d for d in distances if d['distance'] <= max_distance]
+    # valid_cheats = get_valid_cheats(distances_within_max)  # must go through wall - note: might not actually need this
+    # cheats = get_cheats(distances_within_max)
+
+    print(sum(c for c in cheats if calculate_cheat_code_score(map_object['scores'], c) >= min_picoseconds))
