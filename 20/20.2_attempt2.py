@@ -106,7 +106,12 @@ def print_map_with_scores(map, scores):
         print(''.join(row))
 
 def calculate_distances(route):
-    return []
+    distances = []
+    for start in route:
+        for end in route:
+            distance = abs(end[0] - start[0]) + abs(end[1] - start[1])
+            distances.append({'start': start, 'end': end, 'distance': distance})
+    return distances
 
 def calculate_cheat_code_score(scores, cheat):
     return scores[cheat['end']] - scores[cheat['start']] - cheat['distance']
@@ -134,4 +139,4 @@ if __name__ == '__main__':
     # valid_cheats = get_valid_cheats(distances_within_max)  # must go through wall - note: might not actually need this
     # cheats = get_cheats(distances_within_max)
 
-    print(sum(c for c in cheats if calculate_cheat_code_score(map_object['scores'], c) >= min_picoseconds))
+    print(len([c for c in cheats if calculate_cheat_code_score(map_object['scores'], c) >= min_picoseconds]))
