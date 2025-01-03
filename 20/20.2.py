@@ -166,7 +166,6 @@ def get_all_connecting_empty_tiles_and_distances(map, cheat_coord):
     return mapping
 
 def group_by_cheat_code_score(cheat_coords_with_scores):
-    print('inside group_by_cheat_code_score')
     mapping = {}
     for route, score in cheat_coords_with_scores:
         if score not in mapping:
@@ -243,13 +242,8 @@ if __name__ == '__main__':
     print()
     set_scores(map_object)
     print_map_with_scores(map_object['map'], map_object['scores'])
-    # pprint.pprint(sorted(get_all_valid_cheat_coords(map_object), key=lambda x: x[1]))
 
     cheat_coords_with_scores = get_all_valid_cheat_coords(map_object)
-    print('HI JEFF!')
     print(get_all_non_walls_missing_route(map_object['map'], cheat_coords_with_scores))
-    # pprint.pprint(cheat_coords_with_scores)
     grouped = group_by_cheat_code_score(cheat_coords_with_scores)
     pprint.pprint({score: len(grouped[score]) for score in grouped})
-
-    # print(sum([len(grouped[score]) for score in grouped if score >= 100]))
