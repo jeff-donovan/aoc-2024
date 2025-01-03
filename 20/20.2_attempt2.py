@@ -105,16 +105,23 @@ def print_map_with_scores(map, scores):
                     row.append('  ' + score_string)
         print(''.join(row))
 
-def calculate_distances(route):
-    distances = []
+def num_cheats(scores, route, max_distance, min_picoseconds):
+    total = 0
     for start in route:
         for end in route:
-            distance = abs(end[0] - start[0]) + abs(end[1] - start[1])
-            distances.append({'start': start, 'end': end, 'distance': distance})
-    return distances
+            if is_valid_cheat(scores, start, end, max_distance, min_picoseconds):
+                total += 1
+    return total
 
-def calculate_cheat_code_score(scores, cheat):
-    return scores[cheat['end']] - scores[cheat['start']] - cheat['distance']
+def is_valid_cheat(scores, start, end, max_distance, min_picoseconds):
+    distance = calculate_distance(start, end)
+    return distance <= max_distance and calculate_cheat_code_score(scores, start, end, distance) >= min_picoseconds
+
+def calculate_distance(start, end):
+    return abs(end[0] - start[0]) + abs(end[1] - start[1])
+
+def calculate_cheat_code_score(scores, start, end, distance):
+    return scores[end] - scores[start] - distance
 
 if __name__ == '__main__':
     with open('20/day_20_input.txt', 'r') as f:
@@ -134,6 +141,8 @@ if __name__ == '__main__':
     route = get_route(map_object)
     print(route)
     print(len(route))
+
+    print(num_cheats(map_object['scores'], route, max_distance, min_picoseconds))
     # distances = calculate_distances(route)  # {'start': (i, j), 'end': (i, j), 'distance': 0}
 
     # cheats = [d for d in distances if d['distance'] <= max_distance]
