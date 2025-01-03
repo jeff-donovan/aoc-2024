@@ -133,10 +133,11 @@ if __name__ == '__main__':
 
     route = get_route(map_object)
     print(route)
-    distances = calculate_distances(route)  # {'start': (i, j), 'end': (i, j), 'distance': 0}
+    print(len(route))
+    # distances = calculate_distances(route)  # {'start': (i, j), 'end': (i, j), 'distance': 0}
 
-    cheats = [d for d in distances if d['distance'] <= max_distance]
-    # valid_cheats = get_valid_cheats(distances_within_max)  # must go through wall - note: might not actually need this
-    # cheats = get_cheats(distances_within_max)
+    # cheats = [d for d in distances if d['distance'] <= max_distance]
+    # # valid_cheats = get_valid_cheats(distances_within_max)  # must go through wall - note: might not actually need this
+    # # cheats = get_cheats(distances_within_max)
 
-    print(len([c for c in cheats if calculate_cheat_code_score(map_object['scores'], c) >= min_picoseconds]))
+    # print(len([c for c in cheats if calculate_cheat_code_score(map_object['scores'], c) >= min_picoseconds]))
