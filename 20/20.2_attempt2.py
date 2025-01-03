@@ -59,12 +59,19 @@ def next_coord(map_object, i, j):
 def has_not_been_visited(scores, i, j):
     return (i, j) not in scores
 
-def is_start_or_end(map, i, j):
-    return is_start(map, i, j) or is_end(map, i, j)
+def get_route(map_object):
+    map = map_object['map']
+    route = []
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if is_on_route(map, i, j):
+                route.append((i, j))
 
-def get_route(map):
-    # empty tiles, start, or end
-    return []
+    scores = map_object['scores']
+    return sorted(route, key=lambda point: scores[point])
+
+def is_on_route(map, i, j):
+    return is_empty_tile(map, i, j) or is_start(map, i, j) or is_end(map, i, j)
 
 def is_start(map, i, j):
     return is_in_map(map, i, j) and map[i][j] == 'S'
@@ -113,12 +120,14 @@ if __name__ == '__main__':
     print()
     set_scores(map_object)
     print_map_with_scores(map_object['map'], map_object['scores'])
+    print()
 
     # constants to be updated for test vs. input
     max_distance = 20
     min_picoseconds = 50
 
-    route = get_route()
+    route = get_route(map_object)
+    print(route)
     distances = calculate_distances(route)  # {'start': (i, j), 'end': (i, j), 'distance': 0}
 
     cheats = [d for d in distances if d['distance'] <= max_distance]
