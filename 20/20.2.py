@@ -112,7 +112,7 @@ def cheat_code_travel(map_object, cheat_coord):
             route = tuple(sorted((start, end)))
             if route not in map_object['cheat_scores']:
                 map_object['cheat_scores'][route] = 0
-            if distance < 20:  # TODO: consider distance <= 20
+            if distance < 2:  # TODO: consider distance <= 20
                 score = calculate_cheat_code_score(map_object['scores'], start, end, distance + 1)
                 if score > map_object['cheat_scores'][route]:
                     map_object['cheat_scores'][route] = score
