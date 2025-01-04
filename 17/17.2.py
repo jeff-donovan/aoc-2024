@@ -93,18 +93,15 @@ class Day17(object):
 
     # 0
     def adv(self):
-        new_a = self.a // (2 ** self.combo_operand)
-        self._a = new_a
+        self._a = self.a // (2 ** self.combo_operand)
 
     # 1
     def bxl(self):
-        new_b = self.bitwise_xor(self.b, self.literal_operand)
-        self._b = new_b
+        self._b = self.bitwise_xor(self.b, self.literal_operand)
 
     # 2
     def bst(self):
-        new_b = self.combo_operand % 8
-        self._b = new_b
+        self._b = self.combo_operand % 8
 
     # 3
     def jnz(self):
@@ -116,8 +113,7 @@ class Day17(object):
 
     # 4
     def bxc(self):
-        new_b = self.bitwise_xor(self.b, self.c)
-        self._b = new_b
+        self._b = self.bitwise_xor(self.b, self.c)
 
     # 5
     def out(self):
@@ -127,13 +123,11 @@ class Day17(object):
 
     # 6
     def bdv(self):
-        new_b = self.a // (2 ** self.combo_operand)
-        self._b = new_b
+        self._b = self.a // (2 ** self.combo_operand)
 
     # 7
     def cdv(self):
-        new_c = self.a // (2 ** self.combo_operand)
-        self._c = new_c
+        self._c = self.a // (2 ** self.combo_operand)
 
     def bitwise_xor(self, a, b):
         return a ^ b
