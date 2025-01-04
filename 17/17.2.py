@@ -91,26 +91,22 @@ class Day17(object):
         }
         return mapping[opcode]()
 
+    # 0
     def adv(self):
         new_a = self.register_a // (2 ** self.combo_operand)
         self._register_a = new_a
 
-    def bdv(self):
-        new_b = self.register_a // (2 ** self.combo_operand)
-        self._register_b = new_b
-
-    def cdv(self):
-        new_c = self.register_a // (2 ** self.combo_operand)
-        self._register_c = new_c
-
+    # 1
     def bxl(self):
         new_b = self.bitwise_xor(self.register_b, self.literal_operand)
         self._register_b = new_b
 
+    # 2
     def bst(self):
         new_b = self.combo_operand % 8
         self._register_b = new_b
 
+    # 3
     def jnz(self):
         if self.register_a == 0:
             return
@@ -118,14 +114,26 @@ class Day17(object):
         self._instruction_pointer = self.literal_operand
         self._has_jumped = True
 
+    # 4
     def bxc(self):
         new_b = self.bitwise_xor(self.register_b, self.register_c)
         self._register_b = new_b
 
+    # 5
     def out(self):
         val = self.combo_operand % 8
         self._outputs.append(val)
         self.raise_if_outputs_invalid()
+
+    # 6
+    def bdv(self):
+        new_b = self.register_a // (2 ** self.combo_operand)
+        self._register_b = new_b
+
+    # 7
+    def cdv(self):
+        new_c = self.register_a // (2 ** self.combo_operand)
+        self._register_c = new_c
 
     def bitwise_xor(self, a, b):
         return a ^ b
