@@ -1,0 +1,337 @@
+2,4,1,5,7,5,4,5,0,3,1,6,5,5,3,0
+
+iterations...
+
+i = 0
+    outputs = []
+    A = initial_A
+    B = 0
+    C = 0
+    pointer = 0
+    opcode  = inputs[0]
+            = 2
+    operand = inputs[1]
+            = 4
+    literal = 4
+    combo   = A
+            = initial_A
+
+    opcode of 2 -> bst()
+    bst()
+        B = combo % 8
+        B = initial_A % 8
+
+i = 1
+    outputs = []
+    A = initial_A
+    B = initial_A % 8
+    C = 0
+    pointer = 2
+    opcode  = inputs[2]
+            = 1
+    operand = inputs[3]
+            = 5
+    literal = 5
+    combo   = B
+            = initial_A % 8
+
+    opcode of 1 -> bxl()
+    bxl()
+        B = B ^ literal
+          = (initial_A % 8) ^ 5
+
+i = 2
+    outputs = []
+    A = initial_A
+    B = (initial_A % 8) ^ 5
+    C = 0
+    pointer = 4
+    opcode  = inputs[4]
+            = 7
+    operand = inputs[5]
+            = 5
+    literal = 5
+    combo   = B
+            = (initial_A % 8) ^ 5
+
+    opcode of 7 -> cdv()
+    cdv()
+        C = A // (2 ** combo)
+        C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+
+i = 3
+    outputs = []
+    A = initial_A
+    B = (initial_A % 8) ^ 5
+    C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+    pointer = 6
+    opcode  = inputs[6]
+            = 4
+    operand = inputs[7]
+            = 5
+    literal = 5
+    combo   = B
+            = (initial_A % 8) ^ 5
+
+    opcode of 4 -> bxc()
+    bxc()
+        B = B ^ C
+        B = ((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))
+
+i = 4
+    outputs = []
+    A = initial_A
+    B = ((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))
+    C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+    pointer = 8
+    opcode  = inputs[8]
+            = 0
+    operand = inputs[9]
+            = 3
+    literal = 3
+    combo   = 3
+
+    opcode of 0 -> adv()
+    adv()
+        A = A // (2 ** combo)
+          = initial_A // (2 ** 3)
+          = initial_A // 8
+
+i = 5
+    outputs = []
+    A = initial_A // 8
+    B = ((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))
+    C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+    pointer = 10
+    opcode  = inputs[10]
+            = 1
+    operand = inputs[11]
+            = 6
+    literal = 6
+    combo   = C
+            = initial_A // (2 ** ((initial_A % 8) ^ 5))
+
+    opcode of 1 -> bxl()
+    bxl()
+        B = B ^ literal
+          = (((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6
+
+i = 6
+    outputs = []
+    A = initial_A // 8
+    B = (((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6
+    C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+    pointer = 12
+    opcode  = inputs[12]
+            = 5
+    operand = inputs[13]
+            = 5
+    literal = 5
+    combo   = B
+            = (((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6
+
+    opcode of 5 -> out()
+    out()
+        outputs[0] = combo % 8
+                 2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+i = 7
+    outputs = [2,]
+    A = initial_A // 8
+    B = (((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6
+    C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+    pointer = 14
+    opcode  = inputs[14]
+            = 3
+    operand = inputs[15]
+            = 0
+    literal = 0
+    combo   = 0
+
+    opcode of 3 -> jnz()
+    jnz()
+        A != 0 so can't return yet
+        pointer = literal
+                = 0
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+i = 8
+    outputs = [2,]
+    A = initial_A // 8
+    B = (((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6
+    C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+    pointer = 0
+    opcode  = inputs[0]
+            = 2
+    operand = inputs[1]
+            = 4
+    literal = 4
+    combo   = A
+            = initial_A // 8
+
+    opcode of 2 -> bst()
+    bst()
+        B = combo % 8
+          = (initial_A // 8) % 8
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+i = 9
+    outputs = [2,]
+    A = initial_A // 8
+    B = (initial_A // 8) % 8
+    C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+    pointer = 2
+    opcode  = inputs[2]
+            = 1
+    operand = inputs[3]
+            = 5
+    literal = 5
+    combo   = B
+            = (initial_A // 8) % 8
+
+    opcode of 1 -> bxl()
+    bxl()
+        B = B ^ literal
+          = ((initial_A // 8) % 8) ^ 5
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+i = 10
+    outputs = [2,]
+    A = initial_A // 8
+    B = ((initial_A // 8) % 8) ^ 5
+    C = initial_A // (2 ** ((initial_A % 8) ^ 5))
+    pointer = 4
+    opcode  = inputs[4]
+            = 7
+    operand = inputs[5]
+            = 5
+    literal = 5
+    combo   = B
+            = ((initial_A // 8) % 8) ^ 5
+
+    opcode of 7 -> cdv()
+    cdv()
+        C = A // (2 ** combo)
+          = (initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5))
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+i = 11
+    outputs = [2,]
+    A = initial_A // 8
+    B = ((initial_A // 8) % 8) ^ 5
+    C = (initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5))
+    pointer = 6
+    opcode  = inputs[6]
+            = 4
+    operand = inputs[7]
+            = 5
+    literal = 5
+    combo   = B
+            = ((initial_A // 8) % 8) ^ 5
+
+    opcode of 4 -> bxc()
+    bxc()
+        B = B ^ C
+          = (((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+i = 12
+    outputs = [2,]
+    A = initial_A // 8
+    B = (((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))
+    C = (initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5))
+    pointer = 8
+    opcode  = inputs[8]
+            = 0
+    operand = inputs[9]
+            = 3
+    literal = 3
+    combo   = 3
+
+    opcode of 0 -> adv()
+    adv()
+        A = A // (2 ** combo)
+          = (initial_A // 8) // 8
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+i = 13
+    outputs = [2,]
+    A = (initial_A // 8) // 8
+    B = (((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))
+    C = (initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5))
+    pointer = 10
+    opcode  = inputs[10]
+            = 1
+    operand = inputs[11]
+            = 6
+    literal = 6
+    combo   = C
+            = (initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5))
+
+    opcode of 1 -> bxl()
+    bxl()
+        B = B ^ literal
+          = ((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+i = 14
+    outputs = [2,]
+    A = (initial_A // 8) // 8
+    B = ((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6
+    C = (initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5))
+    pointer = 12
+    opcode  = inputs[12]
+            = 5
+    operand = inputs[13]
+            = 5
+    literal = 5
+    combo   = B
+            = ((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6
+
+    opcode of 5 -> out()
+    out()
+        outputs[1] = combo % 8
+                   = (((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6) % 8
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+4 = (((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6) % 8
+i = 15
+    outputs = [2,4,]
+    A = (initial_A // 8) // 8
+    B = ((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6
+    C = (initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5))
+    pointer = 14
+    opcode  = inputs[14]
+            = 3
+    operand = inputs[15]
+            = 0
+    literal = 0
+    combo   = 0
+
+    opcode of 3 -> jnz()
+    jnz()
+        A != 0 so can't return yet
+        pointer = literal
+                = 0
+
+2 = ((((initial_A % 8) ^ 5) ^ (initial_A // (2 ** ((initial_A % 8) ^ 5)))) ^ 6) % 8
+4 = (((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6) % 8
+i = 16
+    outputs = [2,4,]
+    A = (initial_A // 8) // 8
+    B = ((((initial_A // 8) % 8) ^ 5) ^ ((initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5)))) ^ 6
+    C = (initial_A // 8) // (2 ** (((initial_A // 8) % 8) ^ 5))
+    pointer = 0
+    opcode  = inputs[0]
+            = 2
+    operand = inputs[1]
+            = 4
+    literal = 4
+    combo   = A
+            = (initial_A // 8) // 8
+
+    opcode of 2 -> bst()
+    bst()
+        B = combo % 8
+          = ((initial_A // 8) // 8) % 8
