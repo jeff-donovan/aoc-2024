@@ -4,13 +4,13 @@ import datetime
 REGISTER = 'Register'
 
 class Day17(object):
-    def __init__(self, register_a, inputs):
+    def __init__(self, a, inputs):
         self._inputs = inputs
         self._outputs = []
 
-        self._register_a = register_a  # ignore register_a value from contents
-        self._register_b = 0
-        self._register_c = 0
+        self._a = a  # ignore register_a value from contents
+        self._b = 0
+        self._c = 0
 
         self._instruction_pointer = 0
         self._has_jumped = False
@@ -41,16 +41,16 @@ class Day17(object):
         return True
 
     @property
-    def register_a(self):
-        return self._register_a
+    def a(self):
+        return self._a
 
     @property
-    def register_b(self):
-        return self._register_b
+    def b(self):
+        return self._b
 
     @property
-    def register_c(self):
-        return self._register_c
+    def c(self):
+        return self._c
 
     @property
     def literal_operand(self):
@@ -63,9 +63,9 @@ class Day17(object):
             1: 1,
             2: 2,
             3: 3,
-            4: self.register_a,
-            5: self.register_b,
-            6: self.register_c,
+            4: self.a,
+            5: self.b,
+            6: self.c,
         }
         return mapping[self._operand]
 
@@ -93,22 +93,22 @@ class Day17(object):
 
     # 0
     def adv(self):
-        new_a = self.register_a // (2 ** self.combo_operand)
-        self._register_a = new_a
+        new_a = self.a // (2 ** self.combo_operand)
+        self._a = new_a
 
     # 1
     def bxl(self):
-        new_b = self.bitwise_xor(self.register_b, self.literal_operand)
-        self._register_b = new_b
+        new_b = self.bitwise_xor(self.b, self.literal_operand)
+        self._b = new_b
 
     # 2
     def bst(self):
         new_b = self.combo_operand % 8
-        self._register_b = new_b
+        self._b = new_b
 
     # 3
     def jnz(self):
-        if self.register_a == 0:
+        if self.a == 0:
             return
 
         self._instruction_pointer = self.literal_operand
@@ -116,8 +116,8 @@ class Day17(object):
 
     # 4
     def bxc(self):
-        new_b = self.bitwise_xor(self.register_b, self.register_c)
-        self._register_b = new_b
+        new_b = self.bitwise_xor(self.b, self.c)
+        self._b = new_b
 
     # 5
     def out(self):
@@ -127,26 +127,26 @@ class Day17(object):
 
     # 6
     def bdv(self):
-        new_b = self.register_a // (2 ** self.combo_operand)
-        self._register_b = new_b
+        new_b = self.a // (2 ** self.combo_operand)
+        self._b = new_b
 
     # 7
     def cdv(self):
-        new_c = self.register_a // (2 ** self.combo_operand)
-        self._register_c = new_c
+        new_c = self.a // (2 ** self.combo_operand)
+        self._c = new_c
 
     def bitwise_xor(self, a, b):
         return a ^ b
 
 def parse_contents(contents):
-    register_contents, input_contents = contents.split('\n\n')
+    contents, input_contents = contents.split('\n\n')
     registers = {}
-    for line in register_contents.split('\n'):
+    for line in contents.split('\n'):
         if line:
             register_data = line.split(': ')
-            register_code = register_data[0][len(REGISTER) + 1:]
+            code = register_data[0][len(REGISTER) + 1:]
             register_value = int(register_data[1])
-            registers[register_code] = register_value
+            registers[code] = register_value
 
     inputs = []
     for line in input_contents.split('\n'):
@@ -185,18 +185,18 @@ if __name__ == '__main__':
 
     registers, inputs = parse_contents(contents)
 
-    # register_a = 168046722  # what i left off at last time
+    # a = 168046722  # what i left off at last time
 
     # start = datetime.datetime.now()
-    # register_a = 0
+    # a = 0
     # while True:
-    #     print('register a: ', register_a)
-    #     program = Day17(register_a, inputs)
+    #     print('register a: ', a)
+    #     program = Day17(a, inputs)
     #     program.run()
     #     if program.is_copy():
-    #         print('SOLUTION IS: ', register_a)
+    #         print('SOLUTION IS: ', a)
     #         break
-    #     register_a += 1
+    #     a += 1
     # print('SOLUTION APPROACH 1 TOOK: ', datetime.datetime.now() - start)
     # print()
 
@@ -254,26 +254,26 @@ if __name__ == '__main__':
     print('SOLUTION APPROACH 2 TOOK: ', datetime.datetime.now() - start)
 
     # start = datetime.datetime.now()
-    # # register_a = 2563700000  # what i left off at last time
-    # register_a = 0
+    # # a = 2563700000  # what i left off at last time
+    # a = 0
     # num_outputs = 0
-    # while register_a < 1001:
-    #     # if register_a % 100 == 0:
-    #     #     print('register a: ', register_a)
-    #     program = Day17(register_a, inputs)
+    # while a < 1001:
+    #     # if a % 100 == 0:
+    #     #     print('register a: ', a)
+    #     program = Day17(a, inputs)
     #     try:
     #         program.run()
     #         if program.is_copy():
-    #             print('SOLUTION IS: ', register_a)
+    #             print('SOLUTION IS: ', a)
     #             break
-    #         register_a += 1
+    #         a += 1
     #     except:
-    #         register_a += 1
+    #         a += 1
 
     #     # if len(program.outputs) >= num_outputs:
     #     #     num_outputs = len(program.outputs)
-    #     #     print(f'{num_outputs} OUTPUTS | {register_a}')
+    #     #     print(f'{num_outputs} OUTPUTS | {a}')
     #     num_outputs = len(program.outputs)
-    #     print(f'{num_outputs} OUTPUTS | {register_a - 1}')  # remember - we've already incremented register_a
+    #     print(f'{num_outputs} OUTPUTS | {a - 1}')  # remember - we've already incremented a
     # print('SOLUTION APPROACH 3 TOOK: ', datetime.datetime.now() - start)
     # print()
